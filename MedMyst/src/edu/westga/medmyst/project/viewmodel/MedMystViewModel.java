@@ -80,7 +80,6 @@ public class MedMystViewModel {
 	public boolean validateLogin() throws SQLException {
 		String usernameValue = this.username.get();
 		String passwordValue = this.password.get();
-		System.out.print("" + usernameValue + passwordValue);
 		if (usernameValue == null || usernameValue.isEmpty() || passwordValue == null || passwordValue.isEmpty()) {
 			this.loginSuccess.set("Username and password must not be empty.");
 			return false;
@@ -89,10 +88,11 @@ public class MedMystViewModel {
 		boolean isValidLogin = this.loginDAL.checkValidLogin(this.username.get(), this.password.get());
 
 		if (isValidLogin) {
-			return true;
-		} else {
-			this.loginSuccess.set("Invalid username or password.");
-			return false;
-		}
+	        this.loginSuccess.set("Login successful!");
+	        return true;
+	    } else {
+	        this.loginSuccess.set("Invalid username or password.");
+	        return false;
+	    }
 	}
 }
