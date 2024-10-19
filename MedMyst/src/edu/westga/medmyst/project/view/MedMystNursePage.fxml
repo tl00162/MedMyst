@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="513.0" prefWidth="391.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.MedMystNurseCodeBehind">
+   <children>
+      <Label fx:id="usernameLabel" layoutX="14.0" layoutY="14.0" text="Logged in as:" />
+      <Button fx:id="logoutButton" layoutX="318.0" layoutY="10.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
+      <Button fx:id="addPatientButton" layoutX="85.0" layoutY="345.0" mnemonicParsing="false" onAction="#addPatient" text="Add Patient" />
+      <Button fx:id="editPatientButton" layoutX="196.0" layoutY="345.0" mnemonicParsing="false" onAction="#editPatient" text="Edit Patient" />
+      <ListView fx:id="patientsListView" layoutX="96.0" layoutY="120.0" prefHeight="200.0" prefWidth="200.0" />
+   </children>
+</AnchorPane>

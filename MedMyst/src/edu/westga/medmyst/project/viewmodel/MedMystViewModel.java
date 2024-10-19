@@ -3,6 +3,7 @@ package edu.westga.medmyst.project.viewmodel;
 import java.sql.SQLException;
 
 import edu.westga.medmyst.project.dal.LoginDAL;
+import edu.westga.medmyst.project.model.Login;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -21,6 +22,7 @@ public class MedMystViewModel {
 	private StringProperty loginSuccess;
 
 	private LoginDAL loginDAL;
+	private Login currentUser;
 
 	/**
 	 * Constructs a new MedMystViewModel and initializes its properties.
@@ -31,6 +33,7 @@ public class MedMystViewModel {
 		this.password = new SimpleStringProperty();
 		this.loginSuccess = new SimpleStringProperty();
 		this.loginDAL = new LoginDAL();
+		this.currentUser = null;
 	}
 
 	/**
@@ -64,6 +67,24 @@ public class MedMystViewModel {
 	public StringProperty getLoginSuccess() {
 		return this.loginSuccess;
 	}
+	
+	/**
+     * Returns the current logged-in user.
+     * 
+     * @return the current AppUser if logged in, or null if no user is logged in
+     */
+    public Login getCurrentUser() {
+        return this.currentUser;
+    }
+    
+    /**
+     * Logs the user out by clearing the current user.
+     */
+    public void logout() {
+        this.currentUser = null;
+        this.loginSuccess.set("You have been logged out.");
+    }
+
 
 	/**
 	 * Validates the login credentials by checking the username and password against
@@ -89,6 +110,7 @@ public class MedMystViewModel {
 
 		if (isValidLogin) {
 	        this.loginSuccess.set("Login successful!");
+	        this.currentUser = new Login(usernameValue);
 	        return true;
 	    } else {
 	        this.loginSuccess.set("Invalid username or password.");

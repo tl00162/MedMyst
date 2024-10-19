@@ -17,7 +17,7 @@ import javafx.scene.layout.Pane;
  */
 public class MedMystApplication extends Application {
 
-	private static final String GUI_FXML = "view/MedMyst.fxml";
+	private static final String GUI_FXML = "view/MedMystLogin.fxml";
 	private static final String TITLE = "MedMyst";
 
 	/**

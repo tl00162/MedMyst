@@ -10,6 +10,16 @@ public class Login {
 
     private String username;
     private String password;
+    
+    /**
+     * Constructs a new Login instance with the given username and a filler password
+     *
+     * @param username the username for this login, must not be null or empty
+     * @throws IllegalArgumentException if the username or password is null or empty
+     */
+    public Login(String username) {
+        this(username, "password");
+    }
 
     /**
      * Constructs a new Login instance with the given username and password.
@@ -46,4 +56,14 @@ public class Login {
     public String getPassword() {
         return this.password;
     }
+    
+    /**
+     * Sets the username of the user.
+     *
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 }
