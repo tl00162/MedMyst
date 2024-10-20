@@ -114,42 +114,82 @@ public class MedMystViewModel {
         return this.currentUser;
     }
     
+    /**
+     * Returns the patientIdProperty
+     * @return the patientIdProperty
+     */
     public IntegerProperty patientIdProperty() {
     	return this.patientId;
     }
     
+    /**
+     * Returns the firstNameProperty
+     * @return the firstNameProperty
+     */
     public StringProperty firstNameProperty() {
         return this.firstName;
     }
 
+    /**
+     * Returns the lastNameProperty
+     * @return the lastNameProperty
+     */
     public StringProperty lastNameProperty() {
         return this.lastName;
     }
 
+    /**
+     * Returns the dateOfBirthProperty
+     * @return the dateOfBirthProperty
+     */
     public ObjectProperty<LocalDate> dateOfBirthProperty() {
         return this.dateOfBirth;
     }
 
+    /**
+     * Returns the genderProperty
+     * @return the genderProperty
+     */
     public StringProperty genderProperty() {
         return this.gender;
     }
 
+    /**
+     * Returns the phoneNumberProperty
+     * @return the phoneNumberProperty
+     */
     public StringProperty phoneNumberProperty() {
         return this.phoneNumber;
     }
 
+    /**
+     * Returns the address1Property
+     * @return the address1Property
+     */
     public StringProperty address1Property() {
         return this.address1;
     }
 
+    /**
+     * Returns the address2Property
+     * @return the address2Property
+     */
     public StringProperty address2Property() {
         return this.address2;
     }
 
+    /**
+     * Returns the stateProperty
+     * @return the stateProperty
+     */
     public StringProperty stateProperty() {
         return this.state;
     }
 
+    /**
+     * Returns the zipProperty
+     * @return the zipProperty
+     */
     public StringProperty zipProperty() {
         return this.zip;
     }
@@ -195,6 +235,10 @@ public class MedMystViewModel {
 	    }
 	}
 	
+	/**
+	 * Tries to add new Patient to the DB
+	 * @return true if patient added else false
+	 */
 	public boolean addPatient() {
 	    if (this.firstName.get().isEmpty() || this.lastName.get().isEmpty() || this.dateOfBirth.get() == null || 
 	        this.gender.get().isEmpty() || this.address1.get().isEmpty() || this.state.get().isEmpty() || 
@@ -216,6 +260,11 @@ public class MedMystViewModel {
 	    }
 	}
 	
+	/**
+	 * Tries to update existing patient in the DB
+	 * @param patientToUpdate the patient to Update
+	 * @return true if updated, else false
+	 */
 	public boolean updatePatient(Patient patientToUpdate) {
 	    if (this.firstName.get().isEmpty() || this.lastName.get().isEmpty() || this.dateOfBirth.get() == null || 
 	        this.gender.get().isEmpty() || this.address1.get().isEmpty() || this.state.get().isEmpty() || 
@@ -234,6 +283,10 @@ public class MedMystViewModel {
 	    }
 	}
 	
+	/**
+	 * Loads the specified patient's data
+	 * @param patient the specified patient
+	 */
 	public void loadPatientData(Patient patient) {
 		this.patientId.set(patient.getPatientId());
 	    this.firstName.set(patient.getFName());
@@ -246,6 +299,10 @@ public class MedMystViewModel {
 	    this.zip.set(patient.getZip());
 	}
 	
+	/**
+	 * Gets the list of all patients
+	 * @return the list of patients
+	 */
 	public List<Patient> getPatients() {
 	    try {
 	        return this.patientDAL.getAllPatients();

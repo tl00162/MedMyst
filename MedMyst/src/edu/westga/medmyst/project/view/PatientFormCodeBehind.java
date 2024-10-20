@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
@@ -64,10 +63,14 @@ public class PatientFormCodeBehind {
     @FXML
     private void initialize() {
     	
-        this.cancelButton.setOnAction(event -> closeWindow());
-        this.addPatientButton.setOnAction(event -> savePatient());
+        this.cancelButton.setOnAction(event -> this.closeWindow());
+        this.addPatientButton.setOnAction(event -> this.savePatient());
     }
 
+    /**
+     * Sets the view model for this instance.
+     * @param viewmodel the specified view model
+     */
     public void setViewModel(MedMystViewModel viewmodel) {
         this.viewmodel = viewmodel;
         
@@ -89,6 +92,10 @@ public class PatientFormCodeBehind {
         }
     }
     
+    /**
+     * Sets the currentPatient to the specified patient.
+     * @param selectedPatient the patient to set.
+     */
     public void setCurrentPatient(Patient selectedPatient) {
     	this.currentPatient = selectedPatient;
     }
@@ -109,10 +116,17 @@ public class PatientFormCodeBehind {
         );
     }
     
+    /**
+     * Returns user to the nurse page.
+     * @param onFormSubmit
+     */
     public void setOnFormSubmit(Runnable onFormSubmit) {
     	this.onFormSubmit = onFormSubmit;
     }
 
+    /**
+     * Populates the Patient Form with the current patient's information.
+     */
     public void populateForm() {	
         this.fnameTextField.setText(this.currentPatient.getFName());
         this.lnameTextField.setText(this.currentPatient.getLName());
@@ -132,6 +146,9 @@ public class PatientFormCodeBehind {
         stage.close();
     }
 
+    /**
+     * Creates a new patient or updates the selected current patient.
+     */
     private void savePatient() {
 
         String firstName = this.fnameTextField.getText();
@@ -185,7 +202,7 @@ public class PatientFormCodeBehind {
 
 
         if (errorMessage.length() > 0) {
-            showErrorDialog(errorMessage.toString());
+            this.showErrorDialog(errorMessage.toString());
             return;
         }
 
@@ -193,7 +210,7 @@ public class PatientFormCodeBehind {
         if (this.currentPatient == null) {
             boolean success = this.viewmodel.addPatient();
             if (!success) {
-                showErrorDialog("Failed to add patient. Please try again.");
+                this.showErrorDialog("Failed to add patient. Please try again.");
                 return;
             }
         } else {
@@ -209,7 +226,7 @@ public class PatientFormCodeBehind {
             this.currentPatient.setZip(zip);
             boolean success = this.viewmodel.updatePatient(this.currentPatient);
             if (!success) {
-                showErrorDialog("Failed to update patient. Please try again.");
+                this.showErrorDialog("Failed to update patient. Please try again.");
                 return;
             }
         }
@@ -220,7 +237,7 @@ public class PatientFormCodeBehind {
             this.onFormSubmit.run();
         }
 
-        closeWindow();
+        this.closeWindow();
     }
 
     private void showErrorDialog(String errorMessage) {
