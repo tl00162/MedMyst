@@ -27,144 +27,144 @@ import javafx.stage.Stage;
  */
 public class MedMystNurseCodeBehind {
 
-    @FXML
-    private Button addPatientButton;
+	@FXML
+	private Button addPatientButton;
 
-    @FXML
-    private Button editPatientButton;
+	@FXML
+	private Button editPatientButton;
 
-    @FXML
-    private Button logoutButton;
+	@FXML
+	private Button logoutButton;
 
-    @FXML
-    private ListView<Patient> patientsListView;
+	@FXML
+	private ListView<Patient> patientsListView;
 
-    @FXML
-    private Label usernameLabel;
-    
-    private MedMystViewModel viewmodel;
-    
-    private Patient selectedPatient;
-    
-    @FXML
-    private void initialize() {
-        this.editPatientButton.disableProperty().bind(
-            this.patientsListView.getSelectionModel().selectedItemProperty().isNull()
-        );
+	@FXML
+	private Label usernameLabel;
 
-        this.patientsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            this.selectedPatient = newValue;
-        });
-    }
-    
-    /**
-     * Refreshes the patient list in the ListView.
-     */
-    private void refreshPatientList() {
-        List<Patient> patientList = this.viewmodel.getPatients();
-        ObservableList<Patient> observablePatientList = FXCollections.observableArrayList(patientList);
-        this.patientsListView.setItems(observablePatientList);
+	private MedMystViewModel viewmodel;
 
-        this.patientsListView.setCellFactory(patientListView -> new ListCell<Patient>() {
-            @Override
-            protected void updateItem(Patient patient, boolean empty) {
-                super.updateItem(patient, empty);
-                if (empty || patient == null) {
-                    setText(null);
-                } else {
-                    setText(patient.getFName() + " " + patient.getLName());
-                }
-            }
-        });
-    }
-    
-    /**
-     * Sets the ViewModel for this controller and updates the username label.
-     *
-     * @param viewmodel The ViewModel to use in this controller.
-     */
-    public void setViewModel(MedMystViewModel viewmodel) {
-        this.viewmodel = viewmodel;
+	private Patient selectedPatient;
 
-        if (this.viewmodel.getCurrentUser() != null) {
-            this.usernameLabel.setText("Welcome, " + this.viewmodel.getCurrentUser().getUsername() + "!");
-        }
-        
-        this.refreshPatientList();
-    }
-    
-    @FXML
-    private void addPatient() {
-    	try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/PatientForm.fxml"));
-            Pane patientFormPane = loader.load();
+	@FXML
+	private void initialize() {
+		this.editPatientButton.disableProperty()
+				.bind(this.patientsListView.getSelectionModel().selectedItemProperty().isNull());
 
-            Stage patientFormStage = new Stage();
-            patientFormStage.setTitle("Add Patient");
-            patientFormStage.setScene(new Scene(patientFormPane));
+		this.patientsListView.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> {
+					this.selectedPatient = newValue;
+				});
+	}
 
-            PatientFormCodeBehind patientFormCodeBehind = loader.getController();
-            patientFormCodeBehind.setViewModel(this.viewmodel);
-            
-            patientFormCodeBehind.setOnFormSubmit(() -> {
-                this.refreshPatientList();
-                patientFormStage.close();
-            });
+	/**
+	 * Refreshes the patient list in the ListView.
+	 */
+	private void refreshPatientList() {
+		List<Patient> patientList = this.viewmodel.getPatients();
+		ObservableList<Patient> observablePatientList = FXCollections.observableArrayList(patientList);
+		this.patientsListView.setItems(observablePatientList);
 
-            patientFormStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+		this.patientsListView.setCellFactory(patientListView -> new ListCell<Patient>() {
+			@Override
+			protected void updateItem(Patient patient, boolean empty) {
+				super.updateItem(patient, empty);
+				if (empty || patient == null) {
+					setText(null);
+				} else {
+					setText(patient.getFName() + " " + patient.getLName());
+				}
+			}
+		});
+	}
 
-    @FXML
-    private void editPatient() {
-    	System.out.println(this.selectedPatient.getFName());
-    	System.out.println(this.selectedPatient.getLName());
-    	System.out.println(this.selectedPatient.getPatientId());
-    	if (this.selectedPatient != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/PatientForm.fxml"));
-                Pane patientFormPane = loader.load();
+	/**
+	 * Sets the ViewModel for this controller and updates the username label.
+	 *
+	 * @param viewmodel The ViewModel to use in this controller.
+	 */
+	public void setViewModel(MedMystViewModel viewmodel) {
+		this.viewmodel = viewmodel;
 
-                Stage patientFormStage = new Stage();
-                patientFormStage.setTitle("Edit Patient");
-                patientFormStage.setScene(new Scene(patientFormPane));
+		if (this.viewmodel.getCurrentUser() != null) {
+			this.usernameLabel.setText("Welcome, " + this.viewmodel.getCurrentUser().getUsername() + "!");
+		}
 
-                PatientFormCodeBehind patientFormCodeBehind = loader.getController();
-                patientFormCodeBehind.setCurrentPatient(this.selectedPatient);
-                patientFormCodeBehind.setViewModel(this.viewmodel);
-                patientFormCodeBehind.populateForm();
-                
-                patientFormCodeBehind.setOnFormSubmit(() -> {
-                    this.refreshPatientList();
-                    this.selectedPatient = null;
-                    patientFormStage.close();
-                });
+		this.refreshPatientList();
+	}
 
-                patientFormStage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("No patient selected.");
-        }
-    }
+	@FXML
+	private void addPatient() {
+		try {
+			FXMLLoader loader = new FXMLLoader(
+					getClass().getResource("/edu/westga/medmyst/project/view/PatientForm.fxml"));
+			Pane patientFormPane = loader.load();
 
-    @FXML
-    private void logout() {
-        this.viewmodel.logout();
-        System.out.println("Logged out");
+			Stage patientFormStage = new Stage();
+			patientFormStage.setTitle("Add Patient");
+			patientFormStage.setScene(new Scene(patientFormPane));
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/MedMystLogin.fxml"));
-            Pane loginPane = loader.load();
-            Stage stage = (Stage) this.logoutButton.getScene().getWindow();
-            Scene scene = new Scene(loginPane);
-            stage.setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+			PatientFormCodeBehind patientFormCodeBehind = loader.getController();
+			patientFormCodeBehind.setViewModel(this.viewmodel);
+
+			patientFormCodeBehind.setOnFormSubmit(() -> {
+				this.refreshPatientList();
+				patientFormStage.close();
+			});
+
+			patientFormStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	private void editPatient() {
+		if (this.selectedPatient != null) {
+			try {
+				FXMLLoader loader = new FXMLLoader(
+						getClass().getResource("/edu/westga/medmyst/project/view/PatientForm.fxml"));
+				Pane patientFormPane = loader.load();
+
+				Stage patientFormStage = new Stage();
+				patientFormStage.setTitle("Edit Patient");
+				patientFormStage.setScene(new Scene(patientFormPane));
+
+				PatientFormCodeBehind patientFormCodeBehind = loader.getController();
+				patientFormCodeBehind.setCurrentPatient(this.selectedPatient);
+				patientFormCodeBehind.setViewModel(this.viewmodel);
+				patientFormCodeBehind.populateForm();
+
+				patientFormCodeBehind.setOnFormSubmit(() -> {
+					this.refreshPatientList();
+					this.selectedPatient = null;
+					patientFormStage.close();
+				});
+
+				patientFormStage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("No patient selected.");
+		}
+	}
+
+	@FXML
+	private void logout() {
+		this.viewmodel.logout();
+		System.out.println("Logged out");
+
+		try {
+			FXMLLoader loader = new FXMLLoader(
+					getClass().getResource("/edu/westga/medmyst/project/view/MedMystLogin.fxml"));
+			Pane loginPane = loader.load();
+			Stage stage = (Stage) this.logoutButton.getScene().getWindow();
+			Scene scene = new Scene(loginPane);
+			stage.setScene(scene);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

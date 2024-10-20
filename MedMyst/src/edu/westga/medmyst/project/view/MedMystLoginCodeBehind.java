@@ -71,10 +71,10 @@ public class MedMystLoginCodeBehind {
 			FXMLLoader loader = new FXMLLoader(
 					getClass().getResource("/edu/westga/medmyst/project/view/MedMystNursePage.fxml"));
 			Pane dashboardPane = loader.load();
-			
+
 			MedMystNurseCodeBehind nurseController = loader.getController();
-	        
-	        nurseController.setViewModel(this.viewmodel);
+
+			nurseController.setViewModel(this.viewmodel);
 
 			Stage stage = (Stage) this.loginButton.getScene().getWindow();
 			Scene scene = new Scene(dashboardPane);
