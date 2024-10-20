@@ -1,15 +1,19 @@
 package edu.westga.medmyst.project.view;
 
 import java.io.IOException;
+import java.util.List;
 
 import edu.westga.medmyst.project.model.Patient;
 import edu.westga.medmyst.project.viewmodel.MedMystViewModel;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ListCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -33,7 +37,7 @@ public class MedMystNurseCodeBehind {
     private Button logoutButton;
 
     @FXML
-    private ListView<?> patientsListView;
+    private ListView<Patient> patientsListView;
 
     @FXML
     private Label usernameLabel;
@@ -41,8 +45,29 @@ public class MedMystNurseCodeBehind {
     private MedMystViewModel viewmodel;
     
     @FXML
-    private void initialize() {    	
-    	//TODO GET LIST OF PATIENTS AND ADD TO LIST VIEW
+    private void initialize() {
+    	
+    }
+    
+    /**
+     * Refreshes the patient list in the ListView.
+     */
+    private void refreshPatientList() {
+        List<Patient> patientList = this.viewmodel.getPatients();
+        ObservableList<Patient> observablePatientList = FXCollections.observableArrayList(patientList);
+        this.patientsListView.setItems(observablePatientList);
+
+        this.patientsListView.setCellFactory(patientListView -> new ListCell<Patient>() {
+            @Override
+            protected void updateItem(Patient patient, boolean empty) {
+                super.updateItem(patient, empty);
+                if (empty || patient == null) {
+                    setText(null);
+                } else {
+                    setText(patient.getFName() + " " + patient.getLName());
+                }
+            }
+        });
     }
     
     /**
@@ -56,6 +81,8 @@ public class MedMystNurseCodeBehind {
         if (this.viewmodel.getCurrentUser() != null) {
             this.usernameLabel.setText("Welcome, " + this.viewmodel.getCurrentUser().getUsername() + "!");
         }
+        
+        this.refreshPatientList();
     }
     
     @FXML
@@ -68,9 +95,13 @@ public class MedMystNurseCodeBehind {
             patientFormStage.setTitle("Add Patient");
             patientFormStage.setScene(new Scene(patientFormPane));
 
-            // Get the controller for the patient form and pass the view model
             PatientFormCodeBehind patientFormCodeBehind = loader.getController();
-            patientFormCodeBehind.setViewModel(this.viewmodel); // Pass the viewmodel for handling patient logic
+            patientFormCodeBehind.setViewModel(this.viewmodel);
+            
+            patientFormCodeBehind.setOnFormSubmit(() -> {
+                this.refreshPatientList();
+                patientFormStage.close();
+            });
 
             patientFormStage.show();
         } catch (IOException e) {
@@ -87,15 +118,18 @@ public class MedMystNurseCodeBehind {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/PatientForm.fxml"));
                 Pane patientFormPane = loader.load();
 
-                // Create a new stage for the Patient Form
                 Stage patientFormStage = new Stage();
                 patientFormStage.setTitle("Edit Patient");
                 patientFormStage.setScene(new Scene(patientFormPane));
 
-                // Get the controller for the patient form and pass the view model and selected patient
                 PatientFormCodeBehind patientFormCodeBehind = loader.getController();
                 patientFormCodeBehind.setViewModel(this.viewmodel);
-                patientFormCodeBehind.populateForm(selectedPatient); // Populate the form with the patient's details
+                patientFormCodeBehind.populateForm(selectedPatient);
+                
+                patientFormCodeBehind.setOnFormSubmit(() -> {
+                    this.refreshPatientList();
+                    patientFormStage.close();
+                });
 
                 patientFormStage.show();
             } catch (IOException e) {
