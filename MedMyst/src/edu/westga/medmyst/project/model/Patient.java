@@ -34,7 +34,8 @@ public class Patient {
 	 * @param state the patient's state
 	 * @param zip the patient's zip code
 	 */
-	public Patient(String fname, String lname, LocalDate birthDate, String gender, String phoneNumber, String address1, String address2, String state, String zip) {
+	public Patient(int patientId, String fname, String lname, LocalDate birthDate, String gender, String phoneNumber, String address1, String address2, String state, String zip) {
+		this.patient_id = patientId;
 		this.f_name = fname;
 		this.l_name = lname;
 		this.date_of_birth = birthDate;

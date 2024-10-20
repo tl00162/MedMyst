@@ -83,6 +83,14 @@ public class PatientFormCodeBehind {
         
         this.populateGenderComboBox();
         this.populateStateComboBox();
+        
+        if (this.currentPatient != null) {
+        	this.addPatientButton.setText("Edit Patient");
+        }
+    }
+    
+    public void setCurrentPatient(Patient selectedPatient) {
+    	this.currentPatient = selectedPatient;
     }
     
     private void populateGenderComboBox() {
@@ -105,19 +113,20 @@ public class PatientFormCodeBehind {
     	this.onFormSubmit = onFormSubmit;
     }
 
-    public void populateForm(Patient patient) {
-    	this.currentPatient = patient;
-        this.fnameTextField.setText(patient.getFName());
-        this.lnameTextField.setText(patient.getLName());
-        this.dobDatePicker.setValue(patient.getDateOfBirth());
-        this.genderComboBox.setValue(patient.getGender());
-        this.address1TextField.setText(patient.getAddress1());
-        this.address2TextField.setText(patient.getAddress2());
-        this.stateComboBox.setValue(patient.getState());
-        this.zipTextField.setText(patient.getZip());
+    public void populateForm() {	
+        this.fnameTextField.setText(this.currentPatient.getFName());
+        this.lnameTextField.setText(this.currentPatient.getLName());
+        this.dobDatePicker.setValue(this.currentPatient.getDateOfBirth());
+        this.genderComboBox.setValue(this.currentPatient.getGender());
+        this.address1TextField.setText(this.currentPatient.getAddress1());
+        this.address2TextField.setText(this.currentPatient.getAddress2());
+        this.stateComboBox.setValue(this.currentPatient.getState());
+        this.zipTextField.setText(this.currentPatient.getZip());
     }
 
     private void closeWindow() {
+    	
+    	this.currentPatient = null;
 
         Stage stage = (Stage) this.cancelButton.getScene().getWindow();
         stage.close();
@@ -139,11 +148,14 @@ public class PatientFormCodeBehind {
         StringBuilder errorMessage = new StringBuilder();
 
 
-        if (firstName.isEmpty() || firstName.length() > 50) {
+        if (firstName == null || firstName.isEmpty() || firstName.length() > 50) {
             errorMessage.append("First name must not be empty and cannot exceed 50 characters.\n");
         }
-        if (lastName.isEmpty() || lastName.length() > 50) {
+        if (lastName == null || lastName.isEmpty() || lastName.length() > 50) {
             errorMessage.append("Last name must not be empty and cannot exceed 50 characters.\n");
+        }
+        if (dob == null) {
+        	errorMessage.append("Date of birth must be selected.\n");
         }
 
 
@@ -152,12 +164,12 @@ public class PatientFormCodeBehind {
         }
 
 
-        if (phoneNumber.length() != 10 || !phoneNumber.matches("\\d+")) {
+        if (phoneNumber == null || phoneNumber.length() != 10 || !phoneNumber.matches("\\d+")) {
             errorMessage.append("Phone number must be exactly 10 digits long and contain only numbers.\n");
         }
 
 
-        if (address1.isEmpty()) {
+        if (address1 == null || address1.isEmpty()) {
             errorMessage.append("Address1 must not be empty.\n");
         }
 
@@ -167,7 +179,7 @@ public class PatientFormCodeBehind {
         }
 
 
-        if (zip.length() != 5 || !zip.matches("\\d+")) {
+        if (zip == null || zip.length() != 5 || !zip.matches("\\d+")) {
             errorMessage.append("Zip code must be exactly 5 digits long and contain only numbers.\n");
         }
 
@@ -179,7 +191,7 @@ public class PatientFormCodeBehind {
 
 
         if (this.currentPatient == null) {
-            boolean success = this.viewmodel.addPatient(); // Call to addPatient without parameters
+            boolean success = this.viewmodel.addPatient();
             if (!success) {
                 showErrorDialog("Failed to add patient. Please try again.");
                 return;
@@ -201,6 +213,8 @@ public class PatientFormCodeBehind {
                 return;
             }
         }
+        
+        this.currentPatient = null;
 
         if (this.onFormSubmit != null) {
             this.onFormSubmit.run();

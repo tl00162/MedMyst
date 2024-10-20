@@ -9,7 +9,9 @@ import edu.westga.medmyst.project.dal.LoginDAL;
 import edu.westga.medmyst.project.dal.PatientDAL;
 import edu.westga.medmyst.project.model.Login;
 import edu.westga.medmyst.project.model.Patient;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -28,6 +30,7 @@ public class MedMystViewModel {
 	private StringProperty password;
 	private StringProperty loginSuccess;
 	
+	private IntegerProperty patientId;
 	private StringProperty firstName;
 	private StringProperty lastName;
 	private ObjectProperty<LocalDate> dateOfBirth;
@@ -53,6 +56,7 @@ public class MedMystViewModel {
 		this.password = new SimpleStringProperty();
 		this.loginSuccess = new SimpleStringProperty();
 		
+		this.patientId = new SimpleIntegerProperty();
 		this.firstName = new SimpleStringProperty();
 	    this.lastName = new SimpleStringProperty();
 	    this.dateOfBirth = new SimpleObjectProperty<>();
@@ -108,6 +112,10 @@ public class MedMystViewModel {
      */
     public Login getCurrentUser() {
         return this.currentUser;
+    }
+    
+    public IntegerProperty patientIdProperty() {
+    	return this.patientId;
     }
     
     public StringProperty firstNameProperty() {
@@ -195,7 +203,7 @@ public class MedMystViewModel {
 	        return false;
 	    }
 
-	    Patient newPatient = new Patient(this.firstName.get(), this.lastName.get(), this.dateOfBirth.get(),
+	    Patient newPatient = new Patient(this.patientId.get(), this.firstName.get(), this.lastName.get(), this.dateOfBirth.get(),
 	                                     this.gender.get(), this.phoneNumber.get(), this.address1.get(), this.address2.get(), 
 	                                     this.state.get(), this.zip.get());
 	    try {
@@ -216,15 +224,6 @@ public class MedMystViewModel {
 	        return false;
 	    }
 
-	    patientToUpdate.setFName(this.firstName.get());
-	    patientToUpdate.setLName(this.lastName.get());
-	    patientToUpdate.setDateOfBirth(this.dateOfBirth.get());
-	    patientToUpdate.setGender(this.gender.get());
-	    patientToUpdate.setAddress1(this.address1.get());
-	    patientToUpdate.setAddress2(this.address2.get());
-	    patientToUpdate.setState(this.state.get());
-	    patientToUpdate.setZip(this.zip.get());
-
 	    try {
 
 	        this.patientDAL.updatePatient(patientToUpdate);
@@ -236,6 +235,7 @@ public class MedMystViewModel {
 	}
 	
 	public void loadPatientData(Patient patient) {
+		this.patientId.set(patient.getPatientId());
 	    this.firstName.set(patient.getFName());
 	    this.lastName.set(patient.getLName());
 	    this.dateOfBirth.set(patient.getDateOfBirth());

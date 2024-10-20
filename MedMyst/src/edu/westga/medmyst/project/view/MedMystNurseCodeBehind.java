@@ -44,9 +44,17 @@ public class MedMystNurseCodeBehind {
     
     private MedMystViewModel viewmodel;
     
+    private Patient selectedPatient;
+    
     @FXML
     private void initialize() {
-    	
+        this.editPatientButton.disableProperty().bind(
+            this.patientsListView.getSelectionModel().selectedItemProperty().isNull()
+        );
+
+        this.patientsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            this.selectedPatient = newValue;
+        });
     }
     
     /**
@@ -111,9 +119,10 @@ public class MedMystNurseCodeBehind {
 
     @FXML
     private void editPatient() {
-    	Patient selectedPatient = (Patient) this.patientsListView.getSelectionModel().getSelectedItem();
-        
-        if (selectedPatient != null) {
+    	System.out.println(this.selectedPatient.getFName());
+    	System.out.println(this.selectedPatient.getLName());
+    	System.out.println(this.selectedPatient.getPatientId());
+    	if (this.selectedPatient != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/PatientForm.fxml"));
                 Pane patientFormPane = loader.load();
@@ -123,11 +132,13 @@ public class MedMystNurseCodeBehind {
                 patientFormStage.setScene(new Scene(patientFormPane));
 
                 PatientFormCodeBehind patientFormCodeBehind = loader.getController();
+                patientFormCodeBehind.setCurrentPatient(this.selectedPatient);
                 patientFormCodeBehind.setViewModel(this.viewmodel);
-                patientFormCodeBehind.populateForm(selectedPatient);
+                patientFormCodeBehind.populateForm();
                 
                 patientFormCodeBehind.setOnFormSubmit(() -> {
                     this.refreshPatientList();
+                    this.selectedPatient = null;
                     patientFormStage.close();
                 });
 
