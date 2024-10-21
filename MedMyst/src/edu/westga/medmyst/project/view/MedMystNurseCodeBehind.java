@@ -22,7 +22,7 @@ import javafx.stage.Stage;
  * 
  * MedmystNurseCodeBehind provides access to the Nurse dashboard GUI
  * 
- * @author CS 3152
+ * @author tl00162
  * @version Fall 2024
  */
 public class MedMystNurseCodeBehind {
@@ -87,7 +87,14 @@ public class MedMystNurseCodeBehind {
 		this.viewmodel = viewmodel;
 
 		if (this.viewmodel.getCurrentUser() != null) {
-			this.usernameLabel.setText("Welcome, " + this.viewmodel.getCurrentUser().getUsername() + "!");
+			String firstName = this.viewmodel.getCurrentUser().getFirstName();
+			String role = this.viewmodel.getCurrentUser().getRole();
+
+			if (role.equalsIgnoreCase("nurse")) {
+				this.usernameLabel.setText("Welcome, Nurse " + firstName + "!");
+			} else if (role.equalsIgnoreCase("admin")) {
+				this.usernameLabel.setText("Welcome, Admin " + firstName + "!");
+			}
 		}
 
 		this.refreshPatientList();
@@ -106,6 +113,8 @@ public class MedMystNurseCodeBehind {
 
 			PatientFormCodeBehind patientFormCodeBehind = loader.getController();
 			patientFormCodeBehind.setViewModel(this.viewmodel);
+
+			patientFormCodeBehind.clearForm();
 
 			patientFormCodeBehind.setOnFormSubmit(() -> {
 				this.refreshPatientList();
@@ -153,7 +162,6 @@ public class MedMystNurseCodeBehind {
 	@FXML
 	private void logout() {
 		this.viewmodel.logout();
-		System.out.println("Logged out");
 
 		try {
 			FXMLLoader loader = new FXMLLoader(

@@ -17,11 +17,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * The Class TextTwistViewModel
+ * The Class MedMystViewModel
  * 
- * TextTwistViewModel mediates between the view and the rest of the game.
+ * MedMystViewModel mediates between the view and the rest of the application.
  * 
- * @author Thomas Lamont
+ * @author tl00162
  * @version Fall 2024
  */
 public class MedMystViewModel {
@@ -226,16 +226,17 @@ public class MedMystViewModel {
 	public boolean validateLogin() throws SQLException {
 		String usernameValue = this.username.get();
 		String passwordValue = this.password.get();
+
 		if (usernameValue == null || usernameValue.isEmpty() || passwordValue == null || passwordValue.isEmpty()) {
 			this.loginSuccess.set("Username and password must not be empty.");
 			return false;
 		}
 
-		boolean isValidLogin = this.loginDAL.checkValidLogin(this.username.get(), this.password.get());
+		Login login = this.loginDAL.checkValidLogin(usernameValue, passwordValue);
 
-		if (isValidLogin) {
-			this.loginSuccess.set("Login successful!");
-			this.currentUser = new Login(usernameValue);
+		if (login != null) {
+			this.loginSuccess.set("Login successful! Welcome, " + login.getFirstName() + " " + login.getLastName());
+			this.currentUser = login;
 			return true;
 		} else {
 			this.loginSuccess.set("Invalid username or password.");

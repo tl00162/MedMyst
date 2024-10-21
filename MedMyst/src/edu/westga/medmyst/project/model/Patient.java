@@ -10,17 +10,17 @@ import java.time.LocalDate;
  */
 public class Patient {
 
-	private int patient_id;
-	private String f_name;
-	private String l_name;
-	private LocalDate date_of_birth;
+	private int patientID;
+	private String firstName;
+	private String lastName;
+	private LocalDate dateOfBirth;
 	private String gender;
-	private String phone_number;
+	private String phoneNumber;
 	private String address1;
 	private String address2;
 	private String state;
 	private String zip;
-	private Boolean active_status;
+	private Boolean activeStatus;
 
 	/**
 	 * Instantiates a new patient.
@@ -38,17 +38,17 @@ public class Patient {
 	 */
 	public Patient(int patientId, String fname, String lname, LocalDate birthDate, String gender, String phoneNumber,
 			String address1, String address2, String state, String zip) {
-		this.patient_id = patientId;
-		this.f_name = fname;
-		this.l_name = lname;
-		this.date_of_birth = birthDate;
+		this.patientID = patientId;
+		this.firstName = fname;
+		this.lastName = lname;
+		this.dateOfBirth = birthDate;
 		this.gender = gender;
-		this.phone_number = phoneNumber;
+		this.phoneNumber = phoneNumber;
 		this.address1 = address1;
 		this.address2 = address2;
 		this.state = state;
 		this.zip = zip;
-		this.active_status = true;
+		this.activeStatus = true;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class Patient {
 	 * @return the patientId
 	 */
 	public int getPatientId() {
-		return this.patient_id;
+		return this.patientID;
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class Patient {
 	 * @param patient_id the new patientId
 	 */
 	public void setPatientId(int patient_id) {
-		this.patient_id = patient_id;
+		this.patientID = patient_id;
 	}
 
 	/**
@@ -75,16 +75,16 @@ public class Patient {
 	 * @return the fName
 	 */
 	public String getFName() {
-		return this.f_name;
+		return this.firstName;
 	}
 
 	/**
 	 * Sets the fName
 	 * 
-	 * @param f_name the new fName
+	 * @param fistName the new fName
 	 */
-	public void setFName(String f_name) {
-		this.f_name = f_name;
+	public void setFName(String fistName) {
+		this.firstName = fistName;
 	}
 
 	/**
@@ -93,16 +93,16 @@ public class Patient {
 	 * @return the lName
 	 */
 	public String getLName() {
-		return this.l_name;
+		return this.lastName;
 	}
 
 	/**
 	 * Sets the lname
 	 * 
-	 * @param l_name the new lName
+	 * @param lastName the new lName
 	 */
-	public void setLName(String l_name) {
-		this.l_name = l_name;
+	public void setLName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	/**
@@ -111,16 +111,16 @@ public class Patient {
 	 * @return the dob
 	 */
 	public LocalDate getDateOfBirth() {
-		return this.date_of_birth;
+		return this.dateOfBirth;
 	}
 
 	/**
 	 * Sets the dob
 	 * 
-	 * @param date_of_birth the new dob
+	 * @param dateOfBirth the new dob
 	 */
-	public void setDateOfBirth(LocalDate date_of_birth) {
-		this.date_of_birth = date_of_birth;
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	/**
@@ -147,16 +147,16 @@ public class Patient {
 	 * @return the phone number
 	 */
 	public String getPhoneNumber() {
-		return this.phone_number;
+		return this.phoneNumber;
 	}
 
 	/**
 	 * sets the phone number
 	 * 
-	 * @param phone_number the new phone number
+	 * @param phoneNumber the new phone number
 	 */
-	public void setPhoneNumber(String phone_number) {
-		this.phone_number = phone_number;
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 	/**
@@ -237,21 +237,21 @@ public class Patient {
 	 * @return the active status
 	 */
 	public Boolean getActiveStatus() {
-		return this.active_status;
+		return this.activeStatus;
 	}
 
 	/**
 	 * Sets the active status
 	 * 
-	 * @param active_status the new active_status
+	 * @param activeStatus the new active_status
 	 */
-	public void setActiveStatus(Boolean active_status) {
-		this.active_status = active_status;
+	public void setActiveStatus(Boolean activeStatus) {
+		this.activeStatus = activeStatus;
 	}
 
 	@Override
 	public String toString() {
-		return (this.f_name + " " + this.l_name + " " + this.gender);
+		return (this.firstName + " " + this.lastName + " " + this.gender);
 
 	}
 }

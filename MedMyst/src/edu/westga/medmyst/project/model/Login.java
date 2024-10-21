@@ -1,68 +1,112 @@
 package edu.westga.medmyst.project.model;
 
 /**
- * Represents a login with a username and password.
+ * Represents a login with a username, password, first name, last name, and user
+ * role (nurse or admin).
  * 
  * @author tl00162
  */
 public class Login {
 
-	private String username;
-	private String password;
+	private String userID;
+	private String role;
+	private String firstName;
+	private String lastName;
 
 	/**
-	 * Constructs a new Login instance with the given username and a filler password
+	 * Constructs a new Login instance with the given username, role, first name,
+	 * and last name.
 	 *
-	 * @param username the username for this login, must not be null or empty
-	 * @throws IllegalArgumentException if the username or password is null or empty
+	 * @param username  the username for this login, must not be null or empty
+	 * @param role      the role of the user (either "nurse" or "admin"), must not
+	 *                  be null or empty
+	 * @param firstName the first name of the user
+	 * @param lastName  the last name of the user
+	 * @throws IllegalArgumentException if the username or role is null or empty
 	 */
-	public Login(String username) {
-		this(username, "password");
-	}
-
-	/**
-	 * Constructs a new Login instance with the given username and password.
-	 *
-	 * @param username the username for this login, must not be null or empty
-	 * @param password the password for this login, must not be null or empty
-	 * @throws IllegalArgumentException if the username or password is null or empty
-	 */
-	public Login(String username, String password) {
+	public Login(String username, String role, String firstName, String lastName) {
 		if (username == null || username.length() == 0) {
 			throw new IllegalArgumentException("Username cannot be null or empty");
 		}
-		if (password == null || password.length() == 0) {
-			throw new IllegalArgumentException("Password cannot be null or empty");
+		if (role == null || role.length() == 0) {
+			throw new IllegalArgumentException("Role cannot be null or empty");
 		}
-		this.username = username;
-		this.password = password;
+		this.userID = username;
+		this.role = role;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
 	/**
-	 * Returns the username for this login.
+	 * Returns the userID for this login.
 	 *
-	 * @return the username
+	 * @return the userID
 	 */
-	public String getUsername() {
-		return this.username;
+	public String getUserID() {
+		return this.userID;
 	}
 
 	/**
-	 * Returns the password for this login.
+	 * Gets the role of the user.
 	 *
-	 * @return the password
+	 * @return the role
 	 */
-	public String getPassword() {
-		return this.password;
+	public String getRole() {
+		return this.role;
 	}
 
 	/**
-	 * Sets the username of the user.
+	 * Gets the first name of the user.
 	 *
-	 * @param username the username to set
+	 * @return the first name of the logged-in user.
+	 */
+	public String getFirstName() {
+		return this.firstName;
+	}
+
+	/**
+	 * Gets the last name of the user.
+	 *
+	 * @return the last name of the logged-in user.
+	 */
+	public String getLastName() {
+		return this.lastName;
+	}
+
+	/**
+	 * Sets the userID (username) for this login.
+	 *
+	 * @param username the new username to set for the logged-in user.
 	 */
 	public void setUsername(String username) {
-		this.username = username;
+		this.userID = username;
 	}
 
+	/**
+	 * Sets the role of the user.
+	 *
+	 * @param role the role to set for the logged-in user (either "nurse" or
+	 *             "admin").
+	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	/**
+	 * Sets the first name of the user.
+	 *
+	 * @param firstName the new first name to set for the logged-in user.
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * Sets the last name of the user.
+	 *
+	 * @param lastName the new last name to set for the logged-in user.
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 }

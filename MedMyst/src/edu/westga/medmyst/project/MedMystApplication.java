@@ -1,5 +1,5 @@
 package edu.westga.medmyst.project;
-	
+
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -9,11 +9,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
 /**
- * TextTwistApplication extends the JavaFX Application class to build the GUI
- * and start program execution.
+ * MedMystApplication extends the JavaFX Application class to build the GUI and
+ * start program execution.
  * 
- * @author CS 3152
- * @version Fall 2024
+ * @author tl00162 & demmons1
  */
 public class MedMystApplication extends Application {
 

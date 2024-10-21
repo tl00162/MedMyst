@@ -140,6 +140,21 @@ public class PatientFormCodeBehind {
 		this.zipTextField.setText(this.currentPatient.getZip());
 	}
 
+	/**
+	 * Clears the form fields so new information can be added.
+	 */
+	public void clearForm() {
+		this.fnameTextField.clear();
+		this.lnameTextField.clear();
+		this.dobDatePicker.setValue(null);
+		this.genderComboBox.setValue(null);
+		this.phoneNumberTextField.clear();
+		this.address1TextField.clear();
+		this.address2TextField.clear();
+		this.stateComboBox.setValue(null);
+		this.zipTextField.clear();
+	}
+
 	private void closeWindow() {
 
 		this.currentPatient = null;
@@ -152,19 +167,41 @@ public class PatientFormCodeBehind {
 	 * Creates a new patient or updates the selected current patient.
 	 */
 	private void savePatient() {
+		StringBuilder errorMessage = new StringBuilder();
+		if (!this.validatePatientData(errorMessage)) {
+			this.showErrorDialog(errorMessage.toString());
+			return;
+		}
+		if (this.currentPatient == null) {
+			boolean success = this.viewmodel.addPatient();
+			if (!success) {
+				this.showErrorDialog("Failed to add patient. Please try again.");
+				return;
+			}
+		} else {
+			this.updateExistingPatient();
+			boolean success = this.viewmodel.updatePatient(this.currentPatient);
+			if (!success) {
+				this.showErrorDialog("Failed to update patient. Please try again.");
+				return;
+			}
+		}
+		this.currentPatient = null;
+		if (this.onFormSubmit != null) {
+			this.onFormSubmit.run();
+		}
+		this.closeWindow();
+	}
 
+	private boolean validatePatientData(StringBuilder errorMessage) {
 		String firstName = this.fnameTextField.getText();
 		String lastName = this.lnameTextField.getText();
 		LocalDate dob = this.dobDatePicker.getValue();
 		String gender = this.genderComboBox.getValue();
 		String phoneNumber = this.phoneNumberTextField.getText();
 		String address1 = this.address1TextField.getText();
-		String address2 = this.address2TextField.getText();
 		String state = this.stateComboBox.getValue();
 		String zip = this.zipTextField.getText();
-
-		StringBuilder errorMessage = new StringBuilder();
-
 		if (firstName == null || firstName.isEmpty() || firstName.length() > 50) {
 			errorMessage.append("First name must not be empty and cannot exceed 50 characters.\n");
 		}
@@ -174,63 +211,34 @@ public class PatientFormCodeBehind {
 		if (dob == null) {
 			errorMessage.append("Date of birth must be selected.\n");
 		}
-
 		if (gender == null || (!gender.equals("M") && !gender.equals("F"))) {
 			errorMessage.append("Gender must be selected and should be either 'M' or 'F'.\n");
 		}
-
 		if (phoneNumber == null || phoneNumber.length() != 10 || !phoneNumber.matches("\\d+")) {
 			errorMessage.append("Phone number must be exactly 10 digits long and contain only numbers.\n");
 		}
-
 		if (address1 == null || address1.isEmpty()) {
 			errorMessage.append("Address1 must not be empty.\n");
 		}
-
 		if (state == null) {
 			errorMessage.append("State must be selected.\n");
 		}
-
 		if (zip == null || zip.length() != 5 || !zip.matches("\\d+")) {
 			errorMessage.append("Zip code must be exactly 5 digits long and contain only numbers.\n");
 		}
+		return errorMessage.length() == 0;
+	}
 
-		if (errorMessage.length() > 0) {
-			this.showErrorDialog(errorMessage.toString());
-			return;
-		}
-
-		if (this.currentPatient == null) {
-			boolean success = this.viewmodel.addPatient();
-			if (!success) {
-				this.showErrorDialog("Failed to add patient. Please try again.");
-				return;
-			}
-		} else {
-
-			this.currentPatient.setFName(firstName);
-			this.currentPatient.setLName(lastName);
-			this.currentPatient.setDateOfBirth(dob);
-			this.currentPatient.setGender(gender);
-			this.currentPatient.setPhoneNumber(phoneNumber);
-			this.currentPatient.setAddress1(address1);
-			this.currentPatient.setAddress2(address2);
-			this.currentPatient.setState(state);
-			this.currentPatient.setZip(zip);
-			boolean success = this.viewmodel.updatePatient(this.currentPatient);
-			if (!success) {
-				this.showErrorDialog("Failed to update patient. Please try again.");
-				return;
-			}
-		}
-
-		this.currentPatient = null;
-
-		if (this.onFormSubmit != null) {
-			this.onFormSubmit.run();
-		}
-
-		this.closeWindow();
+	private void updateExistingPatient() {
+		this.currentPatient.setFName(this.fnameTextField.getText());
+		this.currentPatient.setLName(this.lnameTextField.getText());
+		this.currentPatient.setDateOfBirth(this.dobDatePicker.getValue());
+		this.currentPatient.setGender(this.genderComboBox.getValue());
+		this.currentPatient.setPhoneNumber(this.phoneNumberTextField.getText());
+		this.currentPatient.setAddress1(this.address1TextField.getText());
+		this.currentPatient.setAddress2(this.address2TextField.getText());
+		this.currentPatient.setState(this.stateComboBox.getValue());
+		this.currentPatient.setZip(this.zipTextField.getText());
 	}
 
 	private void showErrorDialog(String errorMessage) {
@@ -240,4 +248,5 @@ public class PatientFormCodeBehind {
 		alert.setContentText(errorMessage);
 		alert.showAndWait();
 	}
+
 }

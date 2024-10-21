@@ -3,7 +3,7 @@ package edu.westga.medmyst.project.dal;
 /**
  * Connection string
  * 
- * @author Thomas Lamont
+ * @author tl00162
  */
 public class ConnectionString {
 

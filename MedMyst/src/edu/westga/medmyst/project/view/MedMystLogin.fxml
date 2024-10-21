@@ -5,12 +5,18 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="513.0" prefWidth="391.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.MedMystLoginCodeBehind">
    <children>
       <TextField fx:id="usernameTextField" layoutX="121.0" layoutY="232.0" promptText="Username" />
       <PasswordField fx:id="passwordTextField" layoutX="121.0" layoutY="265.0" promptText="Password" />
       <Button fx:id="loginButton" layoutX="121.0" layoutY="307.0" mnemonicParsing="false" onAction="#loginButtonClick" prefHeight="25.0" prefWidth="149.0" text="Login" />
-      <Label fx:id="loginSuccess" layoutX="49.0" layoutY="128.0" prefHeight="73.0" prefWidth="294.0" textAlignment="CENTER" />
+      <Label fx:id="loginSuccess" layoutX="50.0" layoutY="152.0" prefHeight="73.0" prefWidth="294.0" textAlignment="CENTER" />
+      <Label layoutX="72.0" layoutY="82.0" text="MedMyst">
+         <font>
+            <Font name="System Bold" size="56.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
