@@ -1,16 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="513.0" prefWidth="391.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.MedMystNurseCodeBehind">
+<AnchorPane prefHeight="534.0" prefWidth="549.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.MedMystNurseCodeBehind">
    <children>
       <Label fx:id="usernameLabel" layoutX="14.0" layoutY="14.0" text="Logged in as:" />
-      <Button fx:id="logoutButton" layoutX="318.0" layoutY="10.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
-      <Button fx:id="addPatientButton" layoutX="85.0" layoutY="345.0" mnemonicParsing="false" onAction="#addPatient" text="Add Patient" />
-      <Button fx:id="editPatientButton" layoutX="196.0" layoutY="345.0" mnemonicParsing="false" onAction="#editPatient" text="Edit Patient" />
-      <ListView fx:id="patientsListView" layoutX="96.0" layoutY="120.0" prefHeight="200.0" prefWidth="200.0" />
+      <Button fx:id="logoutButton" layoutX="472.0" layoutY="23.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
+      <Label fx:id="patientListLabel" layoutX="155.0" layoutY="88.0" text="Patient List">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <ListView fx:id="patientsListView" layoutX="79.0" layoutY="118.0" prefHeight="280.0" prefWidth="248.0" />
+      <Button fx:id="addPatientButton" layoutX="110.0" layoutY="409.0" mnemonicParsing="false" onAction="#addPatient" text="Add Patient" />
+      <Button fx:id="editPatientButton" layoutX="221.0" layoutY="409.0" mnemonicParsing="false" onAction="#editPatient" text="Edit Patient" />
+      <Label fx:id="searchByLabel" layoutX="382.0" layoutY="118.0" text="Search By:">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="searchFirstNameLabel" layoutX="343.0" layoutY="154.0" text="First Name" />
+      <TextField fx:id="searchFirstNameTextField" layoutX="343.0" layoutY="171.0" />
+      <Label fx:id="searchLastNameLabel" layoutX="343.0" layoutY="211.0" text="Last Name" />
+      <TextField fx:id="searchLastNameTextField" layoutX="344.0" layoutY="228.0" />
+      <Label fx:id="searchDOBLabel" layoutX="344.0" layoutY="270.0" text="DOB" />
+      <DatePicker fx:id="searchDOBPicker" layoutX="344.0" layoutY="287.0" />
+      <Button fx:id="searchButton" layoutX="393.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchPatients" text="Search" />
+      <Button fx:id="manageAppointmentsButton" layoutX="117.0" layoutY="467.0" mnemonicParsing="false" onAction="#goToAppointments" text="Manage Appointments">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

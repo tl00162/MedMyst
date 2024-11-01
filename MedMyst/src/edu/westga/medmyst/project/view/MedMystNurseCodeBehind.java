@@ -1,6 +1,7 @@
 package edu.westga.medmyst.project.view;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import edu.westga.medmyst.project.model.Patient;
@@ -11,8 +12,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -38,6 +41,21 @@ public class MedMystNurseCodeBehind {
 
 	@FXML
 	private ListView<Patient> patientsListView;
+	
+	@FXML
+	private Button manageAppointmentsButton;
+	
+	@FXML
+	private TextField searchFirstNameTextField;
+	
+	@FXML
+	private TextField searchLastNameTextField;
+	
+	@FXML
+	private DatePicker searchDOBPicker;
+	
+	@FXML
+	private Button searchButton;
 
 	@FXML
 	private Label usernameLabel;
@@ -173,6 +191,36 @@ public class MedMystNurseCodeBehind {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@FXML
+	private void goToAppointments() {
+		try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/ManageAppointments.fxml"));
+	        Pane manageAppointmentsPane = loader.load();
+
+	        Stage appointmentStage = new Stage();
+	        appointmentStage.setTitle("Manage Appointments");
+	        appointmentStage.setScene(new Scene(manageAppointmentsPane));
+
+	        ManageAppointmentsCodeBehind appointmentController = loader.getController();
+	        appointmentController.setViewModel(this.viewmodel);
+
+	        appointmentStage.show();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	@FXML
+	private void searchPatients() {
+	    String firstName = this.searchFirstNameTextField.getText();
+	    String lastName = this.searchLastNameTextField.getText();
+	    LocalDate dob = this.searchDOBPicker.getValue();
+	    
+	    List<Patient> filteredPatients = this.viewmodel.searchPatients(firstName, lastName, dob);
+	    ObservableList<Patient> observablePatientList = FXCollections.observableArrayList(filteredPatients);
+	    this.patientsListView.setItems(observablePatientList);
 	}
 
 }
