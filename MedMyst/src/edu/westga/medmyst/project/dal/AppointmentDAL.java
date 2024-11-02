@@ -76,35 +76,45 @@ public class AppointmentDAL {
     }
 
     /**
-     * Retrieves an appointment by its ID.
-     *
-     * @param appointmentId The ID of the appointment.
-     * @return The appointment object if found, otherwise null.
-     * @throws SQLException If an SQL error occurs.
+     * Retrieves appointments based on given criteria.
+     * 
+     * @param patientId The patient ID to filter by (use 0 if not filtering by patient).
+     * @param doctorId The doctor ID to filter by (use 0 if not filtering by doctor).
+     * @return A list of matching appointments.
+     * @throws SQLException If a database access error occurs.
      */
-    public Appointment getAppointmentById(int appointmentId) throws SQLException {
-        String query = "SELECT * FROM appointment WHERE appointment_id = ?";
+    public List<Appointment> getAppointmentsByCriteria(int patientId, int doctorId) throws SQLException {
+        List<Appointment> appointments = new ArrayList<>();
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM appointment WHERE 1=1");
+
+        if (patientId > 0) {
+            queryBuilder.append(" AND patient_id = ").append(patientId);
+        }
+        if (doctorId > 0) {
+            queryBuilder.append(" AND doctor_id = ").append(doctorId);
+        }
+
+        String query = queryBuilder.toString();
 
         try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+             PreparedStatement stmt = connection.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
-            stmt.setInt(1, appointmentId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Appointment(
-                            rs.getInt("appointment_id"),
-                            rs.getInt("patient_id"),
-                            rs.getInt("doctor_id"),
-                            rs.getString("reason"),
-                            rs.getString("details"),
-                            rs.getString("appointment_type"),
-                            rs.getTimestamp("datetime").toLocalDateTime()
-                    );
-                }
+            while (rs.next()) {
+                Appointment appointment = new Appointment(
+                    rs.getInt("appointment_id"),
+                    rs.getInt("patient_id"),
+                    rs.getInt("doctor_id"),
+                    rs.getString("reason"),
+                    rs.getString("details"),
+                    rs.getString("appointment_type"),
+                    rs.getTimestamp("datetime").toLocalDateTime()
+                );
+                appointments.add(appointment);
             }
         }
-        return null;
+
+        return appointments;
     }
 
     /**

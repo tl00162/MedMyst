@@ -8,11 +8,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="534.0" prefWidth="549.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.MedMystNurseCodeBehind">
+<AnchorPane prefHeight="581.0" prefWidth="1206.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.MedMystNurseCodeBehind">
    <children>
       <Label fx:id="usernameLabel" layoutX="14.0" layoutY="14.0" text="Logged in as:" />
-      <Button fx:id="logoutButton" layoutX="472.0" layoutY="23.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
-      <Label fx:id="patientListLabel" layoutX="155.0" layoutY="88.0" text="Patient List">
+      <Button fx:id="logoutButton" layoutX="1138.0" layoutY="10.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
+      <Label fx:id="patientListLabel" layoutX="155.0" layoutY="88.0" text="Patients">
          <font>
             <Font size="20.0" />
          </font>
@@ -26,16 +26,31 @@
          </font>
       </Label>
       <Label fx:id="searchFirstNameLabel" layoutX="343.0" layoutY="154.0" text="First Name" />
-      <TextField fx:id="searchFirstNameTextField" layoutX="343.0" layoutY="171.0" />
+      <TextField fx:id="searchFirstNameTextFieldPatient" layoutX="343.0" layoutY="171.0" />
       <Label fx:id="searchLastNameLabel" layoutX="343.0" layoutY="211.0" text="Last Name" />
-      <TextField fx:id="searchLastNameTextField" layoutX="344.0" layoutY="228.0" />
+      <TextField fx:id="searchLastNameTextFieldPatient" layoutX="344.0" layoutY="228.0" />
       <Label fx:id="searchDOBLabel" layoutX="344.0" layoutY="270.0" text="DOB" />
-      <DatePicker fx:id="searchDOBPicker" layoutX="344.0" layoutY="287.0" />
-      <Button fx:id="searchButton" layoutX="393.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchPatients" text="Search" />
-      <Button fx:id="manageAppointmentsButton" layoutX="117.0" layoutY="467.0" mnemonicParsing="false" onAction="#goToAppointments" text="Manage Appointments">
+      <DatePicker fx:id="searchDOBPickerPatient" layoutX="344.0" layoutY="287.0" />
+      <Button fx:id="searchButtonPatient" layoutX="393.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchPatients" text="Search" />
+      <Label fx:id="appointmentListLabel" layoutX="758.0" layoutY="88.0" text="Appointments">
          <font>
-            <Font size="15.0" />
+            <Font size="20.0" />
          </font>
-      </Button>
+      </Label>
+      <ListView fx:id="appointmentsListView" layoutX="697.0" layoutY="118.0" prefHeight="280.0" prefWidth="248.0" />
+      <Button fx:id="addAppointmentButton" layoutX="112.0" layoutY="444.0" mnemonicParsing="false" text="Create Appointment for Patient" />
+      <Button fx:id="editAppointmentButton" layoutX="829.0" layoutY="409.0" mnemonicParsing="false" text="Edit Appointment" />
+      <Label fx:id="searchByAppointmentLabel" layoutX="1010.0" layoutY="118.0" text="Search By:">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="firstNameLabel2" layoutX="971.0" layoutY="154.0" text="First Name" />
+      <TextField fx:id="searchFirstNameTextFieldAppointment" layoutX="971.0" layoutY="171.0" />
+      <Label fx:id="searchLastNameLabelAppointment" layoutX="971.0" layoutY="211.0" text="Last Name" />
+      <TextField fx:id="searchLastNameTextFieldAppointment" layoutX="971.0" layoutY="228.0" />
+      <Label fx:id="searchDOBLabelAppointment" layoutX="972.0" layoutY="270.0" text="DOB" />
+      <DatePicker fx:id="searchDOBPickerAppointment" layoutX="972.0" layoutY="287.0" />
+      <Button fx:id="searchButtonAppointment" layoutX="1009.0" layoutY="333.0" mnemonicParsing="false" text="Search" />
    </children>
 </AnchorPane>

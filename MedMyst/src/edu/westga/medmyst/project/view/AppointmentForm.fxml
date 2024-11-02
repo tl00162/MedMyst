@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="588.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.PatientFormCodeBehind">
+   <children>
+      <Label fx:id="fnameLabel" layoutX="62.0" layoutY="76.0" text="First Name:" />
+      <TextField fx:id="fnameTextField" layoutX="62.0" layoutY="102.0" />
+      <Label fx:id="lnameLabel" layoutX="332.0" layoutY="76.0" text="Last Name: " />
+      <TextField fx:id="lnameTextField" layoutX="332.0" layoutY="102.0" />
+      <Label fx:id="dobLabel" layoutX="59.0" layoutY="157.0" text="Date of Birth: " />
+      <DatePicker fx:id="dobDatePicker" layoutX="59.0" layoutY="187.0" />
+      <Label fx:id="genderLabel" layoutX="334.0" layoutY="159.0" text="Gender:" />
+      <ComboBox fx:id="genderComboBox" layoutX="332.0" layoutY="191.0" prefWidth="150.0" />
+      <Label fx:id="phoneNumberLabel" layoutX="59.0" layoutY="230.0" text="Phone Number:" />
+      <TextField fx:id="phoneNumberTextField" layoutX="58.0" layoutY="254.0" prefHeight="25.0" prefWidth="242.0" />
+      <Label fx:id="address1Label" layoutX="59.0" layoutY="286.0" text="Address 1: " />
+      <TextField fx:id="address1TextField" layoutX="59.0" layoutY="321.0" prefHeight="25.0" prefWidth="401.0" />
+      <Label fx:id="address2Label" layoutX="59.0" layoutY="369.0" text="Address 2:" />
+      <TextField fx:id="address2TextField" layoutX="59.0" layoutY="399.0" prefHeight="25.0" prefWidth="401.0" />
+      <Label fx:id="stateLabel" layoutX="63.0" layoutY="450.0" text="State: " />
+      <ComboBox fx:id="stateComboBox" layoutX="63.0" layoutY="484.0" prefWidth="150.0" />
+      <Label fx:id="zipLabel" layoutX="292.0" layoutY="450.0" text="Zip: " />
+      <TextField fx:id="zipTextField" layoutX="290.0" layoutY="485.0" prefHeight="25.0" prefWidth="116.0" />
+      <Button fx:id="addPatientButton" layoutX="62.0" layoutY="528.0" mnemonicParsing="false" text="Add Patient" />
+      <Button fx:id="cancelButton" layoutX="442.0" layoutY="528.0" mnemonicParsing="false" text="Cancel" />
+      <Label fx:id="appointmentFormLabel" layoutX="203.0" layoutY="8.0" text="Appointment Form">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

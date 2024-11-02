@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+import edu.westga.medmyst.project.model.Appointment;
 import edu.westga.medmyst.project.model.Patient;
 import edu.westga.medmyst.project.viewmodel.MedMystViewModel;
 import javafx.collections.FXCollections;
@@ -43,19 +44,37 @@ public class MedMystNurseCodeBehind {
 	private ListView<Patient> patientsListView;
 	
 	@FXML
-	private Button manageAppointmentsButton;
+	private TextField searchFirstNameTextFieldPatient;
 	
 	@FXML
-	private TextField searchFirstNameTextField;
+	private TextField searchLastNameTextFieldPatient;
 	
 	@FXML
-	private TextField searchLastNameTextField;
+	private DatePicker searchDOBPickerPatient;
 	
 	@FXML
-	private DatePicker searchDOBPicker;
+	private Button searchButtonPatient;
 	
 	@FXML
-	private Button searchButton;
+	private Button addAppointmentButton;
+	
+	@FXML
+	private Button editAppointmentButton;
+	
+	@FXML
+	private ListView<Appointment> appointmentsListView;
+	
+	@FXML
+	private TextField searchFirstNameTextFieldAppointment;
+	
+	@FXML
+	private TextField searchLastNameTextFieldAppointment;
+	
+	@FXML
+	private DatePicker searchDOBPickerAppointment;
+	
+	@FXML
+	private Button searchButtonAppointment;
 
 	@FXML
 	private Label usernameLabel;
@@ -63,16 +82,26 @@ public class MedMystNurseCodeBehind {
 	private MedMystViewModel viewmodel;
 
 	private Patient selectedPatient;
+	
+	private Appointment selectedAppointment;
 
 	@FXML
 	private void initialize() {
 		this.editPatientButton.disableProperty()
+				.bind(this.patientsListView.getSelectionModel().selectedItemProperty().isNull());
+		this.addAppointmentButton.disableProperty()
 				.bind(this.patientsListView.getSelectionModel().selectedItemProperty().isNull());
 
 		this.patientsListView.getSelectionModel().selectedItemProperty()
 				.addListener((observable, oldValue, newValue) -> {
 					this.selectedPatient = newValue;
 				});
+		
+		this.editAppointmentButton.disableProperty().bind(this.appointmentsListView.getSelectionModel().selectedItemProperty().isNull());
+		
+		this.appointmentsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			this.selectedAppointment = newValue;
+			});
 	}
 
 	/**
@@ -91,6 +120,27 @@ public class MedMystNurseCodeBehind {
 					setText(null);
 				} else {
 					setText(patient.getFName() + " " + patient.getLName());
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Refreshes the appointment list in the ListView.
+	 */
+	private void refreshAppointmentList() {
+		List<Appointment> appointmentList = this.viewmodel.getAppointments();
+		ObservableList<Appointment> observableAppointmentList = FXCollections.observableArrayList(appointmentList);
+		this.appointmentsListView.setItems(observableAppointmentList);
+		
+		this.appointmentsListView.setCellFactory(appointmentListView -> new ListCell<Appointment>() {
+			@Override
+			protected void updateItem(Appointment appointment, boolean empty) {
+				super.updateItem(appointment, empty);
+				if (empty || appointment == null) {
+					setText(null);
+				} else {
+					setText(appointment.getPatientId() + " " + appointment.getDateTime());
 				}
 			}
 		});
@@ -116,6 +166,7 @@ public class MedMystNurseCodeBehind {
 		}
 
 		this.refreshPatientList();
+		this.refreshAppointmentList();
 	}
 
 	@FXML
@@ -194,29 +245,10 @@ public class MedMystNurseCodeBehind {
 	}
 	
 	@FXML
-	private void goToAppointments() {
-		try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/ManageAppointments.fxml"));
-	        Pane manageAppointmentsPane = loader.load();
-
-	        Stage appointmentStage = new Stage();
-	        appointmentStage.setTitle("Manage Appointments");
-	        appointmentStage.setScene(new Scene(manageAppointmentsPane));
-
-	        ManageAppointmentsCodeBehind appointmentController = loader.getController();
-	        appointmentController.setViewModel(this.viewmodel);
-
-	        appointmentStage.show();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	}
-	
-	@FXML
 	private void searchPatients() {
-	    String firstName = this.searchFirstNameTextField.getText();
-	    String lastName = this.searchLastNameTextField.getText();
-	    LocalDate dob = this.searchDOBPicker.getValue();
+	    String firstName = this.searchFirstNameTextFieldPatient.getText();
+	    String lastName = this.searchLastNameTextFieldPatient.getText();
+	    LocalDate dob = this.searchDOBPickerPatient.getValue();
 	    
 	    List<Patient> filteredPatients = this.viewmodel.searchPatients(firstName, lastName, dob);
 	    ObservableList<Patient> observablePatientList = FXCollections.observableArrayList(filteredPatients);
