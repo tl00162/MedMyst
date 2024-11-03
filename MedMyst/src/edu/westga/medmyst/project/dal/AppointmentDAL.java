@@ -74,6 +74,37 @@ public class AppointmentDAL {
             stmt.executeUpdate();
         }
     }
+    
+    /**
+     * Retrieves all appointments from the database.
+     * 
+     * @return a list of all appointments
+     * @throws SQLException if a database access error occurs
+     */
+    public List<Appointment> getAllAppointments() throws SQLException {
+        List<Appointment> appointments = new ArrayList<>();
+        String query = "SELECT * FROM appointment";
+
+        try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+             PreparedStatement stmt = connection.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Appointment appointment = new Appointment(
+                    rs.getInt("appointment_id"),
+                    rs.getInt("patient_id"),
+                    rs.getInt("doctor_id"),
+                    rs.getString("reason"),
+                    rs.getString("details"),
+                    rs.getString("appointment_type"),
+                    rs.getTimestamp("datetime").toLocalDateTime()
+                );
+                appointments.add(appointment);
+            }
+        }
+
+        return appointments;
+    }
 
     /**
      * Retrieves appointments based on given criteria.

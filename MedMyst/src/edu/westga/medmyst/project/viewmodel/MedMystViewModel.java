@@ -12,8 +12,10 @@ import edu.westga.medmyst.project.dal.PatientDAL;
 import edu.westga.medmyst.project.model.Appointment;
 import edu.westga.medmyst.project.model.Login;
 import edu.westga.medmyst.project.model.Patient;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -49,7 +51,14 @@ public class MedMystViewModel {
     private StringProperty reason;
     private StringProperty details;
     private StringProperty appointmentType;
+    private ObjectProperty<LocalDate> appointmentDate;
+    private StringProperty appointmentTime;
     private ObjectProperty<LocalDateTime> appointmentDateTime;
+    private IntegerProperty systolicPressure;
+    private IntegerProperty diastolicPressure;
+    private IntegerProperty pulse;
+    private DoubleProperty height;
+    private DoubleProperty weight;
 
 	private LoginDAL loginDAL;
 	private Login currentUser;
@@ -82,7 +91,14 @@ public class MedMystViewModel {
 	    this.reason = new SimpleStringProperty();
 	    this.details = new SimpleStringProperty();
 	    this.appointmentType = new SimpleStringProperty();
+	    this.appointmentDate = new SimpleObjectProperty<>();
+	    this.appointmentTime = new SimpleStringProperty();
 	    this.appointmentDateTime = new SimpleObjectProperty<>();
+	    this.systolicPressure = new SimpleIntegerProperty();
+	    this.diastolicPressure = new SimpleIntegerProperty();
+	    this.pulse = new SimpleIntegerProperty();
+	    this.height = new SimpleDoubleProperty();
+	    this.weight = new SimpleDoubleProperty();
 
 		this.loginDAL = new LoginDAL();
 		this.currentUser = null;
@@ -266,6 +282,14 @@ public class MedMystViewModel {
     public StringProperty appointmentTypeProperty() {
         return this.appointmentType;
     }
+    
+    public ObjectProperty<LocalDate> appointmentDateProperty() {
+    	return this.appointmentDate;
+    }
+    
+    public StringProperty appointmentTimeProperty() {
+    	return this.appointmentTime;
+    }
 
     /**
      * Returns the appointmentDateTimeProperty
@@ -274,6 +298,26 @@ public class MedMystViewModel {
      */
     public ObjectProperty<LocalDateTime> appointmentDateTimeProperty() {
         return this.appointmentDateTime;
+    }
+    
+    public IntegerProperty systolicPressureProperty() {
+    	return this.systolicPressure;
+    }
+    
+    public IntegerProperty diastolicPressureProperty() {
+    	return this.diastolicPressure;
+    }
+    
+    public IntegerProperty pulseProperty() {
+    	return this.pulse;
+    }
+    
+    public DoubleProperty heightProperty() {
+    	return this.height;
+    }
+    
+    public DoubleProperty weightProperty() {
+    	return this.weight;
     }
 
 	/**
@@ -410,6 +454,14 @@ public class MedMystViewModel {
 	            || this.reason.get().isEmpty() || this.appointmentType.get().isEmpty()) {
 	        return false;
 	    }
+	    
+	    LocalDateTime appointmentDateTime = null;
+	    if (this.appointmentDate.getValue() != null && this.appointmentTime.getValue() != null) {
+            appointmentDateTime = LocalDateTime.of(
+                this.appointmentDate.getValue(),
+                java.time.LocalTime.parse(this.convertTo24HourFormat(this.appointmentTime.getValue()))
+            );
+	    }
 
 	    Appointment newAppointment = new Appointment(
 	            this.appointmentId.get(),
@@ -418,7 +470,8 @@ public class MedMystViewModel {
 	            this.reason.get(),
 	            this.details.get(),
 	            this.appointmentType.get(),
-	            this.appointmentDateTime.get());
+	            appointmentDateTime);
+	  
 
 	    try {
 	        this.appointmentDAL.addAppointment(newAppointment);
@@ -445,6 +498,22 @@ public class MedMystViewModel {
 	    appointmentToUpdate.setDetails(this.details.get());
 	    appointmentToUpdate.setAppointmentType(this.appointmentType.get());
 	    appointmentToUpdate.setDateTime(this.appointmentDateTime.get());
+	    
+	    if (this.systolicPressure.get() >= 0) {
+	    	appointmentToUpdate.setSystolicPressure(this.systolicPressure.get());
+	    }
+	    if (this.diastolicPressure.get() >= 0) {
+	    	appointmentToUpdate.setDiastolicPressure(this.diastolicPressure.get());
+	    }
+	    if (this.pulse.get() >= 0) {
+	    	appointmentToUpdate.setPulse(this.pulse.get());
+	    }
+	    if (this.height.get() >= 0) {
+	    	appointmentToUpdate.setHeight(this.height.get());
+	    }
+	    if (this.weight.get() >= 0) {
+	    	appointmentToUpdate.setWeight(this.weight.get());
+	    }
 
 	    try {
 	        this.appointmentDAL.updateAppointment(appointmentToUpdate);
@@ -455,6 +524,20 @@ public class MedMystViewModel {
 	    }
 	}
 	
+	/**
+	 * Gets the list of all appointments.
+	 * 
+	 * @return the list of appointments
+	 */
+	public List<Appointment> getAppointments() {
+	    try {
+	        return this.appointmentDAL.getAllAppointments();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return new ArrayList<>();
+	    }
+	}
+
 	/**
 	 * Searches for appointments based on given criteria.
 	 * 
@@ -470,4 +553,10 @@ public class MedMystViewModel {
 	        return new ArrayList<>();
 	    }
 	}
+	
+	private String convertTo24HourFormat(String time) {
+        return java.time.format.DateTimeFormatter.ofPattern("hh:mm a")
+            .parse(time, java.time.LocalTime::from)
+            .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
+    }
 }

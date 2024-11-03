@@ -227,6 +227,37 @@ public class MedMystNurseCodeBehind {
 			System.out.println("No patient selected.");
 		}
 	}
+	
+	@FXML
+    private void createAppointment() {
+        if (this.selectedPatient != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/AppointmentForm.fxml"));
+                Pane appointmentFormPane = loader.load();
+
+                Stage appointmentFormStage = new Stage();
+                appointmentFormStage.setTitle("Create Appointment");
+                appointmentFormStage.setScene(new Scene(appointmentFormPane));
+
+                AppointmentFormCodeBehind appointmentFormCodeBehind = loader.getController();
+                appointmentFormCodeBehind.setViewModel(this.viewmodel);
+                appointmentFormCodeBehind.setCurrentPatient(this.selectedPatient);
+
+                appointmentFormCodeBehind.setOnFormSubmit(() -> {
+                    this.refreshAppointmentList();
+                    appointmentFormStage.close();
+                });
+
+                appointmentFormStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("No patient selected.");
+        }
+    }
+	
+	
 
 	@FXML
 	private void logout() {

@@ -18,6 +18,11 @@ public class Appointment {
     private String details;
     private String appointmentType;
     private LocalDateTime dateTime;
+    private int systolicPressure;
+    private int diastolicPressure;
+    private int pulse;
+    private double weight;
+    private double height;
 
     /**
      * Constructs an Appointment object.
@@ -112,7 +117,47 @@ public class Appointment {
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
+    
+    public int getSystolicPressure() {
+    	return this.systolicPressure;
+    }
+    
+    public void setSystolicPressure(int pressure) {
+    	this.systolicPressure = pressure;
+    }
+    
+    public int getDiastolicPressure() {
+    	return this.diastolicPressure;
+    }
+    
+    public void setDiastolicPressure(int pressure) {
+    	this.diastolicPressure = pressure;
+    }
+    
+    public int getPulse() {
+    	return this.pulse;
+    }
+    
+    public void setPulse(int pulse) {
+    	this.pulse = pulse;
+    }
+    
+    public double getWeight() {
+    	return this.weight;
+    }
+    
+    public void setWeight(double weight) {
+    	this.weight = weight;
+    }
+    
+    public double getHeight() {
+    	return this.height;
+    }
 
+    public void setHeight(double height) {
+    	this.height = height;
+    }
+    
     @Override
     public String toString() {
         return "Appointment [appointmentId=" + appointmentId + ", patientId=" + patientId + ", doctorId=" + doctorId
