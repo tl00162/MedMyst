@@ -14,6 +14,9 @@ public class Appointment {
     private int appointmentId;
     private int patientId;
     private int doctorId;
+    private String doctorFirstName;
+    private String doctorLastName;
+    private String doctorSpecialty;
     private String reason;
     private String details;
     private String appointmentType;
@@ -35,29 +38,18 @@ public class Appointment {
      * @param appointmentType The type of the appointment.
      * @param dateTime        The date and time of the appointment.
      */
-    public Appointment(int appointmentId, int patientId, int doctorId, String reason, String details, 
+    public Appointment(int appointmentId, int patientId, int doctorId, String doctorFirstName, String doctorLastName, String doctorSpecialty, String reason, String details, 
     		String appointmentType, LocalDateTime dateTime) {
         this.appointmentId = appointmentId;
         this.patientId = patientId;
         this.doctorId = doctorId;
+        this.doctorFirstName = doctorFirstName;
+        this.doctorLastName = doctorLastName;
+        this.doctorSpecialty = doctorSpecialty;
         this.reason = reason;
         this.details = details;
         this.appointmentType = appointmentType;
         this.dateTime = dateTime;
-    }
-
-    /**
-     * Constructs an Appointment object without an appointmentId (for new appointments).
-     *
-     * @param patientId       The ID of the patient.
-     * @param doctorId        The ID of the doctor.
-     * @param reason          The reason for the appointment.
-     * @param details         Additional details for the appointment.
-     * @param appointmentType The type of the appointment.
-     * @param dateTime        The date and time of the appointment.
-     */
-    public Appointment(int patientId, int doctorId, String reason, String details, String appointmentType, LocalDateTime dateTime) {
-        this(0, patientId, doctorId, reason, details, appointmentType, dateTime);
     }
 
     // Getters and setters
@@ -84,6 +76,30 @@ public class Appointment {
 
     public void setDoctorId(int doctorId) {
         this.doctorId = doctorId;
+    }
+    
+    public String getDoctorFirstName() {
+        return this.doctorFirstName;
+    }
+
+    public void setDoctorFirstName(String doctorFirstName) {
+        this.doctorFirstName = doctorFirstName;
+    }
+
+    public String getDoctorLastName() {
+        return this.doctorLastName;
+    }
+
+    public void setDoctorLastName(String doctorLastName) {
+        this.doctorLastName = doctorLastName;
+    }
+
+    public String getDoctorSpecialty() {
+        return this.doctorSpecialty;
+    }
+
+    public void setDoctorSpecialty(String doctorSpecialty) {
+        this.doctorSpecialty = doctorSpecialty;
     }
 
     public String getReason() {

@@ -22,12 +22,13 @@
       <Label fx:id="dobLabel" layoutX="381.0" layoutY="59.0" text="Date of Birth: " />
       <DatePicker fx:id="dobDatePicker" layoutX="381.0" layoutY="76.0" />
       <Label fx:id="appointmentTypeLabel" layoutX="58.0" layoutY="127.0" text="Appointment Type" />
-      <TextField fx:id="appointmentTypeTextField" layoutX="58.0" layoutY="144.0" prefHeight="25.0" prefWidth="181.0" />
+      <ComboBox fx:id="appointmentTypeComboBox" layoutX="58.0" layoutY="144.0" prefWidth="150.0" />
       <Label fx:id="dateLabel" layoutX="260.0" layoutY="127.0" text="Date" />
       <DatePicker fx:id="dateDatePicker" layoutX="253.0" layoutY="144.0" />
       <Label fx:id="timeLabel" layoutX="455.0" layoutY="127.0" text="Time" />
       <ComboBox fx:id="timeComboBox" layoutX="451.0" layoutY="144.0" prefHeight="25.0" prefWidth="91.0" />
       <Label fx:id="doctorLabel" layoutX="58.0" layoutY="186.0" text="Doctor" />
+      <ComboBox fx:id="doctorComboBox" layoutX="58.0" layoutY="203.0" prefWidth="150.0" />
       <Label fx:id="reasonLabel" layoutX="60.0" layoutY="232.0" text="Reason" />
       <TextField fx:id="reasonTextField" layoutX="59.0" layoutY="249.0" prefHeight="60.0" prefWidth="485.0" />
       <Label fx:id="detailsLabel" layoutX="62.0" layoutY="322.0" text="Details" />
@@ -54,6 +55,5 @@
       <TextField fx:id="weightTextField" layoutX="419.0" layoutY="536.0" prefHeight="25.0" prefWidth="73.0" />
       <Label layoutX="491.0" layoutY="481.0" text="in" />
       <Label layoutX="493.0" layoutY="540.0" text="lb" />
-      <TextField fx:id="doctorTextField" layoutX="58.0" layoutY="203.0" />
    </children>
 </AnchorPane>

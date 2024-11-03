@@ -83,7 +83,10 @@ public class AppointmentDAL {
      */
     public List<Appointment> getAllAppointments() throws SQLException {
         List<Appointment> appointments = new ArrayList<>();
-        String query = "SELECT * FROM appointment";
+        String query = "SELECT a.appointment_id, a.patient_id, a.doctor_id, a.reason, a.details, a.appointment_type, a.datetime, "
+                     + "d.f_name AS doctor_first_name, d.l_name AS doctor_last_name, d.specialty AS doctor_specialty "
+                     + "FROM appointment a "
+                     + "JOIN doctor d ON a.doctor_id = d.doctor_id";
 
         try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
              PreparedStatement stmt = connection.prepareStatement(query);
@@ -94,6 +97,9 @@ public class AppointmentDAL {
                     rs.getInt("appointment_id"),
                     rs.getInt("patient_id"),
                     rs.getInt("doctor_id"),
+                    rs.getString("doctor_first_name"),
+                    rs.getString("doctor_last_name"),
+                    rs.getString("doctor_specialty"),
                     rs.getString("reason"),
                     rs.getString("details"),
                     rs.getString("appointment_type"),
@@ -102,7 +108,6 @@ public class AppointmentDAL {
                 appointments.add(appointment);
             }
         }
-
         return appointments;
     }
 
@@ -116,13 +121,15 @@ public class AppointmentDAL {
      */
     public List<Appointment> getAppointmentsByCriteria(int patientId, int doctorId) throws SQLException {
         List<Appointment> appointments = new ArrayList<>();
-        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM appointment WHERE 1=1");
+        StringBuilder queryBuilder = new StringBuilder("SELECT a.appointment_id, a.patient_id, a.doctor_id, a.reason, a.details, "
+                + "a.appointment_type, a.datetime, d.f_name AS doctor_first_name, d.l_name AS doctor_last_name, d.specialty AS doctor_specialty "
+                + "FROM appointment a JOIN doctor d ON a.doctor_id = d.doctor_id WHERE 1=1");
 
         if (patientId > 0) {
-            queryBuilder.append(" AND patient_id = ").append(patientId);
+            queryBuilder.append(" AND a.patient_id = ").append(patientId);
         }
         if (doctorId > 0) {
-            queryBuilder.append(" AND doctor_id = ").append(doctorId);
+            queryBuilder.append(" AND a.doctor_id = ").append(doctorId);
         }
 
         String query = queryBuilder.toString();
@@ -136,47 +143,15 @@ public class AppointmentDAL {
                     rs.getInt("appointment_id"),
                     rs.getInt("patient_id"),
                     rs.getInt("doctor_id"),
+                    rs.getString("doctor_first_name"),
+                    rs.getString("doctor_last_name"),
+                    rs.getString("doctor_specialty"),
                     rs.getString("reason"),
                     rs.getString("details"),
                     rs.getString("appointment_type"),
                     rs.getTimestamp("datetime").toLocalDateTime()
                 );
                 appointments.add(appointment);
-            }
-        }
-
-        return appointments;
-    }
-
-    /**
-     * Retrieves all appointments for a specific patient.
-     *
-     * @param patientId The ID of the patient.
-     * @return A list of appointments for the patient.
-     * @throws SQLException If an SQL error occurs.
-     */
-    public List<Appointment> getAppointmentsByPatientId(int patientId) throws SQLException {
-        List<Appointment> appointments = new ArrayList<>();
-        String query = "SELECT * FROM appointment WHERE patient_id = ?";
-
-        try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            stmt.setInt(1, patientId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Appointment appointment = new Appointment(
-                            rs.getInt("appointment_id"),
-                            rs.getInt("patient_id"),
-                            rs.getInt("doctor_id"),
-                            rs.getString("reason"),
-                            rs.getString("details"),
-                            rs.getString("appointment_type"),
-                            rs.getTimestamp("datetime").toLocalDateTime()
-                    );
-                    appointments.add(appointment);
-                }
             }
         }
         return appointments;

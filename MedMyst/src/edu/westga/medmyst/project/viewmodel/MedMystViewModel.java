@@ -7,9 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.westga.medmyst.project.dal.AppointmentDAL;
+import edu.westga.medmyst.project.dal.AppointmentTypeDAL;
+import edu.westga.medmyst.project.dal.DoctorDAL;
 import edu.westga.medmyst.project.dal.LoginDAL;
 import edu.westga.medmyst.project.dal.PatientDAL;
 import edu.westga.medmyst.project.model.Appointment;
+import edu.westga.medmyst.project.model.AppointmentType;
+import edu.westga.medmyst.project.model.Doctor;
 import edu.westga.medmyst.project.model.Login;
 import edu.westga.medmyst.project.model.Patient;
 import javafx.beans.property.DoubleProperty;
@@ -48,6 +52,9 @@ public class MedMystViewModel {
 	
 	private IntegerProperty appointmentId;
     private IntegerProperty doctorId;
+    private StringProperty doctorFirstName;
+    private StringProperty doctorLastName;
+    private StringProperty doctorSpecialty;
     private StringProperty reason;
     private StringProperty details;
     private StringProperty appointmentType;
@@ -65,6 +72,8 @@ public class MedMystViewModel {
 
 	private PatientDAL patientDAL;
 	private AppointmentDAL appointmentDAL;
+	private DoctorDAL doctorDAL;
+	private AppointmentTypeDAL appointmentTypeDAL;
 
 	/**
 	 * Constructs a new MedMystViewModel and initializes its properties.
@@ -88,6 +97,9 @@ public class MedMystViewModel {
 		
 		this.appointmentId = new SimpleIntegerProperty();
 	    this.doctorId = new SimpleIntegerProperty();
+	    this.doctorFirstName = new SimpleStringProperty();
+	    this.doctorLastName = new SimpleStringProperty();
+	    this.doctorSpecialty = new SimpleStringProperty();
 	    this.reason = new SimpleStringProperty();
 	    this.details = new SimpleStringProperty();
 	    this.appointmentType = new SimpleStringProperty();
@@ -105,6 +117,8 @@ public class MedMystViewModel {
 
 		this.patientDAL = new PatientDAL();
 		this.appointmentDAL = new AppointmentDAL();
+		this.doctorDAL = new DoctorDAL();
+		this.appointmentTypeDAL = new AppointmentTypeDAL();
 	}
 
 	/**
@@ -254,6 +268,18 @@ public class MedMystViewModel {
      */
     public IntegerProperty doctorIdProperty() {
         return this.doctorId;
+    }
+    
+    public StringProperty doctorFirstNameProperty() {
+        return this.doctorFirstName;
+    }
+
+    public StringProperty doctorLastNameProperty() {
+        return this.doctorLastName;
+    }
+
+    public StringProperty doctorSpecialtyProperty() {
+        return this.doctorSpecialty;
     }
 
     /**
@@ -444,43 +470,94 @@ public class MedMystViewModel {
 		}
 	}
 	
+	public List<String> getDoctorNames() {
+	    List<String> doctorNames = new ArrayList<>();
+	    try {
+	        List<Doctor> doctors = this.doctorDAL.getAllDoctors();
+	        for (Doctor doctor : doctors) {
+	            doctorNames.add(doctor.getFirstName() + " " + doctor.getLastName());
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return doctorNames;
+	}
+	
+	public int getDoctorIdByName(String doctorName) {
+	    try {
+	        List<Doctor> doctors = this.doctorDAL.getAllDoctors();
+	        for (Doctor doctor : doctors) {
+	            if ((doctor.getFirstName() + " " + doctor.getLastName()).equals(doctorName)) {
+	                return doctor.getDoctorId();
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return -1; // Return an invalid ID if doctor not found
+	}
+	
+	public String getDoctorNameById(int doctorId) {
+	    try {
+	        Doctor doctor = this.doctorDAL.getDoctorById(doctorId);
+	        return doctor.getFirstName() + " " + doctor.getLastName();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return "";
+	}
+
 	/**
 	 * Tries to add a new Appointment to the DB.
 	 * 
 	 * @return true if the appointment is added, else false
 	 */
 	public boolean addAppointment() {
+		
+		System.out.println("Patient ID: " + this.patientId.get());  // Should be a valid ID, not 0
+		System.out.println("Doctor ID: " + this.doctorId.get());    // Should be a valid ID, not 0
+		System.out.println("Appointment DateTime: " + this.appointmentDateTime.get());  // Should not be null
+		System.out.println("Reason: '" + this.reason.get() + "'");  // Should not be empty
+		System.out.println("Appointment Type: '" + this.appointmentType.get() + "'"); 
+		
+		
 	    if (this.patientId.get() == 0 || this.doctorId.get() == 0 || this.appointmentDateTime.get() == null
 	            || this.reason.get().isEmpty() || this.appointmentType.get().isEmpty()) {
+	    	System.out.println("Error here");
 	        return false;
-	    }
-	    
-	    LocalDateTime appointmentDateTime = null;
-	    if (this.appointmentDate.getValue() != null && this.appointmentTime.getValue() != null) {
-            appointmentDateTime = LocalDateTime.of(
-                this.appointmentDate.getValue(),
-                java.time.LocalTime.parse(this.convertTo24HourFormat(this.appointmentTime.getValue()))
-            );
 	    }
 
 	    Appointment newAppointment = new Appointment(
-	            this.appointmentId.get(),
+	    		this.appointmentId.get(),
 	            this.patientId.get(),
 	            this.doctorId.get(),
+	            this.doctorFirstName.get(),
+	            this.doctorLastName.get(),
+	            this.doctorSpecialty.get(),
 	            this.reason.get(),
 	            this.details.get(),
 	            this.appointmentType.get(),
-	            appointmentDateTime);
-	  
+	            this.appointmentDateTime.get());
+	    
+	    System.out.println(this.patientId);
+	    System.out.println(this.doctorId);
+	    System.out.println(this.appointmentType);
+	    System.out.println(this.appointmentDateTime);
 
 	    try {
 	        this.appointmentDAL.addAppointment(newAppointment);
 	        return true;
 	    } catch (SQLException e) {
+	    	System.err.println("SQL Error during appointment creation:");
+	        System.err.println("Error Code: " + e.getErrorCode());
+	        System.err.println("SQL State: " + e.getSQLState());
+	        System.err.println("Message: " + e.getMessage());
+	        e.printStackTrace();
 	        e.printStackTrace();
 	        return false;
 	    }
 	}
+
 	
 	/**
 	 * Tries to update an existing Appointment in the DB.
@@ -494,25 +571,29 @@ public class MedMystViewModel {
 	    }
 
 	    appointmentToUpdate.setDoctorId(this.doctorId.get());
+	    appointmentToUpdate.setDoctorFirstName(this.doctorFirstName.get());
+	    appointmentToUpdate.setDoctorLastName(this.doctorLastName.get());
+	    appointmentToUpdate.setDoctorSpecialty(this.doctorSpecialty.get());
 	    appointmentToUpdate.setReason(this.reason.get());
 	    appointmentToUpdate.setDetails(this.details.get());
 	    appointmentToUpdate.setAppointmentType(this.appointmentType.get());
 	    appointmentToUpdate.setDateTime(this.appointmentDateTime.get());
-	    
+
+	    // Set additional measurements if they are set in the view
 	    if (this.systolicPressure.get() >= 0) {
-	    	appointmentToUpdate.setSystolicPressure(this.systolicPressure.get());
+	        appointmentToUpdate.setSystolicPressure(this.systolicPressure.get());
 	    }
 	    if (this.diastolicPressure.get() >= 0) {
-	    	appointmentToUpdate.setDiastolicPressure(this.diastolicPressure.get());
+	        appointmentToUpdate.setDiastolicPressure(this.diastolicPressure.get());
 	    }
 	    if (this.pulse.get() >= 0) {
-	    	appointmentToUpdate.setPulse(this.pulse.get());
+	        appointmentToUpdate.setPulse(this.pulse.get());
 	    }
 	    if (this.height.get() >= 0) {
-	    	appointmentToUpdate.setHeight(this.height.get());
+	        appointmentToUpdate.setHeight(this.height.get());
 	    }
 	    if (this.weight.get() >= 0) {
-	    	appointmentToUpdate.setWeight(this.weight.get());
+	        appointmentToUpdate.setWeight(this.weight.get());
 	    }
 
 	    try {
@@ -531,12 +612,33 @@ public class MedMystViewModel {
 	 */
 	public List<Appointment> getAppointments() {
 	    try {
-	        return this.appointmentDAL.getAllAppointments();
+	        List<Appointment> appointments = this.appointmentDAL.getAllAppointments();
+	        return appointments;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        return new ArrayList<>();
 	    }
 	}
+	
+	/**
+     * Retrieves all appointment types from the database as a list of strings.
+     * 
+     * @return a list of appointment type names as strings
+     */
+    public List<String> getAppointmentTypes() {
+        List<String> appointmentTypeNames = new ArrayList<>();
+
+        try {
+            List<AppointmentType> appointmentTypes = this.appointmentTypeDAL.getAllAppointmentTypes();
+            for (AppointmentType type : appointmentTypes) {
+                appointmentTypeNames.add(type.toString());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return appointmentTypeNames;
+    }
 
 	/**
 	 * Searches for appointments based on given criteria.
@@ -547,13 +649,51 @@ public class MedMystViewModel {
 	 */
 	public List<Appointment> searchAppointments(int patientId, int doctorId) {
 	    try {
-	        return this.appointmentDAL.getAppointmentsByCriteria(patientId, doctorId);
+	        List<Appointment> appointments = this.appointmentDAL.getAppointmentsByCriteria(patientId, doctorId);
+	        return appointments;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        return new ArrayList<>();
 	    }
 	}
 	
+	/**
+	 * Loads the specified appointment's data into the ViewModel properties.
+	 * 
+	 * @param appointment The appointment to load data from.
+	 */
+	public void loadAppointmentData(Appointment appointment) {
+	    this.appointmentId.set(appointment.getAppointmentId());
+	    this.patientId.set(appointment.getPatientId());
+	    this.doctorId.set(appointment.getDoctorId());
+	    this.reason.set(appointment.getReason());
+	    this.details.set(appointment.getDetails());
+	    this.appointmentType.set(appointment.getAppointmentType());
+	    this.appointmentDate.set(appointment.getDateTime().toLocalDate());
+	    this.appointmentTime.set(appointment.getDateTime().toLocalTime().toString());
+	    this.appointmentDateTime.set(appointment.getDateTime());
+
+	    // Load doctor details
+	    try {
+	        Doctor doctor = this.doctorDAL.getDoctorById(appointment.getDoctorId());
+	        if (doctor != null) {
+	            this.doctorFirstName.set(doctor.getFirstName());
+	            this.doctorLastName.set(doctor.getLastName());
+	            this.doctorSpecialty.set(doctor.getSpecialty());
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    // Load additional health metrics if available
+	    this.systolicPressure.set(appointment.getSystolicPressure());
+	    this.diastolicPressure.set(appointment.getDiastolicPressure());
+	    this.pulse.set(appointment.getPulse());
+	    this.height.set(appointment.getHeight());
+	    this.weight.set(appointment.getWeight());
+	}
+
+
 	private String convertTo24HourFormat(String time) {
         return java.time.format.DateTimeFormatter.ofPattern("hh:mm a")
             .parse(time, java.time.LocalTime::from)
