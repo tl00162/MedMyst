@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,4 +113,67 @@ public class PatientDAL {
 
 		return patients;
 	}
+	
+	/**
+     * Searches for patients by first name, last name, and date of birth.
+     * 
+     * @param firstName The first name filter (nullable)
+     * @param lastName  The last name filter (nullable)
+     * @param dob       The date of birth filter (nullable)
+     * @return List of matching patients
+     * @throws SQLException If there is an error accessing the database
+     */
+	public List<Patient> searchPatients(String firstName, String lastName, LocalDate dob) throws SQLException {
+	    StringBuilder queryBuilder = new StringBuilder("SELECT * FROM patient WHERE 1=1");
+
+	    if (firstName != null && !firstName.isEmpty()) {
+	        queryBuilder.append(" AND f_name = ?");
+	    }
+	    if (lastName != null && !lastName.isEmpty()) {
+	        queryBuilder.append(" AND l_name = ?");
+	    }
+	    if (dob != null) {
+	        queryBuilder.append(" AND date_of_birth = ?");
+	    }
+
+	    String query = queryBuilder.toString();
+
+	    try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+	         PreparedStatement stmt = connection.prepareStatement(query)) {
+
+	        int paramIndex = 1;
+	        if (firstName != null && !firstName.isEmpty()) {
+	            stmt.setString(paramIndex++, firstName);
+	        }
+	        if (lastName != null && !lastName.isEmpty()) {
+	            stmt.setString(paramIndex++, lastName);
+	        }
+	        if (dob != null) {
+	            stmt.setDate(paramIndex++, java.sql.Date.valueOf(dob));
+	        }
+
+	        ResultSet rs = stmt.executeQuery();
+	        return this.buildPatientListFromResultSet(rs);
+	    }
+	}
+    
+    private List<Patient> buildPatientListFromResultSet(ResultSet rs) throws SQLException {
+        List<Patient> patients = new ArrayList<>();
+        while (rs.next()) {
+            Patient patient = new Patient(
+                rs.getInt("patient_id"),
+                rs.getString("f_name"),
+                rs.getString("l_name"),
+                rs.getDate("date_of_birth").toLocalDate(),
+                rs.getString("gender"),
+                rs.getString("phone_number"),
+                rs.getString("address"),
+                rs.getString("address_2"),
+                rs.getString("state"),
+                rs.getString("zip")
+            );
+            patients.add(patient);
+        }
+        return patients;
+    }
 }

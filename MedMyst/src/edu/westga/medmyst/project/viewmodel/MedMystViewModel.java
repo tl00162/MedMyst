@@ -559,4 +559,18 @@ public class MedMystViewModel {
             .parse(time, java.time.LocalTime::from)
             .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
     }
+	
+	public List<Patient> searchPatients(String firstName, String lastName, LocalDate dob) {
+	    try {
+	        List<Patient> patients = this.patientDAL.searchPatients(firstName, lastName, dob);
+	       
+	        if (patients.isEmpty()) {
+	            return this.patientDAL.getAllPatients();
+	        }
+	        return patients;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return new ArrayList<>();
+	    }
+	}
 }
