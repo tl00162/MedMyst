@@ -2,6 +2,7 @@ package edu.westga.medmyst.project.view;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import edu.westga.medmyst.project.model.Appointment;
@@ -12,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -257,7 +259,56 @@ public class MedMystNurseCodeBehind {
         }
     }
 	
+	@FXML
+	private void editAppointment() {
+	    if (this.selectedAppointment != null) {
+	    	
+	    	 if (this.selectedAppointment.getDateTime().isBefore(LocalDateTime.now())) {
+	             showAlert("Cannot Edit Appointment", "This appointment is in the past and cannot be edited.");
+	             return;
+	         }
+	    	 
+	        try {
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/AppointmentForm.fxml"));
+	            Pane appointmentFormPane = loader.load();
+
+	            Stage appointmentFormStage = new Stage();
+	            appointmentFormStage.setTitle("Edit Appointment");
+	            appointmentFormStage.setScene(new Scene(appointmentFormPane));
+
+	            // Access the controller for the form and set necessary values
+	            AppointmentFormCodeBehind appointmentFormCodeBehind = loader.getController();
+	            appointmentFormCodeBehind.setViewModel(this.viewmodel);
+	            appointmentFormCodeBehind.setCurrentAppointment(this.selectedAppointment);
+	            
+	            Patient patient = this.viewmodel.getPatientById(this.selectedAppointment.getPatientId());
+	            if (patient != null) {
+	                appointmentFormCodeBehind.setCurrentPatient(patient);
+	            }
+
+	            appointmentFormCodeBehind.setOnFormSubmit(() -> {
+	                this.refreshAppointmentList();
+	                this.selectedAppointment = null;
+	                appointmentFormStage.close();
+	            });
+
+	            appointmentFormStage.show();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    } else {
+	        System.out.println("No appointment selected.");
+	    }
+	}
 	
+	private void showAlert(String title, String content) {
+	    Alert alert = new Alert(Alert.AlertType.WARNING);
+	    alert.setTitle(title);
+	    alert.setHeaderText(null);
+	    alert.setContentText(content);
+	    alert.showAndWait();
+	}
+
 
 	@FXML
 	private void logout() {
@@ -285,5 +336,18 @@ public class MedMystNurseCodeBehind {
 	    ObservableList<Patient> observablePatientList = FXCollections.observableArrayList(filteredPatients);
 	    this.patientsListView.setItems(observablePatientList);
 	}
+	
+	@FXML
+	private void searchAppointments() {
+	    String firstName = this.searchFirstNameTextFieldAppointment.getText().trim();
+	    String lastName = this.searchLastNameTextFieldAppointment.getText().trim();
+	    LocalDate dob = this.searchDOBPickerAppointment.getValue();
+
+	    // Call view model's search method with collected values
+	    List<Appointment> filteredAppointments = this.viewmodel.searchAppointmentsByPatientInfo(firstName, lastName, dob);
+	    ObservableList<Appointment> observableAppointmentList = FXCollections.observableArrayList(filteredAppointments);
+	    this.appointmentsListView.setItems(observableAppointmentList);
+	}
+
 
 }

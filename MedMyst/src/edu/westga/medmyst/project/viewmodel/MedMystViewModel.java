@@ -470,6 +470,17 @@ public class MedMystViewModel {
 		}
 	}
 	
+	public Patient getPatientById(int patientId) {
+	    try {
+	        return this.patientDAL.getPatientById(patientId);
+	    } catch (SQLException e) {
+	        System.err.println("Error retrieving patient with ID: " + patientId);
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+
+	
 	public List<String> getDoctorNames() {
 	    List<String> doctorNames = new ArrayList<>();
 	    try {
@@ -513,22 +524,20 @@ public class MedMystViewModel {
 	 * @return true if the appointment is added, else false
 	 */
 	public boolean addAppointment() {
-		
-		System.out.println("Patient ID: " + this.patientId.get());  // Should be a valid ID, not 0
-		System.out.println("Doctor ID: " + this.doctorId.get());    // Should be a valid ID, not 0
-		System.out.println("Appointment DateTime: " + this.appointmentDateTime.get());  // Should not be null
-		System.out.println("Reason: '" + this.reason.get() + "'");  // Should not be empty
-		System.out.println("Appointment Type: '" + this.appointmentType.get() + "'"); 
-		
-		
 	    if (this.patientId.get() == 0 || this.doctorId.get() == 0 || this.appointmentDateTime.get() == null
 	            || this.reason.get().isEmpty() || this.appointmentType.get().isEmpty()) {
-	    	System.out.println("Error here");
+	        System.out.println("Error: Missing required fields for appointment creation.");
+	        return false;
+	    }
+
+	    // Check if the doctor is available at the requested time
+	    if (!isDoctorAvailable(this.doctorId.get(), this.appointmentDateTime.get())) {
+	        System.out.println("Error: Doctor is already booked at this time.");
 	        return false;
 	    }
 
 	    Appointment newAppointment = new Appointment(
-	    		this.appointmentId.get(),
+	            this.appointmentId.get(),
 	            this.patientId.get(),
 	            this.doctorId.get(),
 	            this.doctorFirstName.get(),
@@ -538,25 +547,20 @@ public class MedMystViewModel {
 	            this.details.get(),
 	            this.appointmentType.get(),
 	            this.appointmentDateTime.get());
-	    
-	    System.out.println(this.patientId);
-	    System.out.println(this.doctorId);
-	    System.out.println(this.appointmentType);
-	    System.out.println(this.appointmentDateTime);
 
 	    try {
 	        this.appointmentDAL.addAppointment(newAppointment);
 	        return true;
 	    } catch (SQLException e) {
-	    	System.err.println("SQL Error during appointment creation:");
+	        System.err.println("SQL Error during appointment creation:");
 	        System.err.println("Error Code: " + e.getErrorCode());
 	        System.err.println("SQL State: " + e.getSQLState());
 	        System.err.println("Message: " + e.getMessage());
 	        e.printStackTrace();
-	        e.printStackTrace();
 	        return false;
 	    }
 	}
+
 
 	
 	/**
@@ -657,6 +661,35 @@ public class MedMystViewModel {
 	    }
 	}
 	
+	public List<Appointment> getAppointmentsByPatientId(int patientId) {
+	    try {
+	        return this.appointmentDAL.getAppointmentsByCriteria(patientId, -1); // Assuming -1 ignores the doctor ID filter
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return new ArrayList<>();
+	    }
+	}
+
+	
+	public List<Appointment> searchAppointmentsByPatientInfo(String firstName, String lastName, LocalDate dob) {
+	    List<Appointment> matchingAppointments = new ArrayList<>();
+
+	    try {
+	        // Search for patients matching the given criteria
+	        List<Patient> matchingPatients = this.patientDAL.searchPatients(firstName, lastName, dob);
+	        
+	        // Get appointments for each matching patient
+	        for (Patient patient : matchingPatients) {
+	            matchingAppointments.addAll(this.getAppointmentsByPatientId(patient.getPatientId()));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return matchingAppointments;
+	}
+
+	
 	/**
 	 * Loads the specified appointment's data into the ViewModel properties.
 	 * 
@@ -694,12 +727,6 @@ public class MedMystViewModel {
 	}
 
 
-	private String convertTo24HourFormat(String time) {
-        return java.time.format.DateTimeFormatter.ofPattern("hh:mm a")
-            .parse(time, java.time.LocalTime::from)
-            .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
-    }
-	
 	public List<Patient> searchPatients(String firstName, String lastName, LocalDate dob) {
 	    try {
 	        List<Patient> patients = this.patientDAL.searchPatients(firstName, lastName, dob);
@@ -713,4 +740,26 @@ public class MedMystViewModel {
 	        return new ArrayList<>();
 	    }
 	}
+	
+	public boolean isDoctorAvailable(int doctorId, LocalDateTime dateTime) {
+	    try {
+	        List<Appointment> doctorAppointments = this.appointmentDAL.getAppointmentsByDoctorId(doctorId);
+	        for (Appointment appointment : doctorAppointments) {
+	            if (appointment.getDateTime().equals(dateTime)) {
+	                return false;
+	            }
+	        }
+	        return true;
+	    } catch (SQLException e) {
+	        System.err.println("SQL Error while checking doctor availability:");
+	        System.err.println("Error Code: " + e.getErrorCode());
+	        System.err.println("SQL State: " + e.getSQLState());
+	        System.err.println("Message: " + e.getMessage());
+	        e.printStackTrace();
+	        
+	        return false;
+	    }
+	}
+
+
 }

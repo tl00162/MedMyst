@@ -51,6 +51,16 @@ public class Appointment {
         this.appointmentType = appointmentType;
         this.dateTime = dateTime;
     }
+    
+    public Appointment(int appointmentId, int patientId, int doctorId, String reason, String details, String appointmentType, LocalDateTime dateTime) {
+    	this.appointmentId = appointmentId;
+        this.patientId = patientId;
+        this.doctorId = doctorId;
+        this.reason = reason;
+        this.details = details;
+        this.appointmentType = appointmentType;
+        this.dateTime = dateTime;
+    }
 
     // Getters and setters
 

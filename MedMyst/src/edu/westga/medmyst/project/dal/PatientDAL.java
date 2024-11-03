@@ -176,4 +176,30 @@ public class PatientDAL {
         }
         return patients;
     }
+    
+    public Patient getPatientById(int patientId) throws SQLException {
+        String query = "SELECT * FROM Patient WHERE patient_id = ?";
+        try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+        		PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, patientId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return new Patient(
+                    resultSet.getInt("patient_id"),
+                    resultSet.getString("f_name"),
+                    resultSet.getString("l_name"),
+                    resultSet.getDate("date_of_birth").toLocalDate(),
+                    resultSet.getString("gender"),
+                    resultSet.getString("phone_number"),
+                    resultSet.getString("address"),
+                    resultSet.getString("address_2"),
+                    resultSet.getString("state"),
+                    resultSet.getString("zip")
+                );
+            }
+        }
+        return null; // Return null if no patient is found
+    }
+
 }

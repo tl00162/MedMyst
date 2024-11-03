@@ -39,7 +39,7 @@
       </Label>
       <ListView fx:id="appointmentsListView" layoutX="697.0" layoutY="118.0" prefHeight="280.0" prefWidth="248.0" />
       <Button fx:id="addAppointmentButton" layoutX="112.0" layoutY="444.0" mnemonicParsing="false" onAction="#createAppointment" text="Create Appointment for Patient" />
-      <Button fx:id="editAppointmentButton" layoutX="829.0" layoutY="409.0" mnemonicParsing="false" text="Edit Appointment" />
+      <Button fx:id="editAppointmentButton" layoutX="829.0" layoutY="409.0" mnemonicParsing="false" onAction="#editAppointment" text="Edit Appointment" />
       <Label fx:id="searchByAppointmentLabel" layoutX="1010.0" layoutY="118.0" text="Search By:">
          <font>
             <Font size="16.0" />
@@ -51,6 +51,6 @@
       <TextField fx:id="searchLastNameTextFieldAppointment" layoutX="971.0" layoutY="228.0" />
       <Label fx:id="searchDOBLabelAppointment" layoutX="972.0" layoutY="270.0" text="DOB" />
       <DatePicker fx:id="searchDOBPickerAppointment" layoutX="972.0" layoutY="287.0" />
-      <Button fx:id="searchButtonAppointment" layoutX="1009.0" layoutY="333.0" mnemonicParsing="false" text="Search" />
+      <Button fx:id="searchButtonAppointment" layoutX="1009.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchAppointments" text="Search" />
    </children>
 </AnchorPane>

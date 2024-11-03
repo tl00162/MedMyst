@@ -143,15 +143,44 @@ public class AppointmentDAL {
                     rs.getInt("appointment_id"),
                     rs.getInt("patient_id"),
                     rs.getInt("doctor_id"),
-                    rs.getString("doctor_first_name"),
-                    rs.getString("doctor_last_name"),
-                    rs.getString("doctor_specialty"),
                     rs.getString("reason"),
                     rs.getString("details"),
                     rs.getString("appointment_type"),
                     rs.getTimestamp("datetime").toLocalDateTime()
                 );
                 appointments.add(appointment);
+            }
+        }
+        return appointments;
+    }
+    
+    /**
+     * Retrieves all appointments for a specific doctor by their ID.
+     * 
+     * @param doctorId the ID of the doctor whose appointments to retrieve
+     * @return a list of Appointments for the specified doctor
+     * @throws SQLException if a database access error occurs
+     */
+    public List<Appointment> getAppointmentsByDoctorId(int doctorId) throws SQLException {
+        List<Appointment> appointments = new ArrayList<>();
+        String query = "SELECT * FROM appointment WHERE doctor_id = ?";
+        
+        try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+        		PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, doctorId);
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                while (resultSet.next()) {
+                    Appointment appointment = new Appointment(
+                        resultSet.getInt("appointment_id"),
+                        resultSet.getInt("patient_id"),
+                        resultSet.getInt("doctor_id"),
+                        resultSet.getString("reason"),
+                        resultSet.getString("details"),
+                        resultSet.getString("appointment_type"),
+                        resultSet.getTimestamp("datetime").toLocalDateTime()
+                    );
+                    appointments.add(appointment);
+                }
             }
         }
         return appointments;

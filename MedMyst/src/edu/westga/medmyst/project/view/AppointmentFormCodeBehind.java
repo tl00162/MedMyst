@@ -261,11 +261,16 @@ public class AppointmentFormCodeBehind {
     }
 
     private String convertTo24HourFormat(String time) {
+        // Check if the time is already in 24-hour format
+        if (time.matches("\\d{2}:\\d{2}")) {
+            return time;
+        }
+        // Parse and convert 12-hour format to 24-hour format
         return java.time.format.DateTimeFormatter.ofPattern("hh:mm a")
             .parse(time, java.time.LocalTime::from)
             .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
     }
-    
+
     private void updateAppointmentDateTime() {
         LocalDate date = this.dateDatePicker.getValue();
         String time = this.timeComboBox.getValue();
