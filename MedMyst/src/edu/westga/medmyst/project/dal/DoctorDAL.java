@@ -7,13 +7,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * DAL for accessing doctor data in the database.
  * 
+ * @author demmons1
  * @version Fall 2024
  */
 public class DoctorDAL {
@@ -155,7 +155,7 @@ public class DoctorDAL {
             }
         }
 
-        return null; // No doctor found with the provided ID
+        return null;
     }
     
     /**
@@ -183,7 +183,7 @@ public class DoctorDAL {
             }
         }
 
-        return -1; // Return -1 if no doctor with the given name is found
+        return -1;
     }
     
     /**

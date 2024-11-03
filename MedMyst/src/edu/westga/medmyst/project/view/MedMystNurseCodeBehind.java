@@ -103,7 +103,7 @@ public class MedMystNurseCodeBehind {
 		
 		this.appointmentsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			this.selectedAppointment = newValue;
-			});
+		});
 	}
 
 	/**
@@ -263,20 +263,16 @@ public class MedMystNurseCodeBehind {
 	private void editAppointment() {
 	    if (this.selectedAppointment != null) {
 	    	
-	    	 if (this.selectedAppointment.getDateTime().isBefore(LocalDateTime.now())) {
-	             showAlert("Cannot Edit Appointment", "This appointment is in the past and cannot be edited.");
-	             return;
-	         }
-	    	 
+	    	if (this.selectedAppointment.getDateTime().isBefore(LocalDateTime.now())) {
+	            this.showAlert("Cannot Edit Appointment", "This appointment is in the past and cannot be edited.");
+	            return;
+	        }
 	        try {
 	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/AppointmentForm.fxml"));
 	            Pane appointmentFormPane = loader.load();
-
 	            Stage appointmentFormStage = new Stage();
 	            appointmentFormStage.setTitle("Edit Appointment");
 	            appointmentFormStage.setScene(new Scene(appointmentFormPane));
-
-	            // Access the controller for the form and set necessary values
 	            AppointmentFormCodeBehind appointmentFormCodeBehind = loader.getController();
 	            appointmentFormCodeBehind.setViewModel(this.viewmodel);
 	            appointmentFormCodeBehind.setCurrentAppointment(this.selectedAppointment);
@@ -285,13 +281,11 @@ public class MedMystNurseCodeBehind {
 	            if (patient != null) {
 	                appointmentFormCodeBehind.setCurrentPatient(patient);
 	            }
-
 	            appointmentFormCodeBehind.setOnFormSubmit(() -> {
 	                this.refreshAppointmentList();
 	                this.selectedAppointment = null;
 	                appointmentFormStage.close();
 	            });
-
 	            appointmentFormStage.show();
 	        } catch (IOException e) {
 	            e.printStackTrace();
@@ -342,8 +336,7 @@ public class MedMystNurseCodeBehind {
 	    String firstName = this.searchFirstNameTextFieldAppointment.getText().trim();
 	    String lastName = this.searchLastNameTextFieldAppointment.getText().trim();
 	    LocalDate dob = this.searchDOBPickerAppointment.getValue();
-
-	    // Call view model's search method with collected values
+	    
 	    List<Appointment> filteredAppointments = this.viewmodel.searchAppointmentsByPatientInfo(firstName, lastName, dob);
 	    ObservableList<Appointment> observableAppointmentList = FXCollections.observableArrayList(filteredAppointments);
 	    this.appointmentsListView.setItems(observableAppointmentList);

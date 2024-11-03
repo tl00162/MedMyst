@@ -13,11 +13,16 @@ import java.util.List;
 /**
  * Data Access Layer for AppointmentType.
  * Provides methods to retrieve appointment types from the database.
- * 
+ * @author demmons1
  * @version Fall 2024
  */
 public class AppointmentTypeDAL {
 
+	/**
+	 * gets the list of all appointmentTypes
+	 * @return the list of appointmentTypes
+	 * @throws SQLException
+	 */
     public List<AppointmentType> getAllAppointmentTypes() throws SQLException {
         List<AppointmentType> appointmentTypes = new ArrayList<>();
         String query = "SELECT * FROM AppointmentType";

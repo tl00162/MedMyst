@@ -1,21 +1,16 @@
 package edu.westga.medmyst.project.view;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import edu.westga.medmyst.project.model.Appointment;
-import edu.westga.medmyst.project.model.AppointmentType;
 import edu.westga.medmyst.project.model.Patient;
 import edu.westga.medmyst.project.viewmodel.MedMystViewModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
@@ -89,15 +84,19 @@ public class AppointmentFormCodeBehind {
 
     @FXML
     private void initialize() {
-        this.cancelButton.setOnAction(event -> closeWindow());
-        this.createAppointmentButton.setOnAction(event -> saveAppointment());
+        this.cancelButton.setOnAction(event -> this.closeWindow());
+        this.createAppointmentButton.setOnAction(event -> this.saveAppointment());
 
         this.populateAppointmentTimeComboBox();
         
-        this.dateDatePicker.valueProperty().addListener((obs, oldDate, newDate) -> updateAppointmentDateTime());
-        this.timeComboBox.valueProperty().addListener((obs, oldTime, newTime) -> updateAppointmentDateTime());
+        this.dateDatePicker.valueProperty().addListener((obs, oldDate, newDate) -> this.updateAppointmentDateTime());
+        this.timeComboBox.valueProperty().addListener((obs, oldTime, newTime) -> this.updateAppointmentDateTime());
     }
 
+    /**
+     * Sets the viewmodel
+     * @param viewmodel the specified viewmodel
+     */
     public void setViewModel(MedMystViewModel viewmodel) {
         this.viewmodel = viewmodel;
         this.populateDoctorComboBox();
@@ -126,10 +125,9 @@ public class AppointmentFormCodeBehind {
     private void bindDoctorComboBox() {
     	this.doctorComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                int doctorId = this.viewmodel.getDoctorIdByName(newValue); // Get doctor ID by name
+                int doctorId = this.viewmodel.getDoctorIdByName(newValue);
                 this.viewmodel.doctorIdProperty().set(doctorId);
 
-                // Split the doctor's full name to update the first and last names in the ViewModel
                 String[] nameParts = newValue.split(" ");
                 if (nameParts.length >= 2) {
                     this.viewmodel.doctorFirstNameProperty().set(nameParts[0]);
@@ -139,6 +137,10 @@ public class AppointmentFormCodeBehind {
         });
 	}
 
+    /**
+     * Sets the current patient
+     * @param patient the selected patient
+     */
 	public void setCurrentPatient(Patient patient) {
         this.currentPatient = patient;
         this.fnameTextField.setText(patient.getFName());
@@ -151,6 +153,10 @@ public class AppointmentFormCodeBehind {
         this.viewmodel.patientIdProperty().set(patient.getPatientId());
     }
     
+	/**
+	 * Sets the current appointment
+	 * @param appointment the selected appointment
+	 */
     public void setCurrentAppointment(Appointment appointment) {
         this.currentAppointment = appointment;
         if (appointment != null) {
@@ -160,7 +166,10 @@ public class AppointmentFormCodeBehind {
         }
     }
 
-
+    /**
+     * Sets up what to run on submit
+     * @param onFormSubmit
+     */
     public void setOnFormSubmit(Runnable onFormSubmit) {
         this.onFormSubmit = onFormSubmit;
     }
@@ -174,7 +183,7 @@ public class AppointmentFormCodeBehind {
     }
     
     private void populateDoctorComboBox() {
-        List<String> doctors = this.viewmodel.getDoctorNames(); // Ensure this method returns a list of doctor names (or ID-name pairs)
+        List<String> doctors = this.viewmodel.getDoctorNames();
         this.doctorComboBox.getItems().addAll(doctors);
     }
     
@@ -191,7 +200,7 @@ public class AppointmentFormCodeBehind {
 
     private void saveAppointment() {
         String selectedDoctor = this.doctorComboBox.getValue();
-        int doctorId = this.viewmodel.getDoctorIdByName(selectedDoctor); // Use a helper method in the viewmodel to get doctor ID by name
+        int doctorId = this.viewmodel.getDoctorIdByName(selectedDoctor);
         
         LocalDateTime appointmentDateTime = null;
         if (this.dateDatePicker.getValue() != null && this.timeComboBox.getValue() != null) {
@@ -220,11 +229,11 @@ public class AppointmentFormCodeBehind {
         }
 
         if (errorMessage.length() > 0) {
-            showErrorDialog(errorMessage.toString());
+            this.showErrorDialog(errorMessage.toString());
             return;
         }
 
-        this.viewmodel.doctorIdProperty().set(doctorId); // Directly set the doctorId property in the viewmodel
+        this.viewmodel.doctorIdProperty().set(doctorId);
         
         System.out.println("Selected Patient ID: " + this.currentPatient.getPatientId());
         System.out.println("Selected Doctor ID: " + doctorId);
@@ -233,14 +242,10 @@ public class AppointmentFormCodeBehind {
         System.out.println("Reason: " + reason);
         System.out.println("Details: " + details);
 
-
-
-
-
         boolean success = this.viewmodel.addAppointment();
 
         if (!success) {
-            showErrorDialog("Failed to create appointment. Please try again.");
+            this.showErrorDialog("Failed to create appointment. Please try again.");
             return;
         }
 
@@ -248,7 +253,7 @@ public class AppointmentFormCodeBehind {
             this.onFormSubmit.run();
         }
 
-        closeWindow();
+        this.closeWindow();
     }
 
 
@@ -261,11 +266,11 @@ public class AppointmentFormCodeBehind {
     }
 
     private String convertTo24HourFormat(String time) {
-        // Check if the time is already in 24-hour format
+       
         if (time.matches("\\d{2}:\\d{2}")) {
             return time;
         }
-        // Parse and convert 12-hour format to 24-hour format
+       
         return java.time.format.DateTimeFormatter.ofPattern("hh:mm a")
             .parse(time, java.time.LocalTime::from)
             .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
@@ -278,11 +283,11 @@ public class AppointmentFormCodeBehind {
         if (date != null && time != null) {
             LocalDateTime dateTime = LocalDateTime.of(
                 date,
-                java.time.LocalTime.parse(convertTo24HourFormat(time))
+                java.time.LocalTime.parse(this.convertTo24HourFormat(time))
             );
             this.viewmodel.appointmentDateTimeProperty().set(dateTime);
         } else {
-            // Clear appointmentDateTime if either date or time is missing
+            
             this.viewmodel.appointmentDateTimeProperty().set(null);
         }
     }

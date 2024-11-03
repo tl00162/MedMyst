@@ -33,6 +33,9 @@ public class Appointment {
      * @param appointmentId   The ID of the appointment.
      * @param patientId       The ID of the patient.
      * @param doctorId        The ID of the doctor.
+     * @param doctorFirstName The doctors first Name.
+     * @param doctorLastName  The doctors last Name.
+     * @param doctorSpecialty The doctors specialty.
      * @param reason          The reason for the appointment.
      * @param details         Additional details for the appointment.
      * @param appointmentType The type of the appointment.
@@ -52,6 +55,16 @@ public class Appointment {
         this.dateTime = dateTime;
     }
     
+    /**
+     * Constructs an appointment object with just the information present in the appointment DB table.
+     * @param appointmentId   The Id of the appointment.
+     * @param patientId		  The ID of the patient.
+     * @param doctorId		  The ID of the doctor.
+     * @param reason		  The reason for the appointment.
+     * @param details		  The details of the appointment.
+     * @param appointmentType The type of the appointment.
+     * @param dateTime		  The date and time of the appointment.
+     */
     public Appointment(int appointmentId, int patientId, int doctorId, String reason, String details, String appointmentType, LocalDateTime dateTime) {
     	this.appointmentId = appointmentId;
         this.patientId = patientId;
@@ -62,132 +75,252 @@ public class Appointment {
         this.dateTime = dateTime;
     }
 
-    // Getters and setters
 
+    /**
+     * Gets the appointment Id
+     * @return the appointmentId
+     */
     public int getAppointmentId() {
-        return appointmentId;
+        return this.appointmentId;
     }
 
+    /**
+     * Sets the appointment Id to the specified value
+     * @param appointmentId the new appointmentId.
+     */
     public void setAppointmentId(int appointmentId) {
         this.appointmentId = appointmentId;
     }
 
+    /**
+     * gets the patientId
+     * @return the patientId.
+     */
     public int getPatientId() {
-        return patientId;
+        return this.patientId;
     }
 
+    /**
+     * sets the patientId to the specified value
+     * @param patientId the new patientId
+     */
     public void setPatientId(int patientId) {
         this.patientId = patientId;
     }
 
+    /**
+     * Gets the doctorId
+     * @return the doctorId
+     */
     public int getDoctorId() {
-        return doctorId;
+        return this.doctorId;
     }
 
+    /**
+     * sets the doctorId to the specified value.
+     * @param doctorId the new doctorId.
+     */
     public void setDoctorId(int doctorId) {
         this.doctorId = doctorId;
     }
     
+    /**
+     * Gets the doctor's first name.
+     * @return the doctor's first name.
+     */
     public String getDoctorFirstName() {
         return this.doctorFirstName;
     }
 
+    /**
+     * Sets the doctor's first name
+     * @param doctorFirstName the new first name
+     */
     public void setDoctorFirstName(String doctorFirstName) {
         this.doctorFirstName = doctorFirstName;
     }
 
+    /**
+     * Gets the doctor's last name
+     * @return the doctor's last name
+     */
     public String getDoctorLastName() {
         return this.doctorLastName;
     }
 
+    /**
+     * sets the doctor's last name
+     * @param doctorLastName the new last name
+     */
     public void setDoctorLastName(String doctorLastName) {
         this.doctorLastName = doctorLastName;
     }
 
+    /**
+     * Gets the doctor's specialty
+     * @return the specialty
+     */
     public String getDoctorSpecialty() {
         return this.doctorSpecialty;
     }
 
+    /**
+     * Sets the doctor's specialty.
+     * @param doctorSpecialty the new specialty
+     */
     public void setDoctorSpecialty(String doctorSpecialty) {
         this.doctorSpecialty = doctorSpecialty;
     }
 
+    /**
+     * Gets the reason for the appointment
+     * @return the reason
+     */
     public String getReason() {
-        return reason;
+        return this.reason;
     }
 
+    /**
+     * Sets the reason for the appointment
+     * @param reason the new reason
+     */
     public void setReason(String reason) {
         this.reason = reason;
     }
 
+    /**
+     * Gets the appointment details
+     * @return the details
+     */
     public String getDetails() {
-        return details;
+        return this.details;
     }
 
+    /**
+     * Sets the appointment details
+     * @param details the new details
+     */
     public void setDetails(String details) {
         this.details = details;
     }
 
+    /**
+     * Gets the appointment Type
+     * @return the appointment Type
+     */
     public String getAppointmentType() {
-        return appointmentType;
+        return this.appointmentType;
     }
 
+    /**
+     * Sets the appointment Type
+     * @param appointmentType the new type
+     */
     public void setAppointmentType(String appointmentType) {
         this.appointmentType = appointmentType;
     }
 
+    /**
+     * Gets the dateTime of the appointment.
+     * @return the dateTime.
+     */
     public LocalDateTime getDateTime() {
-        return dateTime;
+        return this.dateTime;
     }
 
+    /**
+     * sets the DateTime
+     * @param dateTime the new dateTime
+     */
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
     
+    /**
+     * Gets the systolicPressure
+     * @return the systolicPressure
+     */
     public int getSystolicPressure() {
     	return this.systolicPressure;
     }
     
+    /**
+     * Sets the systolicPressure
+     * @param pressure the new pressure
+     */
     public void setSystolicPressure(int pressure) {
     	this.systolicPressure = pressure;
     }
     
+    /**
+     * Gets the diastolic pressure
+     * @return the diastolic pressure
+     */
     public int getDiastolicPressure() {
     	return this.diastolicPressure;
     }
     
+    /**
+     * Sets the diastolic pressure
+     * @param pressure the new pressure
+     */
     public void setDiastolicPressure(int pressure) {
     	this.diastolicPressure = pressure;
     }
     
+    /**
+     * Gets the pulse
+     * @return the pulse
+     */
     public int getPulse() {
     	return this.pulse;
     }
     
+    /**
+     * Sets the pulse
+     * @param pulse the new pulse
+     */
     public void setPulse(int pulse) {
     	this.pulse = pulse;
     }
     
+    /**
+     * Gets the weight
+     * @return the weight
+     */
     public double getWeight() {
     	return this.weight;
     }
     
+    /**
+     * Sets the weight
+     * @param weight the new weight
+     */
     public void setWeight(double weight) {
     	this.weight = weight;
     }
     
+    /**
+     * Gets the height
+     * @return the height
+     */
     public double getHeight() {
     	return this.height;
     }
 
+    
+    /**
+     * Sets the height
+     * @param height the new height
+     */
     public void setHeight(double height) {
     	this.height = height;
     }
     
     @Override
     public String toString() {
-        return "Appointment [appointmentId=" + appointmentId + ", patientId=" + patientId + ", doctorId=" + doctorId
-                + ", reason=" + reason + ", details=" + details + ", appointmentType=" + appointmentType + ", dateTime="
-                + dateTime + "]";
+        return "Appointment [appointmentId=" + this.appointmentId + ", patientId=" + this.patientId + ", doctorId=" + this.doctorId
+                + ", reason=" + this.reason + ", details=" + this.details + ", appointmentType=" + this.appointmentType + ", dateTime="
+                + this.dateTime + "]";
     }
 }

@@ -83,7 +83,6 @@ public class MedMystViewModel {
 		this.username = new SimpleStringProperty();
 		this.password = new SimpleStringProperty();
 		this.loginSuccess = new SimpleStringProperty();
-
 		this.patientId = new SimpleIntegerProperty();
 		this.firstName = new SimpleStringProperty();
 		this.lastName = new SimpleStringProperty();
@@ -93,8 +92,7 @@ public class MedMystViewModel {
 		this.address1 = new SimpleStringProperty();
 		this.address2 = new SimpleStringProperty();
 		this.state = new SimpleStringProperty();
-		this.zip = new SimpleStringProperty();
-		
+		this.zip = new SimpleStringProperty();		
 		this.appointmentId = new SimpleIntegerProperty();
 	    this.doctorId = new SimpleIntegerProperty();
 	    this.doctorFirstName = new SimpleStringProperty();
@@ -111,10 +109,8 @@ public class MedMystViewModel {
 	    this.pulse = new SimpleIntegerProperty();
 	    this.height = new SimpleDoubleProperty();
 	    this.weight = new SimpleDoubleProperty();
-
 		this.loginDAL = new LoginDAL();
 		this.currentUser = null;
-
 		this.patientDAL = new PatientDAL();
 		this.appointmentDAL = new AppointmentDAL();
 		this.doctorDAL = new DoctorDAL();
@@ -470,6 +466,11 @@ public class MedMystViewModel {
 		}
 	}
 	
+	/**
+	 * Gets the patient by Id
+	 * @param patientId
+	 * @return the found patient or null
+	 */
 	public Patient getPatientById(int patientId) {
 	    try {
 	        return this.patientDAL.getPatientById(patientId);
@@ -480,7 +481,10 @@ public class MedMystViewModel {
 	    }
 	}
 
-	
+	/**
+	 * Gets the doctor names
+	 * @return the list of names
+	 */
 	public List<String> getDoctorNames() {
 	    List<String> doctorNames = new ArrayList<>();
 	    try {
@@ -494,6 +498,11 @@ public class MedMystViewModel {
 	    return doctorNames;
 	}
 	
+	/**
+	 * Gets the doctor's Id
+	 * @param doctorName the doctor to find Id
+	 * @return the id
+	 */
 	public int getDoctorIdByName(String doctorName) {
 	    try {
 	        List<Doctor> doctors = this.doctorDAL.getAllDoctors();
@@ -505,9 +514,14 @@ public class MedMystViewModel {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-	    return -1; // Return an invalid ID if doctor not found
+	    return -1;
 	}
 	
+	/**
+	 * Gets the doctors name from their Id
+	 * @param doctorId the specified Id
+	 * @return the matching name
+	 */
 	public String getDoctorNameById(int doctorId) {
 	    try {
 	        Doctor doctor = this.doctorDAL.getDoctorById(doctorId);
@@ -529,13 +543,10 @@ public class MedMystViewModel {
 	        System.out.println("Error: Missing required fields for appointment creation.");
 	        return false;
 	    }
-
-	    // Check if the doctor is available at the requested time
-	    if (!isDoctorAvailable(this.doctorId.get(), this.appointmentDateTime.get())) {
+	    if (!this.isDoctorAvailable(this.doctorId.get(), this.appointmentDateTime.get())) {
 	        System.out.println("Error: Doctor is already booked at this time.");
 	        return false;
 	    }
-
 	    Appointment newAppointment = new Appointment(
 	            this.appointmentId.get(),
 	            this.patientId.get(),
@@ -547,7 +558,6 @@ public class MedMystViewModel {
 	            this.details.get(),
 	            this.appointmentType.get(),
 	            this.appointmentDateTime.get());
-
 	    try {
 	        this.appointmentDAL.addAppointment(newAppointment);
 	        return true;
@@ -573,7 +583,6 @@ public class MedMystViewModel {
 	    if (this.appointmentDateTime.get() == null || this.reason.get().isEmpty() || this.appointmentType.get().isEmpty()) {
 	        return false;
 	    }
-
 	    appointmentToUpdate.setDoctorId(this.doctorId.get());
 	    appointmentToUpdate.setDoctorFirstName(this.doctorFirstName.get());
 	    appointmentToUpdate.setDoctorLastName(this.doctorLastName.get());
@@ -582,8 +591,6 @@ public class MedMystViewModel {
 	    appointmentToUpdate.setDetails(this.details.get());
 	    appointmentToUpdate.setAppointmentType(this.appointmentType.get());
 	    appointmentToUpdate.setDateTime(this.appointmentDateTime.get());
-
-	    // Set additional measurements if they are set in the view
 	    if (this.systolicPressure.get() >= 0) {
 	        appointmentToUpdate.setSystolicPressure(this.systolicPressure.get());
 	    }
@@ -599,7 +606,6 @@ public class MedMystViewModel {
 	    if (this.weight.get() >= 0) {
 	        appointmentToUpdate.setWeight(this.weight.get());
 	    }
-
 	    try {
 	        this.appointmentDAL.updateAppointment(appointmentToUpdate);
 	        return true;
@@ -661,24 +667,33 @@ public class MedMystViewModel {
 	    }
 	}
 	
+	/**
+	 * Gets the list of appointments for a specified patient
+	 * @param patientId the specified patient
+	 * @return the list of appointments
+	 */
 	public List<Appointment> getAppointmentsByPatientId(int patientId) {
 	    try {
-	        return this.appointmentDAL.getAppointmentsByCriteria(patientId, -1); // Assuming -1 ignores the doctor ID filter
+	        return this.appointmentDAL.getAppointmentsByCriteria(patientId, -1);
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        return new ArrayList<>();
 	    }
 	}
 
-	
+	/**
+	 * Gets a list of appointments based on the provided info
+	 * @param firstName patient's first name
+	 * @param lastName patient's last name
+	 * @param dob patient's dob
+	 * @return the list of appointments
+	 */
 	public List<Appointment> searchAppointmentsByPatientInfo(String firstName, String lastName, LocalDate dob) {
 	    List<Appointment> matchingAppointments = new ArrayList<>();
 
 	    try {
-	        // Search for patients matching the given criteria
 	        List<Patient> matchingPatients = this.patientDAL.searchPatients(firstName, lastName, dob);
-	        
-	        // Get appointments for each matching patient
+	       
 	        for (Patient patient : matchingPatients) {
 	            matchingAppointments.addAll(this.getAppointmentsByPatientId(patient.getPatientId()));
 	        }
@@ -706,7 +721,6 @@ public class MedMystViewModel {
 	    this.appointmentTime.set(appointment.getDateTime().toLocalTime().toString());
 	    this.appointmentDateTime.set(appointment.getDateTime());
 
-	    // Load doctor details
 	    try {
 	        Doctor doctor = this.doctorDAL.getDoctorById(appointment.getDoctorId());
 	        if (doctor != null) {
@@ -718,7 +732,6 @@ public class MedMystViewModel {
 	        e.printStackTrace();
 	    }
 
-	    // Load additional health metrics if available
 	    this.systolicPressure.set(appointment.getSystolicPressure());
 	    this.diastolicPressure.set(appointment.getDiastolicPressure());
 	    this.pulse.set(appointment.getPulse());
@@ -726,7 +739,13 @@ public class MedMystViewModel {
 	    this.weight.set(appointment.getWeight());
 	}
 
-
+	/**
+	 * searches for the specified patient based on provided criteria.
+	 * @param firstName the first name
+	 * @param lastName the last name
+	 * @param dob the patients dob
+	 * @return the matching patient
+	 */
 	public List<Patient> searchPatients(String firstName, String lastName, LocalDate dob) {
 	    try {
 	        List<Patient> patients = this.patientDAL.searchPatients(firstName, lastName, dob);
@@ -741,6 +760,12 @@ public class MedMystViewModel {
 	    }
 	}
 	
+	/**
+	 * Checks if a doctor is already booked for that DateTime
+	 * @param doctorId the specified doctor
+	 * @param dateTime the specified time
+	 * @return true if doctor is available, else false
+	 */
 	public boolean isDoctorAvailable(int doctorId, LocalDateTime dateTime) {
 	    try {
 	        List<Appointment> doctorAppointments = this.appointmentDAL.getAppointmentsByDoctorId(doctorId);
@@ -760,6 +785,4 @@ public class MedMystViewModel {
 	        return false;
 	    }
 	}
-
-
 }

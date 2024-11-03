@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 /**
  * Represents a doctor within the system.
- * 
+ * @author demmons1
  * @version Fall 2024
  */
 public class Doctor {
@@ -51,7 +51,6 @@ public class Doctor {
         this.zip = zip;
     }
 
-    // Getters and setters for each field
     public int getDoctorId() {
         return this.doctorId;
     }
