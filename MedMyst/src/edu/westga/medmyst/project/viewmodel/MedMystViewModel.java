@@ -638,40 +638,18 @@ public class MedMystViewModel {
 	 * @return true if updated, else false
 	 */
 	public boolean updateAppointment(Appointment appointmentToUpdate) {
-		if (this.appointmentDateTime.get() == null || this.reason.get().isEmpty()
-				|| this.appointmentType.get().isEmpty()) {
-			return false;
-		}
-		appointmentToUpdate.setDoctorId(this.doctorId.get());
-		appointmentToUpdate.setDoctorFirstName(this.doctorFirstName.get());
-		appointmentToUpdate.setDoctorLastName(this.doctorLastName.get());
-		appointmentToUpdate.setDoctorSpecialty(this.doctorSpecialty.get());
-		appointmentToUpdate.setReason(this.reason.get());
-		appointmentToUpdate.setDetails(this.details.get());
-		appointmentToUpdate.setAppointmentType(this.appointmentType.get());
-		appointmentToUpdate.setDateTime(this.appointmentDateTime.get());
-		if (this.systolicPressure.get() >= 0) {
-			appointmentToUpdate.setSystolicPressure(this.systolicPressure.get());
-		}
-		if (this.diastolicPressure.get() >= 0) {
-			appointmentToUpdate.setDiastolicPressure(this.diastolicPressure.get());
-		}
-		if (this.pulse.get() >= 0) {
-			appointmentToUpdate.setPulse(this.pulse.get());
-		}
-		if (this.height.get() >= 0) {
-			appointmentToUpdate.setHeight(this.height.get());
-		}
-		if (this.weight.get() >= 0) {
-			appointmentToUpdate.setWeight(this.weight.get());
-		}
-		try {
-			this.appointmentDAL.updateAppointment(appointmentToUpdate);
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
+	    if (appointmentToUpdate.getDateTime().isBefore(LocalDateTime.now())) {
+	        System.out.println("Cannot update: Appointment time has passed.");
+	        return false;
+	    }
+
+	    try {
+	        this.appointmentDAL.updateAppointment(appointmentToUpdate);
+	        return true;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 
 	/**
