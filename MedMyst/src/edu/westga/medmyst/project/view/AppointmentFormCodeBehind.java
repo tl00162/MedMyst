@@ -199,52 +199,18 @@ public class AppointmentFormCodeBehind {
     }
 
     private void saveAppointment() {
-        String selectedDoctor = this.doctorComboBox.getValue();
-        int doctorId = this.viewmodel.getDoctorIdByName(selectedDoctor);
-        
-        LocalDateTime appointmentDateTime = null;
-        if (this.dateDatePicker.getValue() != null && this.timeComboBox.getValue() != null) {
-            appointmentDateTime = LocalDateTime.of(
-                this.dateDatePicker.getValue(),
-                java.time.LocalTime.parse(this.convertTo24HourFormat(this.timeComboBox.getValue()))
-            );
-        }
-        String appointmentType = this.appointmentTypeComboBox.getValue();
-        String reason = this.reasonTextField.getText();
-        String details = this.detailsTextField.getText();
-
-        StringBuilder errorMessage = new StringBuilder();
-
-        if (selectedDoctor == null || selectedDoctor.isEmpty()) {
-            errorMessage.append("Doctor must be selected.\n");
-        }
-        if (appointmentDateTime == null) {
-            errorMessage.append("Appointment date and time must be selected.\n");
-        }
-        if (appointmentType == null) {
-            errorMessage.append("Appointment type must be selected.\n");
-        }
-        if (reason == null || reason.isEmpty()) {
-            errorMessage.append("Appointment reason must not be empty.\n");
-        }
-
+        StringBuilder errorMessage = this.validateAppointmentInput();
         if (errorMessage.length() > 0) {
             this.showErrorDialog(errorMessage.toString());
             return;
         }
 
-        this.viewmodel.doctorIdProperty().set(doctorId);
-        
-        System.out.println("Selected Patient ID: " + this.currentPatient.getPatientId());
-        System.out.println("Selected Doctor ID: " + doctorId);
-        System.out.println("Appointment DateTime: " + appointmentDateTime);
-        System.out.println("Appointment DateTime: " + this.viewmodel.appointmentDateTimeProperty().get());
-        System.out.println("Reason: " + reason);
-        System.out.println("Details: " + details);
+        int doctorId = this.getSelectedDoctorId();
+        LocalDateTime appointmentDateTime = this.parseAppointmentDateTime();
 
-        boolean success = this.viewmodel.addAppointment();
+        this.setViewModelProperties(doctorId, appointmentDateTime);
 
-        if (!success) {
+        if (!this.viewmodel.addAppointment()) {
             this.showErrorDialog("Failed to create appointment. Please try again.");
             return;
         }
@@ -255,7 +221,64 @@ public class AppointmentFormCodeBehind {
 
         this.closeWindow();
     }
+    
+    private StringBuilder validateAppointmentInput() {
+        StringBuilder errorMessage = new StringBuilder();
 
+        if (this.doctorComboBox.getValue() == null || this.doctorComboBox.getValue().isEmpty()) {
+            errorMessage.append("Doctor must be selected.\n");
+        }
+        if (this.parseAppointmentDateTime() == null) {
+            errorMessage.append("Appointment date and time must be selected.\n");
+        }
+        if (this.appointmentTypeComboBox.getValue() == null) {
+            errorMessage.append("Appointment type must be selected.\n");
+        }
+        if (this.reasonTextField.getText() == null || this.reasonTextField.getText().isEmpty()) {
+            errorMessage.append("Appointment reason must not be empty.\n");
+        }
+
+        return errorMessage;
+    }
+
+    /**
+     * Parses and formats the appointment date and time.
+     * 
+     * @return The LocalDateTime for the appointment, or null if date or time is not selected.
+     */
+    private LocalDateTime parseAppointmentDateTime() {
+        if (this.dateDatePicker.getValue() != null && this.timeComboBox.getValue() != null) {
+            return LocalDateTime.of(
+                this.dateDatePicker.getValue(),
+                java.time.LocalTime.parse(this.convertTo24HourFormat(this.timeComboBox.getValue()))
+            );
+        }
+        return null;
+    }
+
+    /**
+     * Gets the selected doctor's ID from the viewmodel using the doctor's name.
+     * 
+     * @return the doctor's ID
+     */
+    private int getSelectedDoctorId() {
+        String selectedDoctor = this.doctorComboBox.getValue();
+        return this.viewmodel.getDoctorIdByName(selectedDoctor);
+    }
+
+    /**
+     * Sets the necessary properties in the ViewModel for creating an appointment.
+     * 
+     * @param doctorId The selected doctor's ID.
+     * @param appointmentDateTime The selected appointment date and time.
+     */
+    private void setViewModelProperties(int doctorId, LocalDateTime appointmentDateTime) {
+        this.viewmodel.doctorIdProperty().set(doctorId);
+        this.viewmodel.appointmentDateTimeProperty().set(appointmentDateTime);
+        this.viewmodel.appointmentTypeProperty().set(this.appointmentTypeComboBox.getValue());
+        this.viewmodel.reasonProperty().set(this.reasonTextField.getText());
+        this.viewmodel.detailsProperty().set(this.detailsTextField.getText());
+    }
 
     private void showErrorDialog(String errorMessage) {
         Alert alert = new Alert(AlertType.ERROR);

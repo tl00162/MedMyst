@@ -35,9 +35,10 @@ public class Patient {
 	 * @param address2    the patient's address2
 	 * @param state       the patient's state
 	 * @param zip         the patient's zip code
+	 * @param activeStatus the patient's activeStatus
 	 */
 	public Patient(int patientId, String fname, String lname, LocalDate birthDate, String gender, String phoneNumber,
-			String address1, String address2, String state, String zip) {
+			String address1, String address2, String state, String zip, Boolean activeStatus) {
 		this.patientID = patientId;
 		this.firstName = fname;
 		this.lastName = lname;
@@ -48,7 +49,7 @@ public class Patient {
 		this.address2 = address2;
 		this.state = state;
 		this.zip = zip;
-		this.activeStatus = true;
+		this.activeStatus = activeStatus;
 	}
 
 	/**

@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -35,5 +36,8 @@
             <Font size="24.0" />
          </font>
       </Label>
+      <Label layoutX="334.0" layoutY="230.0" text="Status" />
+      <RadioButton fx:id="activeRadioButton" layoutX="333.0" layoutY="258.0" mnemonicParsing="false" selected="true" text="Active" />
+      <RadioButton fx:id="inactiveRadioButton" layoutX="394.0" layoutY="258.0" mnemonicParsing="false" text="Inactive" />
    </children>
 </AnchorPane>

@@ -16,9 +16,11 @@ import edu.westga.medmyst.project.model.AppointmentType;
 import edu.westga.medmyst.project.model.Doctor;
 import edu.westga.medmyst.project.model.Login;
 import edu.westga.medmyst.project.model.Patient;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -49,6 +51,7 @@ public class MedMystViewModel {
 	private StringProperty address2;
 	private StringProperty state;
 	private StringProperty zip;
+	private BooleanProperty isActive;
 	
 	private IntegerProperty appointmentId;
     private IntegerProperty doctorId;
@@ -115,6 +118,7 @@ public class MedMystViewModel {
 		this.appointmentDAL = new AppointmentDAL();
 		this.doctorDAL = new DoctorDAL();
 		this.appointmentTypeDAL = new AppointmentTypeDAL();
+		this.isActive = new SimpleBooleanProperty();
 	}
 
 	/**
@@ -125,6 +129,16 @@ public class MedMystViewModel {
 	 */
 	public StringProperty getUsername() {
 		return this.username;
+	}
+	
+	/**
+	 * Gets the isActive property that is bound to the radio buttons in the
+	 * view.
+	 * 
+	 * @return the isActive property
+	 */
+	public BooleanProperty getIsActive() {
+	    return this.isActive;
 	}
 
 	/**
@@ -398,7 +412,7 @@ public class MedMystViewModel {
 
 		Patient newPatient = new Patient(this.patientId.get(), this.firstName.get(), this.lastName.get(),
 				this.dateOfBirth.get(), this.gender.get(), this.phoneNumber.get(), this.address1.get(),
-				this.address2.get(), this.state.get(), this.zip.get());
+				this.address2.get(), this.state.get(), this.zip.get(), this.isActive.get());
 		try {
 
 			this.patientDAL.addPatient(newPatient);
@@ -450,6 +464,7 @@ public class MedMystViewModel {
 		this.address2.set(patient.getAddress2());
 		this.state.set(patient.getState());
 		this.zip.set(patient.getZip());
+		
 	}
 
 	/**

@@ -8,7 +8,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -54,6 +56,12 @@ public class PatientFormCodeBehind {
 
 	@FXML
 	private Button cancelButton;
+	
+	@FXML
+    private RadioButton activeRadioButton;
+	
+	@FXML
+    private RadioButton inactiveRadioButton;
 
 	private MedMystViewModel viewmodel;
 
@@ -63,9 +71,13 @@ public class PatientFormCodeBehind {
 
 	@FXML
 	private void initialize() {
-
-		this.cancelButton.setOnAction(event -> this.closeWindow());
+		ToggleGroup activeStatusGroup = new ToggleGroup();
+	    this.activeRadioButton.setToggleGroup(activeStatusGroup);
+	    this.inactiveRadioButton.setToggleGroup(activeStatusGroup);
+	    
+	    this.cancelButton.setOnAction(event -> this.closeWindow());
 		this.addPatientButton.setOnAction(event -> this.savePatient());
+		
 	}
 
 	/**
@@ -85,6 +97,7 @@ public class PatientFormCodeBehind {
 		this.address2TextField.textProperty().bindBidirectional(this.viewmodel.address2Property());
 		this.stateComboBox.valueProperty().bindBidirectional(this.viewmodel.stateProperty());
 		this.zipTextField.textProperty().bindBidirectional(this.viewmodel.zipProperty());
+		this.viewmodel.getIsActive().bindBidirectional(this.activeRadioButton.selectedProperty());
 
 		this.populateGenderComboBox();
 		this.populateStateComboBox();
@@ -138,6 +151,7 @@ public class PatientFormCodeBehind {
 		this.address2TextField.setText(this.currentPatient.getAddress2());
 		this.stateComboBox.setValue(this.currentPatient.getState());
 		this.zipTextField.setText(this.currentPatient.getZip());
+		this.inactiveRadioButton.setSelected(!this.currentPatient.getActiveStatus());
 	}
 
 	/**
@@ -153,6 +167,7 @@ public class PatientFormCodeBehind {
 		this.address2TextField.clear();
 		this.stateComboBox.setValue(null);
 		this.zipTextField.clear();
+		this.activeRadioButton.setSelected(true);
 	}
 
 	private void closeWindow() {
@@ -239,6 +254,7 @@ public class PatientFormCodeBehind {
 		this.currentPatient.setAddress2(this.address2TextField.getText());
 		this.currentPatient.setState(this.stateComboBox.getValue());
 		this.currentPatient.setZip(this.zipTextField.getText());
+		this.currentPatient.setActiveStatus(this.activeRadioButton.isSelected());
 	}
 
 	private void showErrorDialog(String errorMessage) {
