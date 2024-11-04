@@ -91,6 +91,12 @@ public class AppointmentFormCodeBehind {
         
         this.dateDatePicker.valueProperty().addListener((obs, oldDate, newDate) -> this.updateAppointmentDateTime());
         this.timeComboBox.valueProperty().addListener((obs, oldTime, newTime) -> this.updateAppointmentDateTime());
+        
+        this.addIntegerInputRestriction(this.systolicPressureTextField);
+        this.addIntegerInputRestriction(this.diastolicPressureTextField);
+        this.addIntegerInputRestriction(this.pulseTextField);
+        this.addDoubleInputRestriction(this.heightTextField);
+        this.addDoubleInputRestriction(this.weightTextField);
     }
 
     /**
@@ -163,6 +169,7 @@ public class AppointmentFormCodeBehind {
             this.viewmodel.loadAppointmentData(appointment);
             String doctorName = this.viewmodel.getDoctorNameById(appointment.getDoctorId());
             this.doctorComboBox.setValue(doctorName);
+            this.createAppointmentButton.setText("Update Appointment");
         }
     }
 
@@ -210,17 +217,37 @@ public class AppointmentFormCodeBehind {
 
         this.setViewModelProperties(doctorId, appointmentDateTime);
 
-        if (!this.viewmodel.addAppointment()) {
-            this.showErrorDialog("Failed to create appointment. Please try again.");
+        boolean success;
+        if (this.currentAppointment == null) {
+            success = this.viewmodel.addAppointment();
+        } else {
+            this.updateCurrentAppointmentProperties();
+            success = this.viewmodel.updateAppointment(this.currentAppointment);
+        }
+        if (!success) {
+            this.showErrorDialog("Failed to save appointment. Please try again.");
             return;
         }
-
         if (this.onFormSubmit != null) {
             this.onFormSubmit.run();
         }
 
         this.closeWindow();
     }
+
+    private void updateCurrentAppointmentProperties() {
+        this.currentAppointment.setDoctorId(this.viewmodel.doctorIdProperty().get());
+        this.currentAppointment.setDateTime(this.viewmodel.appointmentDateTimeProperty().get());
+        this.currentAppointment.setAppointmentType(this.viewmodel.appointmentTypeProperty().get());
+        this.currentAppointment.setReason(this.viewmodel.reasonProperty().get());
+        this.currentAppointment.setDetails(this.viewmodel.detailsProperty().get());
+        this.currentAppointment.setSystolicPressure(this.viewmodel.systolicPressureProperty().get());
+        this.currentAppointment.setDiastolicPressure(this.viewmodel.diastolicPressureProperty().get());
+        this.currentAppointment.setPulse(this.viewmodel.pulseProperty().get());
+        this.currentAppointment.setHeight(this.viewmodel.heightProperty().get());
+        this.currentAppointment.setWeight(this.viewmodel.weightProperty().get());
+    }
+
     
     private StringBuilder validateAppointmentInput() {
         StringBuilder errorMessage = new StringBuilder();
@@ -228,8 +255,11 @@ public class AppointmentFormCodeBehind {
         if (this.doctorComboBox.getValue() == null || this.doctorComboBox.getValue().isEmpty()) {
             errorMessage.append("Doctor must be selected.\n");
         }
-        if (this.parseAppointmentDateTime() == null) {
+        LocalDateTime appointmentDateTime = this.parseAppointmentDateTime();
+        if (appointmentDateTime == null) {
             errorMessage.append("Appointment date and time must be selected.\n");
+        } else if (appointmentDateTime.isBefore(LocalDateTime.now())) {
+            errorMessage.append("Appointment cannot be scheduled in the past.\n");
         }
         if (this.appointmentTypeComboBox.getValue() == null) {
             errorMessage.append("Appointment type must be selected.\n");
@@ -237,9 +267,42 @@ public class AppointmentFormCodeBehind {
         if (this.reasonTextField.getText() == null || this.reasonTextField.getText().isEmpty()) {
             errorMessage.append("Appointment reason must not be empty.\n");
         }
-
+        if (!this.isNumeric(this.systolicPressureTextField.getText())) {
+            errorMessage.append("Systolic Pressure must be a numeric value.\n");
+        }
+        if (!this.isNumeric(this.diastolicPressureTextField.getText())) {
+            errorMessage.append("Diastolic Pressure must be a numeric value.\n");
+        }
+        if (!this.isNumeric(this.pulseTextField.getText())) {
+            errorMessage.append("Pulse must be a numeric value.\n");
+        }
+        if (!this.isNumeric(this.heightTextField.getText())) {
+            errorMessage.append("Height must be a numeric value.\n");
+        }
+        if (!this.isNumeric(this.weightTextField.getText())) {
+            errorMessage.append("Weight must be a numeric value.\n");
+        }
         return errorMessage;
     }
+
+    /**
+     * Helper method to check if a given string is numeric.
+     * 
+     * @param text The string to check.
+     * @return true if the string is numeric, false otherwise.
+     */
+    private boolean isNumeric(String text) {
+        if (text == null || text.isEmpty()) {
+            return true;
+        }
+        try {
+            Double.parseDouble(text);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
 
     /**
      * Parses and formats the appointment date and time.
@@ -314,4 +377,23 @@ public class AppointmentFormCodeBehind {
             this.viewmodel.appointmentDateTimeProperty().set(null);
         }
     }
+    
+    private void addIntegerInputRestriction(TextField textField) {
+        textField.addEventFilter(javafx.scene.input.KeyEvent.KEY_TYPED, event -> {
+            String character = event.getCharacter();
+            if (!character.matches("[0-9]")) {
+                event.consume();
+            }
+        });
+    }
+
+    private void addDoubleInputRestriction(TextField textField) {
+        textField.addEventFilter(javafx.scene.input.KeyEvent.KEY_TYPED, event -> {
+            String character = event.getCharacter();
+            if (!character.matches("[0-9.]") || (character.equals(".") && textField.getText().contains("."))) {
+                event.consume();
+            }
+        });
+    }
+
 }
