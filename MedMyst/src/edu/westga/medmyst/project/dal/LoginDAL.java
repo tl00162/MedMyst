@@ -26,37 +26,23 @@ public class LoginDAL {
 	 * @throws SQLException if a database access error occurs
 	 */
 	public Login checkValidLogin(String username, String password) throws SQLException {
-		String nurseQuery = "SELECT n.f_name, n.l_name FROM nurseaccount na "
-				+ "JOIN nurse n ON na.user_id = n.nurse_id WHERE na.user_id = ? AND na.password = ?";
-		String adminQuery = "SELECT a.f_name, a.l_name FROM administratoraccount aa "
-				+ "JOIN administrator a ON aa.user_id = a.admin_id WHERE aa.user_id = ? AND aa.password = ?";
+		String query = "SELECT accounttype, f_name, l_name " + "FROM useraccount "
+				+ "WHERE username = ? AND password = ?";
 
-		try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING)) {
+		try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+				PreparedStatement stmt = connection.prepareStatement(query)) {
+			stmt.setString(1, username);
+			stmt.setString(2, password);
 
-			try (PreparedStatement nurseStmt = connection.prepareStatement(nurseQuery)) {
-				nurseStmt.setString(1, username);
-				nurseStmt.setString(2, password);
-
-				ResultSet nurseRs = nurseStmt.executeQuery();
-				if (nurseRs.next()) {
-					String firstName = nurseRs.getString("f_name");
-					String lastName = nurseRs.getString("l_name");
-					return new Login(username, "nurse", firstName, lastName);
-				}
-			}
-			try (PreparedStatement adminStmt = connection.prepareStatement(adminQuery)) {
-				adminStmt.setString(1, username);
-				adminStmt.setString(2, password);
-
-				ResultSet adminRs = adminStmt.executeQuery();
-				if (adminRs.next()) {
-					String firstName = adminRs.getString("f_name");
-					String lastName = adminRs.getString("l_name");
-					return new Login(username, "admin", firstName, lastName);
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					String accountType = rs.getString("accounttype");
+					String firstName = rs.getString("f_name");
+					String lastName = rs.getString("l_name");
+					return new Login(username, accountType, firstName, lastName);
 				}
 			}
 		}
-
 		return null;
 	}
 }

@@ -56,12 +56,12 @@ public class PatientFormCodeBehind {
 
 	@FXML
 	private Button cancelButton;
-	
+
 	@FXML
-    private RadioButton activeRadioButton;
-	
+	private RadioButton activeRadioButton;
+
 	@FXML
-    private RadioButton inactiveRadioButton;
+	private RadioButton inactiveRadioButton;
 
 	private MedMystViewModel viewmodel;
 
@@ -72,12 +72,12 @@ public class PatientFormCodeBehind {
 	@FXML
 	private void initialize() {
 		ToggleGroup activeStatusGroup = new ToggleGroup();
-	    this.activeRadioButton.setToggleGroup(activeStatusGroup);
-	    this.inactiveRadioButton.setToggleGroup(activeStatusGroup);
-	    
-	    this.cancelButton.setOnAction(event -> this.closeWindow());
+		this.activeRadioButton.setToggleGroup(activeStatusGroup);
+		this.inactiveRadioButton.setToggleGroup(activeStatusGroup);
+
+		this.cancelButton.setOnAction(event -> this.closeWindow());
 		this.addPatientButton.setOnAction(event -> this.savePatient());
-		
+
 	}
 
 	/**
