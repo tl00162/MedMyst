@@ -104,6 +104,9 @@ public class MedMystNurseCodeBehind {
 
 		this.editAppointmentButton.disableProperty()
 				.bind(this.appointmentsListView.getSelectionModel().selectedItemProperty().isNull());
+		
+		this.viewAppointmentButton.disableProperty()
+				.bind(this.appointmentsListView.getSelectionModel().selectedItemProperty().isNull());
 
 		this.appointmentsListView.getSelectionModel().selectedItemProperty()
 				.addListener((observable, oldValue, newValue) -> {
@@ -169,21 +172,17 @@ public class MedMystNurseCodeBehind {
 	 * @param viewmodel The ViewModel to use in this controller.
 	 */
 	public void setViewModel(MedMystViewModel viewmodel) {
-		this.viewmodel = viewmodel;
+	    this.viewmodel = viewmodel;
 
-		if (this.viewmodel.getCurrentUser() != null) {
-			String firstName = this.viewmodel.getCurrentUser().getFirstName();
-			String role = this.viewmodel.getCurrentUser().getRole();
+	    if (this.viewmodel.getCurrentUser() != null) {
+	        String firstName = this.viewmodel.getCurrentUser().getFirstName();
+	        String userId = this.viewmodel.getCurrentUser().getUserID();
+	        
+	        this.usernameLabel.setText(String.format("Welcome, %s, %s!", userId, firstName));
+	    }
 
-			if (role.equalsIgnoreCase("nurse")) {
-				this.usernameLabel.setText("Welcome, Nurse " + firstName + "!");
-			} else if (role.equalsIgnoreCase("admin")) {
-				this.usernameLabel.setText("Welcome, Admin " + firstName + "!");
-			}
-		}
-
-		this.refreshPatientList();
-		this.refreshAppointmentList();
+	    this.refreshPatientList();
+	    this.refreshAppointmentList();
 	}
 
 	@FXML
