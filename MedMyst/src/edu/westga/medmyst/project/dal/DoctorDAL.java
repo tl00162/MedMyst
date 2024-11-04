@@ -18,12 +18,12 @@ import java.util.List;
  */
 public class DoctorDAL {
 
-    /**
-     * Inserts a new doctor into the database.
-     * 
-     * @param doctor The doctor object containing the doctor information to insert.
-     * @throws SQLException If a database access error occurs.
-     */
+	/**
+	 * Inserts a new doctor into the database.
+	 * 
+	 * @param doctor The doctor object containing the doctor information to insert.
+	 * @throws SQLException If a database access error occurs.
+	 */
     public void addDoctor(Doctor doctor) throws SQLException {
         String query = "INSERT INTO Doctor (f_name, l_name, date_of_birth, gender, specialty, phone_number, address, address_2, state, zip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 

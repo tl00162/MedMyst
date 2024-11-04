@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -30,9 +31,10 @@
       <Label fx:id="doctorLabel" layoutX="58.0" layoutY="186.0" text="Doctor" />
       <ComboBox fx:id="doctorComboBox" layoutX="58.0" layoutY="203.0" prefWidth="150.0" />
       <Label fx:id="reasonLabel" layoutX="60.0" layoutY="232.0" text="Reason" />
-      <TextField fx:id="reasonTextField" layoutX="59.0" layoutY="249.0" prefHeight="60.0" prefWidth="485.0" />
-      <Label fx:id="detailsLabel" layoutX="62.0" layoutY="322.0" text="Details" />
-      <TextField fx:id="detailsTextField" layoutX="59.0" layoutY="339.0" prefHeight="78.0" prefWidth="485.0" />
+<TextArea fx:id="reasonTextArea" layoutX="59.0" layoutY="249.0" prefHeight="60.0" prefWidth="485.0" wrapText="true" />
+
+<Label fx:id="detailsLabel" layoutX="62.0" layoutY="322.0" text="Details" />
+<TextArea fx:id="detailsTextArea" layoutX="59.0" layoutY="339.0" prefHeight="78.0" prefWidth="485.0" wrapText="true" />
       <Label fx:id="checkUpInfoLabel" layoutX="196.0" layoutY="418.0" text="----- Check Up Info -----">
          <font>
             <Font size="18.0" />
