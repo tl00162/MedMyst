@@ -8,13 +8,13 @@ import edu.westga.medmyst.project.model.Appointment;
 import edu.westga.medmyst.project.model.Patient;
 import edu.westga.medmyst.project.viewmodel.MedMystViewModel;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.util.converter.NumberStringConverter;
 
@@ -22,8 +22,8 @@ import javafx.util.converter.NumberStringConverter;
  * The Class AppointmentFormCodeBehind. AppointmentFormCodeBehind provides
  * access to the Appointment Form GUI.
  * 
- * @author demmons1
  * @version Fall 2024
+ * @author demmons1
  */
 public class AppointmentFormCodeBehind {
 
@@ -128,6 +128,7 @@ public class AppointmentFormCodeBehind {
 				new NumberStringConverter());
 		this.weightTextField.textProperty().bindBidirectional(this.viewmodel.weightProperty(),
 				new NumberStringConverter());
+
 		this.appointmentTypeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
 			if (newVal != null) {
 				this.viewmodel.appointmentTypeProperty().set(newVal);
@@ -195,7 +196,7 @@ public class AppointmentFormCodeBehind {
 	public void setOnFormSubmit(Runnable onFormSubmit) {
 		this.onFormSubmit = onFormSubmit;
 	}
-
+	
 	/**
 	 * Gets the createAppointmentButton
 	 * 
@@ -379,11 +380,9 @@ public class AppointmentFormCodeBehind {
 	}
 
 	private String convertTo24HourFormat(String time) {
-
 		if (time.matches("\\d{2}:\\d{2}")) {
 			return time;
 		}
-
 		return java.time.format.DateTimeFormatter.ofPattern("hh:mm a").parse(time, java.time.LocalTime::from)
 				.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
 	}
@@ -397,7 +396,6 @@ public class AppointmentFormCodeBehind {
 					java.time.LocalTime.parse(this.convertTo24HourFormat(time)));
 			this.viewmodel.appointmentDateTimeProperty().set(dateTime);
 		} else {
-
 			this.viewmodel.appointmentDateTimeProperty().set(null);
 		}
 	}
