@@ -35,6 +35,9 @@ public class MedMystNurseCodeBehind {
 
 	@FXML
 	private Button addPatientButton;
+	
+	@FXML
+    private Button addTestButton;
 
 	@FXML
 	private Button editPatientButton;
@@ -62,6 +65,9 @@ public class MedMystNurseCodeBehind {
 
 	@FXML
 	private Button editAppointmentButton;
+	
+	@FXML
+    private Button editTestButton;
 
 	@FXML
 	private Button clearAppoinmentButton;
@@ -71,6 +77,9 @@ public class MedMystNurseCodeBehind {
 
 	@FXML
 	private ListView<Appointment> appointmentsListView;
+	
+	@FXML
+    private ListView<Appointment> testsListView; //TODO change list type to test, add test model
 
 	@FXML
 	private TextField searchFirstNameTextFieldAppointment;
@@ -86,6 +95,9 @@ public class MedMystNurseCodeBehind {
 
 	@FXML
 	private Button viewAppointmentButton;
+	
+	@FXML
+    private Button viewTestButton;
 
 	@FXML
 	private Label usernameLabel;
@@ -188,6 +200,7 @@ public class MedMystNurseCodeBehind {
 			this.usernameLabel.setText(String.format("Welcome, %s, %s %s!", userId, firstName, lastName));
 		}
 	    this.addAppointmentButton.disableProperty().bind(this.viewmodel.canAddAppointmentProperty().not());
+	    this.addTestButton.disableProperty().bind(this.viewmodel.canAddAppointmentProperty().not());
 		this.refreshPatientList();
 		this.refreshAppointmentList();
 	}
@@ -424,5 +437,20 @@ public class MedMystNurseCodeBehind {
 
 	    this.refreshPatientList();
 	}
+	
+	@FXML
+    void createTest() {
+		//TODO unimplemented
+    }
+	
+	@FXML
+    void editTest() {
+		//TODO unimplemented
+    }
+	
+	@FXML
+    void viewTest() {
+		//TODO unimplemented
+    }
 
 }
