@@ -31,14 +31,14 @@
       <TextField fx:id="searchLastNameTextFieldPatient" layoutX="344.0" layoutY="228.0" />
       <Label fx:id="searchDOBLabel" layoutX="344.0" layoutY="270.0" text="DOB" />
       <DatePicker fx:id="searchDOBPickerPatient" layoutX="344.0" layoutY="287.0" />
-      <Button fx:id="searchButtonPatient" layoutX="393.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchPatients" text="Search" />
+      <Button fx:id="searchButtonPatient" layoutX="440.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchPatients" text="Search" />
       <Label fx:id="appointmentListLabel" layoutX="676.0" layoutY="88.0" text="Appointments">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
       <ListView fx:id="appointmentsListView" layoutX="533.0" layoutY="118.0" prefHeight="280.0" prefWidth="412.0" />
-      <Button fx:id="addAppointmentButton" layoutX="112.0" layoutY="444.0" mnemonicParsing="false" onAction="#createAppointment" text="Create Appointment for Patient" />
+      <Button fx:id="addAppointmentButton" disable="true" layoutX="112.0" layoutY="444.0" mnemonicParsing="false" onAction="#createAppointment" text="Create Appointment for Patient" />
       <Button fx:id="editAppointmentButton" layoutX="829.0" layoutY="409.0" mnemonicParsing="false" onAction="#editAppointment" text="Edit Appointment" />
       <Label fx:id="searchByAppointmentLabel" layoutX="1010.0" layoutY="118.0" text="Search By:">
          <font>
@@ -51,7 +51,9 @@
       <TextField fx:id="searchLastNameTextFieldAppointment" layoutX="971.0" layoutY="228.0" />
       <Label fx:id="searchDOBLabelAppointment" layoutX="972.0" layoutY="270.0" text="DOB" />
       <DatePicker fx:id="searchDOBPickerAppointment" layoutX="972.0" layoutY="287.0" />
-      <Button fx:id="searchButtonAppointment" layoutX="1009.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchAppointments" text="Search" />
+      <Button fx:id="searchButtonAppointment" layoutX="1068.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchAppointments" text="Search" />
       <Button fx:id="viewAppointmentButton" layoutX="533.0" layoutY="409.0" mnemonicParsing="false" onAction="#viewAppointment" text="View appointment" />
+      <Button fx:id="clearPatientButton" layoutX="343.0" layoutY="333.0" mnemonicParsing="false" onAction="#clearPatientSearch" text="Clear" />
+      <Button fx:id="clearAppoinmentButton" layoutX="971.0" layoutY="333.0" mnemonicParsing="false" onAction="#clearAppointments" text="Clear" />
    </children>
 </AnchorPane>

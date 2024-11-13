@@ -64,6 +64,12 @@ public class MedMystNurseCodeBehind {
 	private Button editAppointmentButton;
 
 	@FXML
+	private Button clearAppoinmentButton;
+
+	@FXML
+	private Button clearPatientButton;
+
+	@FXML
 	private ListView<Appointment> appointmentsListView;
 
 	@FXML
@@ -92,26 +98,26 @@ public class MedMystNurseCodeBehind {
 
 	@FXML
 	private void initialize() {
-		this.editPatientButton.disableProperty()
-				.bind(this.patientsListView.getSelectionModel().selectedItemProperty().isNull());
-		this.addAppointmentButton.disableProperty()
-				.bind(this.patientsListView.getSelectionModel().selectedItemProperty().isNull());
+	    this.editPatientButton.disableProperty()
+	            .bind(this.patientsListView.getSelectionModel().selectedItemProperty().isNull());
+	    
+	    this.patientsListView.getSelectionModel().selectedItemProperty()
+	            .addListener((observable, oldValue, newValue) -> {
+	                this.selectedPatient = newValue;
+	                
+	                this.viewmodel.updateCanAddAppointment(newValue);
+	            });
 
-		this.patientsListView.getSelectionModel().selectedItemProperty()
-				.addListener((observable, oldValue, newValue) -> {
-					this.selectedPatient = newValue;
-				});
+	    this.editAppointmentButton.disableProperty()
+	            .bind(this.appointmentsListView.getSelectionModel().selectedItemProperty().isNull());
 
-		this.editAppointmentButton.disableProperty()
-				.bind(this.appointmentsListView.getSelectionModel().selectedItemProperty().isNull());
-		
-		this.viewAppointmentButton.disableProperty()
-				.bind(this.appointmentsListView.getSelectionModel().selectedItemProperty().isNull());
+	    this.viewAppointmentButton.disableProperty()
+	            .bind(this.appointmentsListView.getSelectionModel().selectedItemProperty().isNull());
 
-		this.appointmentsListView.getSelectionModel().selectedItemProperty()
-				.addListener((observable, oldValue, newValue) -> {
-					this.selectedAppointment = newValue;
-				});
+	    this.appointmentsListView.getSelectionModel().selectedItemProperty()
+	            .addListener((observable, oldValue, newValue) -> {
+	                this.selectedAppointment = newValue;
+	            });
 	}
 
 	/**
@@ -172,17 +178,18 @@ public class MedMystNurseCodeBehind {
 	 * @param viewmodel The ViewModel to use in this controller.
 	 */
 	public void setViewModel(MedMystViewModel viewmodel) {
-	    this.viewmodel = viewmodel;
+		this.viewmodel = viewmodel;
 
-	    if (this.viewmodel.getCurrentUser() != null) {
-	        String firstName = this.viewmodel.getCurrentUser().getFirstName();
-	        String userId = this.viewmodel.getCurrentUser().getUserID();
-	        
-	        this.usernameLabel.setText(String.format("Welcome, %s, %s!", userId, firstName));
-	    }
+		if (this.viewmodel.getCurrentUser() != null) {
+			String firstName = this.viewmodel.getCurrentUser().getFirstName();
+			String userId = this.viewmodel.getCurrentUser().getUserID();
+			String lastName = this.viewmodel.getCurrentUser().getLastName();
 
-	    this.refreshPatientList();
-	    this.refreshAppointmentList();
+			this.usernameLabel.setText(String.format("Welcome, %s, %s %s!", userId, firstName, lastName));
+		}
+	    this.addAppointmentButton.disableProperty().bind(this.viewmodel.canAddAppointmentProperty().not());
+		this.refreshPatientList();
+		this.refreshAppointmentList();
 	}
 
 	@FXML
@@ -397,6 +404,25 @@ public class MedMystNurseCodeBehind {
 				dob);
 		ObservableList<Appointment> observableAppointmentList = FXCollections.observableArrayList(filteredAppointments);
 		this.appointmentsListView.setItems(observableAppointmentList);
+	}
+
+	@FXML
+	void clearAppointments() {
+
+	    this.searchFirstNameTextFieldAppointment.clear();
+	    this.searchLastNameTextFieldAppointment.clear();
+	    this.searchDOBPickerAppointment.setValue(null);
+
+	    this.refreshAppointmentList();
+	}
+
+	@FXML
+	void clearPatientSearch() {
+	    this.searchFirstNameTextFieldPatient.clear();
+	    this.searchLastNameTextFieldPatient.clear();
+	    this.searchDOBPickerPatient.setValue(null);
+
+	    this.refreshPatientList();
 	}
 
 }

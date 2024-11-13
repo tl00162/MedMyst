@@ -16,6 +16,7 @@ import edu.westga.medmyst.project.model.AppointmentType;
 import edu.westga.medmyst.project.model.Doctor;
 import edu.westga.medmyst.project.model.Login;
 import edu.westga.medmyst.project.model.Patient;
+import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -52,6 +53,7 @@ public class MedMystViewModel {
 	private StringProperty state;
 	private StringProperty zip;
 	private BooleanProperty isActive;
+	private BooleanProperty canAddAppointment;
 
 	private IntegerProperty appointmentId;
 	private IntegerProperty doctorId;
@@ -119,6 +121,7 @@ public class MedMystViewModel {
 		this.doctorDAL = new DoctorDAL();
 		this.appointmentTypeDAL = new AppointmentTypeDAL();
 		this.isActive = new SimpleBooleanProperty();
+		this.canAddAppointment = new SimpleBooleanProperty(false); 
 	}
 
 	/**
@@ -825,4 +828,30 @@ public class MedMystViewModel {
 			return false;
 		}
 	}
+
+	/**
+	 * Returns the BooleanProperty that indicates if the "Add Appointment" button should be enabled.
+	 * This property is bound to the button's disable property in the view.
+	 *
+	 * @return the canAddAppointment BooleanProperty
+	 */
+	public BooleanProperty canAddAppointmentProperty() {
+        return this.canAddAppointment;
+    }
+	
+	/**
+	 * Updates the canAddAppointment property based on the selected patient's active status.
+	 * If a patient is selected and is active, the property will be set to true, enabling
+	 * the "Add Appointment" button. If no patient is selected or if the patient is inactive,
+	 * the property will be set to false, disabling the button.
+	 *
+	 * @param selectedPatient the currently selected patient, or null if no patient is selected
+	 */
+    public void updateCanAddAppointment(Patient selectedPatient) {
+        if (selectedPatient == null) {
+            this.canAddAppointment.set(false);
+        } else {
+            this.canAddAppointment.set(selectedPatient.getActiveStatus());
+        }
+    }
 }
