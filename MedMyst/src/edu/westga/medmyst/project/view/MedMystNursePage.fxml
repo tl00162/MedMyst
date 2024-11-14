@@ -4,6 +4,8 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -32,14 +34,12 @@
       <Label fx:id="searchDOBLabel" layoutX="344.0" layoutY="270.0" text="DOB" />
       <DatePicker fx:id="searchDOBPickerPatient" layoutX="344.0" layoutY="287.0" />
       <Button fx:id="searchButtonPatient" layoutX="440.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchPatients" text="Search" />
-      <Label fx:id="appointmentListLabel" layoutX="676.0" layoutY="88.0" text="Appointments">
+      <Label fx:id="appointmentListLabel" layoutX="689.0" layoutY="35.0" text="Appointments">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <ListView fx:id="appointmentsListView" layoutX="533.0" layoutY="118.0" prefHeight="280.0" prefWidth="412.0" />
-      <Button fx:id="addAppointmentButton" disable="true" layoutX="112.0" layoutY="444.0" mnemonicParsing="false" onAction="#createAppointment" text="Create Appointment for Patient" />
-      <Button fx:id="editAppointmentButton" layoutX="829.0" layoutY="409.0" mnemonicParsing="false" onAction="#editAppointment" text="Edit Appointment" />
+      <Button fx:id="addAppointmentButton" layoutX="112.0" layoutY="444.0" mnemonicParsing="false" onAction="#createAppointment" text="Create Appointment for Patient" />
       <Label fx:id="searchByAppointmentLabel" layoutX="1010.0" layoutY="118.0" text="Search By:">
          <font>
             <Font size="16.0" />
@@ -52,8 +52,34 @@
       <Label fx:id="searchDOBLabelAppointment" layoutX="972.0" layoutY="270.0" text="DOB" />
       <DatePicker fx:id="searchDOBPickerAppointment" layoutX="972.0" layoutY="287.0" />
       <Button fx:id="searchButtonAppointment" layoutX="1068.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchAppointments" text="Search" />
-      <Button fx:id="viewAppointmentButton" layoutX="533.0" layoutY="409.0" mnemonicParsing="false" onAction="#viewAppointment" text="View appointment" />
       <Button fx:id="clearPatientButton" layoutX="343.0" layoutY="333.0" mnemonicParsing="false" onAction="#clearPatientSearch" text="Clear" />
       <Button fx:id="clearAppoinmentButton" layoutX="971.0" layoutY="333.0" mnemonicParsing="false" onAction="#clearAppointments" text="Clear" />
+      <TabPane layoutX="528.0" layoutY="75.0" prefHeight="413.0" prefWidth="441.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Appointments">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="384.0" prefWidth="331.0">
+                     <children>
+                        <ListView fx:id="appointmentsListView" layoutX="14.0" layoutY="14.0" prefHeight="280.0" prefWidth="412.0" />
+                        <Button fx:id="editAppointmentButton" layoutX="316.0" layoutY="302.0" mnemonicParsing="false" onAction="#editAppointment" text="Edit Appointment" />
+                        <Button fx:id="viewAppointmentButton" layoutX="14.0" layoutY="302.0" mnemonicParsing="false" onAction="#viewAppointment" text="View appointment" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Tests">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView fx:id="testsListView" layoutX="14.0" layoutY="14.0" prefHeight="280.0" prefWidth="416.0" />
+                        <Button fx:id="viewTestButton" layoutX="14.0" layoutY="303.0" mnemonicParsing="false" onAction="#viewTest" text="View Test" />
+                        <Button fx:id="editTestButton" layoutX="365.0" layoutY="303.0" mnemonicParsing="false" onAction="#editTest" text="Edit Test" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <Button fx:id="addTestButton" layoutX="112.0" layoutY="476.0" mnemonicParsing="false" onAction="#createTest" prefHeight="25.0" prefWidth="183.0" text="Create Test for Patient" />
    </children>
 </AnchorPane>
