@@ -290,6 +290,8 @@ public class AppointmentFormCodeBehind {
 			errorMessage.append("Appointment date and time must be selected.\n");
 		} else if (appointmentDateTime.isBefore(LocalDateTime.now())) {
 			errorMessage.append("Appointment cannot be scheduled in the past.\n");
+		} else if (this.viewmodel.isDoctorAvailable(getSelectedDoctorId(), appointmentDateTime)) {
+			errorMessage.append("Doctor cannot be double booked. \n");
 		}
 		if (this.appointmentTypeComboBox.getValue() == null) {
 			errorMessage.append("Appointment type must be selected.\n");
