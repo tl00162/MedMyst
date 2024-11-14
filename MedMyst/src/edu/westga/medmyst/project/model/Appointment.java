@@ -21,11 +21,7 @@ public class Appointment {
     private String details;
     private String appointmentType;
     private LocalDateTime dateTime;
-    private int systolicPressure;
-    private int diastolicPressure;
-    private int pulse;
-    private double weight;
-    private double height;
+    private Checkup checkup;
 
     /**
      * Constructs an Appointment object.
@@ -237,84 +233,19 @@ public class Appointment {
     }
     
     /**
-     * Gets the systolicPressure
-     * @return the systolicPressure
+     * Gets the checkup
+     * @return the checkup
      */
-    public int getSystolicPressure() {
-    	return this.systolicPressure;
+    public Checkup getCheckup() {
+    	return this.checkup;
     }
     
     /**
-     * Sets the systolicPressure
-     * @param pressure the new pressure
+     * Sets the checkup
+     * @param checkup the new checkup
      */
-    public void setSystolicPressure(int pressure) {
-    	this.systolicPressure = pressure;
-    }
-    
-    /**
-     * Gets the diastolic pressure
-     * @return the diastolic pressure
-     */
-    public int getDiastolicPressure() {
-    	return this.diastolicPressure;
-    }
-    
-    /**
-     * Sets the diastolic pressure
-     * @param pressure the new pressure
-     */
-    public void setDiastolicPressure(int pressure) {
-    	this.diastolicPressure = pressure;
-    }
-    
-    /**
-     * Gets the pulse
-     * @return the pulse
-     */
-    public int getPulse() {
-    	return this.pulse;
-    }
-    
-    /**
-     * Sets the pulse
-     * @param pulse the new pulse
-     */
-    public void setPulse(int pulse) {
-    	this.pulse = pulse;
-    }
-    
-    /**
-     * Gets the weight
-     * @return the weight
-     */
-    public double getWeight() {
-    	return this.weight;
-    }
-    
-    /**
-     * Sets the weight
-     * @param weight the new weight
-     */
-    public void setWeight(double weight) {
-    	this.weight = weight;
-    }
-    
-    /**
-     * Gets the height
-     * @return the height
-     */
-    public double getHeight() {
-    	return this.height;
-    }
-
-    
-    /**
-     * Sets the height
-     * @param height the new height
-     */
-    public void setHeight(double height) {
-    	this.height = height;
+    public void setCheckup(Checkup checkup) {
+    	this.checkup = checkup;
     }
     
     @Override

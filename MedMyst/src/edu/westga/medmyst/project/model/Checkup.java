@@ -14,6 +14,8 @@ public class Checkup {
     private int systolicBloodPressure;
     private int pulse;
     private String symptoms;
+    private double height;
+    private double weight;
 
     /**
      * Creates a CheckUp instance with all fields
@@ -25,11 +27,15 @@ public class Checkup {
      * @param systolicBloodPressure the systolic blood pressure recorded
      * @param pulse the pulse recorded during the checkup
      * @param symptoms the symptoms described in the checkup
+     * @param height the height
+     * @param weight the weight
      */
-    public Checkup(int appointmentId, int nurseId, double bodyTemperature, int diastolicBloodPressure, int systolicBloodPressure, int pulse, String symptoms) {
+    public Checkup(int appointmentId, int nurseId, double bodyTemperature, int diastolicBloodPressure, int systolicBloodPressure, int pulse, String symptoms, double height, double weight) {
         this.appointmentId = appointmentId;
         this.nurseId = nurseId;
         this.bodyTemperature = bodyTemperature;
+        this.height = height;
+        this.weight = weight;
         this.diastolicBloodPressure = diastolicBloodPressure;
         this.systolicBloodPressure = systolicBloodPressure;
         this.pulse = pulse;
@@ -82,6 +88,38 @@ public class Checkup {
      */
     public void setBodyTemperature(double bodyTemperature) {
         this.bodyTemperature = bodyTemperature;
+    }
+    
+    /**
+     * Gets the height
+     * @return the height
+     */
+    public double getHeight() {
+    	return this.height;
+    }
+    
+    /**
+     * Sets the height
+     * @param height the new height
+     */
+    public void setHeight(double height) {
+    	this.height = height;
+    }
+    
+    /**
+     * Gets the weight
+     * @return the weight
+     */
+    public double getWeight() {
+    	return this.weight;
+    }
+    
+    /**
+     * Sets the weight
+     * @param weight the new weight
+     */
+    public void setWeight(double weight) {
+    	this.weight = weight;
     }
 
     /**
