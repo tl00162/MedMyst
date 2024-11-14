@@ -16,7 +16,7 @@ public class Test {
     private double low;
     private double high;
     private String unitOfMeasurement;
-    private double result;
+    private String result;
     private LocalDateTime dateTime;
     
     /**
@@ -33,7 +33,7 @@ public class Test {
      * @param dateTime
      */
     public Test(int testId, int patientId, int doctorId, TestType testType, boolean normality, 
-                double low, double high, String unitOfMeasurement, double result, LocalDateTime dateTime) {
+                double low, double high, String unitOfMeasurement, String result, LocalDateTime dateTime) {
         this.testId = testId;
         this.patientId = patientId;
         this.doctorId = doctorId;
@@ -82,7 +82,7 @@ public class Test {
      * Gets the doctorId
      * @return the doctorId
      */
-    public int doctorId() {
+    public int getDoctorId() {
     	return this.doctorId;
     }
     
@@ -108,6 +108,102 @@ public class Test {
      */
     public void setTestType(TestType testType) {
     	this.testType = testType;
+    }
+    
+    /**
+     * Gets the normality
+     * @return the normality
+     */
+    public boolean getNormality() {
+    	return this.normality;
+    }
+    
+    /**
+     * Sets the normality
+     * @param normality the new normality
+     */
+    public void setNormality(boolean normality) {
+    	this.normality = normality;
+    }
+    
+    /**
+     * Gets the low
+     * @return the low
+     */
+    public double getLow() {
+    	return this.low;
+    }
+    
+    /**
+     * Sets the low value
+     * @param low the new low
+     */
+    public void setLow(double low) {
+    	this.low = low;
+    }
+    
+    /**
+     * Gets the high
+     * @return the high
+     */
+    public double getHigh() {
+    	return this.high;
+    }
+    
+    /**
+     * Sets the high value
+     * @param high the new high
+     */
+    public void setHigh(double high) {
+    	this.high = high;
+    }
+    
+    /**
+     * Gets the unitOfMeasurement
+     * @return the unitOfMeasurement
+     */
+    public String getUnitOfMeasurement() {
+    	return this.unitOfMeasurement;
+    }
+    
+    /**
+     * Sets the unit of measurement
+     * @param unit the new unit
+     */
+    public void setUnitOfMeasurement(String unit) {
+    	this.unitOfMeasurement = unit;
+    }
+    
+    /**
+     * Gets the result
+     * @return the result
+     */
+    public String getResult() {
+    	return this.result;
+    }
+    
+    /**
+     * Sets the result
+     * @param result the new result
+     */
+    public void setResult(String result) {
+    	this.result = result;
+    }
+    
+    /**
+     * Gets the datetime
+     * @return the datetime
+     */
+    public LocalDateTime getDateTime() {
+    	return this.dateTime;		
+    }
+    
+    /**
+     * Sets the datetime
+     * @param dateTime the new dateTimee
+     */
+    public void setDateTime(LocalDateTime dateTime) {
+    	this.dateTime = dateTime;
     }
     
 }
