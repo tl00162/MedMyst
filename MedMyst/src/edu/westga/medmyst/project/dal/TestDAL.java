@@ -23,10 +23,9 @@ public class TestDAL {
                 TestType testType = new TestType(resultSet.getString("test_type"), null);
                 labTests.add(new Test(
                     resultSet.getInt("lab_test_id"),
-                    patientId,
                     resultSet.getInt("doctor_id"),
+                    patientId,
                     testType,
-                    resultSet.getBoolean("normality"),
                     resultSet.getDouble("low"),
                     resultSet.getDouble("high"),
                     resultSet.getString("unit_of_measurement"),
@@ -39,20 +38,19 @@ public class TestDAL {
     }
 
     public void addLabTest(Test labTest) throws SQLException {
-        String query = "INSERT INTO LabTest (doctor_id, patient_id, test_type, normality, low, high, unit_of_measurement, results, datetime) " +
-                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO LabTest (doctor_id, patient_id, test_type, low, high, unit_of_measurement, results, datetime) " +
+                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
              PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, labTest.getDoctorId());
             stmt.setInt(2, labTest.getPatientId());
             stmt.setString(3, labTest.getTestType().getTypeName());
-            stmt.setBoolean(4, labTest.getNormality());
-            stmt.setDouble(5, labTest.getLow());
-            stmt.setDouble(6, labTest.getHigh());
-            stmt.setString(7, labTest.getUnitOfMeasurement());
-            stmt.setString(8, labTest.getResult());
-            stmt.setTimestamp(9, Timestamp.valueOf(labTest.getDateTime()));
+            stmt.setDouble(4, labTest.getLow());
+            stmt.setDouble(5, labTest.getHigh());
+            stmt.setString(6, labTest.getUnitOfMeasurement());
+            stmt.setString(7, labTest.getResult());
+            stmt.setTimestamp(8, Timestamp.valueOf(labTest.getDateTime()));
 
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {
@@ -62,7 +60,7 @@ public class TestDAL {
     }
 
     public void updateLabTest(Test labTest) throws SQLException {
-        String query = "UPDATE LabTest SET doctor_id = ?, patient_id = ?, test_type = ?, normality = ?, low = ?, high = ?, " +
+        String query = "UPDATE LabTest SET doctor_id = ?, patient_id = ?, test_type = ?, low = ?, high = ?, " +
                        "unit_of_measurement = ?, results = ?, datetime = ? WHERE lab_test_id = ?";
         try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -70,13 +68,12 @@ public class TestDAL {
             stmt.setInt(1, labTest.getDoctorId());
             stmt.setInt(2, labTest.getPatientId());
             stmt.setString(3, labTest.getTestType().getTypeName());
-            stmt.setBoolean(4, labTest.getNormality());
-            stmt.setDouble(5, labTest.getLow());
-            stmt.setDouble(6, labTest.getHigh());
-            stmt.setString(7, labTest.getUnitOfMeasurement());
-            stmt.setString(8, labTest.getResult());
-            stmt.setTimestamp(9, Timestamp.valueOf(labTest.getDateTime()));
-            stmt.setInt(10, labTest.getTestId());
+            stmt.setDouble(4, labTest.getLow());
+            stmt.setDouble(5, labTest.getHigh());
+            stmt.setString(6, labTest.getUnitOfMeasurement());
+            stmt.setString(7, labTest.getResult());
+            stmt.setTimestamp(8, Timestamp.valueOf(labTest.getDateTime()));
+            stmt.setInt(9, labTest.getTestId());
 
             stmt.executeUpdate();
         }
@@ -92,5 +89,3 @@ public class TestDAL {
         }
     }
 }
-
-

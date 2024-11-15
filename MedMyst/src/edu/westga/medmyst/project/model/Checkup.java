@@ -16,6 +16,7 @@ public class Checkup {
     private String symptoms;
     private double height;
     private double weight;
+    private String initialDiagnosis;
 
     /**
      * Creates a CheckUp instance with all fields
@@ -30,7 +31,7 @@ public class Checkup {
      * @param height the height
      * @param weight the weight
      */
-    public Checkup(int appointmentId, int nurseId, double bodyTemperature, int diastolicBloodPressure, int systolicBloodPressure, int pulse, String symptoms, double height, double weight) {
+    public Checkup(int appointmentId, int nurseId, double bodyTemperature, int diastolicBloodPressure, int systolicBloodPressure, int pulse, String symptoms, double height, double weight, String initialDiagnosis) {
         this.appointmentId = appointmentId;
         this.nurseId = nurseId;
         this.bodyTemperature = bodyTemperature;
@@ -40,6 +41,7 @@ public class Checkup {
         this.systolicBloodPressure = systolicBloodPressure;
         this.pulse = pulse;
         this.symptoms = symptoms;
+        this.initialDiagnosis = initialDiagnosis;
     }
 
     /**
@@ -184,6 +186,22 @@ public class Checkup {
      */
     public void setSymptoms(String symptoms) {
         this.symptoms = symptoms;
+    }
+    
+    /**
+     * Gets the initialDiagnosis
+     * @return the initialDiagnosis
+     */
+    public String getInitialDiagnosis() {
+    	return this.initialDiagnosis;
+    }
+    
+    /**
+     * Sets the initialDiagnosis
+     * @param initialDiagnosis the updated diagnosis
+     */
+    public void setInitialDiagnosis(String initialDiagnosis) {
+    	this.initialDiagnosis = initialDiagnosis;
     }
 
     @Override

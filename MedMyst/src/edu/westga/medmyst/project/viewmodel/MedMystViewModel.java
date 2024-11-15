@@ -7,12 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.westga.medmyst.project.dal.AppointmentDAL;
+import edu.westga.medmyst.project.dal.AppointmentTestDAL;
 import edu.westga.medmyst.project.dal.AppointmentTypeDAL;
+import edu.westga.medmyst.project.dal.CheckupDAL;
 import edu.westga.medmyst.project.dal.DoctorDAL;
 import edu.westga.medmyst.project.dal.LoginDAL;
 import edu.westga.medmyst.project.dal.PatientDAL;
+import edu.westga.medmyst.project.dal.TestDAL;
+import edu.westga.medmyst.project.dal.TestTypeDAL;
 import edu.westga.medmyst.project.model.Appointment;
 import edu.westga.medmyst.project.model.AppointmentType;
+import edu.westga.medmyst.project.model.Checkup;
 import edu.westga.medmyst.project.model.Doctor;
 import edu.westga.medmyst.project.model.Login;
 import edu.westga.medmyst.project.model.Patient;
@@ -79,6 +84,10 @@ public class MedMystViewModel {
 	private AppointmentDAL appointmentDAL;
 	private DoctorDAL doctorDAL;
 	private AppointmentTypeDAL appointmentTypeDAL;
+	private TestDAL testDAL;
+	private TestTypeDAL testTypeDAL;
+	private AppointmentTestDAL appointmentTestDAL;
+	private CheckupDAL checkupDAL;
 
 	/**
 	 * Constructs a new MedMystViewModel and initializes its properties.
@@ -120,6 +129,10 @@ public class MedMystViewModel {
 		this.appointmentDAL = new AppointmentDAL();
 		this.doctorDAL = new DoctorDAL();
 		this.appointmentTypeDAL = new AppointmentTypeDAL();
+		this.testDAL = new TestDAL();
+		this.testTypeDAL = new TestTypeDAL();
+		this.appointmentTestDAL = new AppointmentTestDAL();
+		this.checkupDAL = new CheckupDAL();
 		this.isActive = new SimpleBooleanProperty();
 		this.canAddAppointment = new SimpleBooleanProperty(false); 
 	}
@@ -772,12 +785,18 @@ public class MedMystViewModel {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		this.systolicPressure.set(appointment.getSystolicPressure());
-		this.diastolicPressure.set(appointment.getDiastolicPressure());
-		this.pulse.set(appointment.getPulse());
-		this.height.set(appointment.getHeight());
-		this.weight.set(appointment.getWeight());
+		
+		try {
+			Checkup checkup = this.checkupDAL.getCheckupByAppointmentId(this.appointmentId.get());
+		
+			this.systolicPressure.set(checkup.getSystolicBloodPressure());
+			this.diastolicPressure.set(checkup.getDiastolicBloodPressure());
+			this.pulse.set(checkup.getPulse());
+			this.height.set(checkup.getHeight());
+			this.weight.set(checkup.getWeight());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
