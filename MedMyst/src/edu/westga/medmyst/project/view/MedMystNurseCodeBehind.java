@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import edu.westga.medmyst.project.model.Appointment;
+import edu.westga.medmyst.project.model.AppointmentTest;
 import edu.westga.medmyst.project.model.Patient;
+import edu.westga.medmyst.project.model.Test;
 import edu.westga.medmyst.project.viewmodel.MedMystViewModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -79,7 +81,7 @@ public class MedMystNurseCodeBehind {
 	private ListView<Appointment> appointmentsListView;
 	
 	@FXML
-    private ListView<Appointment> testsListView; //TODO change list type to test, add test model
+    private ListView<AppointmentTest> testsListView;
 
 	@FXML
 	private TextField searchFirstNameTextFieldAppointment;
@@ -107,6 +109,8 @@ public class MedMystNurseCodeBehind {
 	private Patient selectedPatient;
 
 	private Appointment selectedAppointment;
+	
+	private AppointmentTest selectedAppointmentTest;
 
 	@FXML
 	private void initialize() {

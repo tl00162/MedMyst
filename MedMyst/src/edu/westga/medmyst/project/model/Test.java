@@ -9,10 +9,9 @@ import java.time.LocalDateTime;
  */
 public class Test {
 	private int testId;
-    private int patientId;
     private int doctorId;
+    private int patientId;
     private TestType testType;
-    private boolean normality;
     private double low;
     private double high;
     private String unitOfMeasurement;
@@ -32,13 +31,12 @@ public class Test {
      * @param result
      * @param dateTime
      */
-    public Test(int testId, int patientId, int doctorId, TestType testType, boolean normality, 
+    public Test(int testId, int doctorId, int patientId, TestType testType, 
                 double low, double high, String unitOfMeasurement, String result, LocalDateTime dateTime) {
         this.testId = testId;
-        this.patientId = patientId;
         this.doctorId = doctorId;
+        this.patientId = patientId;
         this.testType = testType;
-        this.normality = normality;
         this.low = low;
         this.high = high;
         this.unitOfMeasurement = unitOfMeasurement;
@@ -108,22 +106,6 @@ public class Test {
      */
     public void setTestType(TestType testType) {
     	this.testType = testType;
-    }
-    
-    /**
-     * Gets the normality
-     * @return the normality
-     */
-    public boolean getNormality() {
-    	return this.normality;
-    }
-    
-    /**
-     * Sets the normality
-     * @param normality the new normality
-     */
-    public void setNormality(boolean normality) {
-    	this.normality = normality;
     }
     
     /**

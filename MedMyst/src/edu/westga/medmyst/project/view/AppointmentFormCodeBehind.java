@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import edu.westga.medmyst.project.model.Appointment;
+import edu.westga.medmyst.project.model.Checkup;
 import edu.westga.medmyst.project.model.Patient;
 import edu.westga.medmyst.project.viewmodel.MedMystViewModel;
 import javafx.fxml.FXML;
@@ -80,6 +81,8 @@ public class AppointmentFormCodeBehind {
 	private Patient currentPatient;
 
 	private Appointment currentAppointment;
+	
+	private Checkup currentCheckup;
 
 	private Runnable onFormSubmit;
 
@@ -272,11 +275,11 @@ public class AppointmentFormCodeBehind {
 		this.currentAppointment.setAppointmentType(this.viewmodel.appointmentTypeProperty().get());
 		this.currentAppointment.setReason(this.viewmodel.reasonProperty().get());
 		this.currentAppointment.setDetails(this.viewmodel.detailsProperty().get());
-		this.currentAppointment.setSystolicPressure(this.viewmodel.systolicPressureProperty().get());
-		this.currentAppointment.setDiastolicPressure(this.viewmodel.diastolicPressureProperty().get());
-		this.currentAppointment.setPulse(this.viewmodel.pulseProperty().get());
-		this.currentAppointment.setHeight(this.viewmodel.heightProperty().get());
-		this.currentAppointment.setWeight(this.viewmodel.weightProperty().get());
+		this.currentCheckup.setSystolicBloodPressure(this.viewmodel.systolicPressureProperty().get());
+		this.currentCheckup.setDiastolicBloodPressure(this.viewmodel.diastolicPressureProperty().get());
+		this.currentCheckup.setPulse(this.viewmodel.pulseProperty().get());
+		this.currentCheckup.setHeight(this.viewmodel.heightProperty().get());
+		this.currentCheckup.setWeight(this.viewmodel.weightProperty().get());
 	}
 
 	private StringBuilder validateAppointmentInput() {
