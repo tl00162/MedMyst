@@ -45,4 +45,27 @@ public class LoginDAL {
 		}
 		return null;
 	}
+	
+	/**
+     * Retrieves the user_id for the given username.
+     * 
+     * @param username the username to look up
+     * @return the user_id if found, -1 otherwise
+     * @throws SQLException if a database access error occurs
+     */
+    public int getUserIdByUsername(String username) throws SQLException {
+        String query = "SELECT user_id FROM useraccount WHERE username = ?";
+
+        try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, username);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("user_id");
+                }
+            }
+        }
+        return -1;
+    }
 }

@@ -71,11 +71,14 @@ public class MedMystViewModel {
 	private ObjectProperty<LocalDate> appointmentDate;
 	private StringProperty appointmentTime;
 	private ObjectProperty<LocalDateTime> appointmentDateTime;
+	private DoubleProperty bodyTemperature;
 	private IntegerProperty systolicPressure;
 	private IntegerProperty diastolicPressure;
 	private IntegerProperty pulse;
+	private StringProperty symptoms;
 	private DoubleProperty height;
 	private DoubleProperty weight;
+	private StringProperty initialDiagnosis;
 
 	private LoginDAL loginDAL;
 	private Login currentUser;
@@ -118,11 +121,14 @@ public class MedMystViewModel {
 		this.appointmentDate = new SimpleObjectProperty<>();
 		this.appointmentTime = new SimpleStringProperty();
 		this.appointmentDateTime = new SimpleObjectProperty<>();
+		this.bodyTemperature = new SimpleDoubleProperty();
 		this.systolicPressure = new SimpleIntegerProperty();
 		this.diastolicPressure = new SimpleIntegerProperty();
 		this.pulse = new SimpleIntegerProperty();
+		this.symptoms = new SimpleStringProperty();
 		this.height = new SimpleDoubleProperty();
 		this.weight = new SimpleDoubleProperty();
+		this.initialDiagnosis = new SimpleStringProperty();
 		this.loginDAL = new LoginDAL();
 		this.currentUser = null;
 		this.patientDAL = new PatientDAL();
@@ -375,6 +381,14 @@ public class MedMystViewModel {
 	public ObjectProperty<LocalDateTime> appointmentDateTimeProperty() {
 		return this.appointmentDateTime;
 	}
+	
+	/**
+	 * Returns the bodyTemperatureProperty
+	 * @return the bodyTemperatureProperty
+	 */
+	public DoubleProperty bodyTemperatureProperty() {
+		return this.bodyTemperature;
+	}
 
 	/**
 	 * Returns the systolicPressureProperty.
@@ -402,6 +416,14 @@ public class MedMystViewModel {
 	public IntegerProperty pulseProperty() {
 		return this.pulse;
 	}
+	
+	/**
+	 * Returns the symptomsProperty
+	 * @return the symptomsProperty
+	 */
+	public StringProperty symptomsProperty() {
+		return this.symptoms;
+	}
 
 	/**
 	 * Returns the heightProperty.
@@ -419,6 +441,14 @@ public class MedMystViewModel {
 	 */
 	public DoubleProperty weightProperty() {
 		return this.weight;
+	}
+	
+	/**
+	 * Returns the initialDiagnosisProperty
+	 * @return the initialDiagnosisProperty
+	 */
+	public StringProperty initialDiagnosisProperty() {
+		return this.initialDiagnosis;
 	}
 
 	/**
@@ -634,8 +664,13 @@ public class MedMystViewModel {
 		Appointment newAppointment = new Appointment(this.appointmentId.get(), this.patientId.get(),
 				this.doctorId.get(), this.doctorFirstName.get(), this.doctorLastName.get(), this.doctorSpecialty.get(),
 				this.reason.get(), this.details.get(), this.appointmentType.get(), this.appointmentDateTime.get());
+		
 		try {
+			Checkup newCheckup = new Checkup(this.appointmentId.get(), this.loginDAL.getUserIdByUsername(this.username.get()), 
+					this.bodyTemperature.get(), this.diastolicPressure.get(), this.systolicPressure.get(), this.pulse.get(), 
+					this.symptoms.get(), this.height.get(), this.weight.get(), this.initialDiagnosis.get());
 			this.appointmentDAL.addAppointment(newAppointment);
+			this.checkupDAL.addCheckup(newCheckup);
 			return true;
 		} catch (SQLException e) {
 			System.err.println("SQL Error during appointment creation:");
