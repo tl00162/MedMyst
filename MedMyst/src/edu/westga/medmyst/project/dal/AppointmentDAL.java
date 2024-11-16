@@ -24,8 +24,9 @@ public class AppointmentDAL {
 	 *
 	 * @param appointment The appointment object to be added.
 	 * @throws SQLException If an SQL error occurs.
+	 * @return the generated appointmentId
 	 */
-	public void addAppointment(Appointment appointment) throws SQLException {
+	public int addAppointment(Appointment appointment) throws SQLException {
 		String query = "INSERT INTO appointment (patient_id, doctor_id, reason, details, appointment_type, datetime) VALUES (?, ?, ?, ?, ?, ?)";
 
 		try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
@@ -43,6 +44,7 @@ public class AppointmentDAL {
 			try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
 				if (generatedKeys.next()) {
 					appointment.setAppointmentId(generatedKeys.getInt(1));
+					return appointment.getAppointmentId();
 				} else {
 					throw new SQLException("Creating appointment failed, no ID obtained.");
 				}

@@ -60,6 +60,9 @@ public class AppointmentFormCodeBehind {
 
 	@FXML
 	private TextField diastolicPressureTextField;
+	
+	@FXML
+	private TextField temperatureTextField;
 
 	@FXML
 	private TextField pulseTextField;
@@ -69,6 +72,12 @@ public class AppointmentFormCodeBehind {
 
 	@FXML
 	private TextField weightTextField;
+	
+	@FXML
+	private TextArea symptomsTextArea;
+	
+	@FXML
+	private TextArea initialDiagnosisTextArea;
 
 	@FXML
 	private Button createAppointmentButton;
@@ -99,6 +108,7 @@ public class AppointmentFormCodeBehind {
 		this.addIntegerInputRestriction(this.systolicPressureTextField);
 		this.addIntegerInputRestriction(this.diastolicPressureTextField);
 		this.addIntegerInputRestriction(this.pulseTextField);
+		this.addDoubleInputRestriction(this.temperatureTextField);
 		this.addDoubleInputRestriction(this.heightTextField);
 		this.addDoubleInputRestriction(this.weightTextField);
 	}
@@ -125,12 +135,16 @@ public class AppointmentFormCodeBehind {
 				new NumberStringConverter());
 		this.diastolicPressureTextField.textProperty().bindBidirectional(this.viewmodel.diastolicPressureProperty(),
 				new NumberStringConverter());
+		this.temperatureTextField.textProperty().bindBidirectional(this.viewmodel.bodyTemperatureProperty(), 
+				new NumberStringConverter());
 		this.pulseTextField.textProperty().bindBidirectional(this.viewmodel.pulseProperty(),
 				new NumberStringConverter());
 		this.heightTextField.textProperty().bindBidirectional(this.viewmodel.heightProperty(),
 				new NumberStringConverter());
 		this.weightTextField.textProperty().bindBidirectional(this.viewmodel.weightProperty(),
 				new NumberStringConverter());
+		this.symptomsTextArea.textProperty().bindBidirectional(this.viewmodel.symptomsProperty());
+		this.initialDiagnosisTextArea.textProperty().bindBidirectional(this.viewmodel.initialDiagnosisProperty());
 
 		this.appointmentTypeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
 			if (newVal != null) {
@@ -189,6 +203,10 @@ public class AppointmentFormCodeBehind {
 			this.createAppointmentButton.setText("Update Appointment");
 			this.appointmentTypeComboBox.setValue(appointment.getAppointmentType());
 		}
+	}
+	
+	public void setCurrentCheckup(Checkup checkup) {
+		this.currentCheckup = checkup;
 	}
 
 	/**
@@ -257,6 +275,7 @@ public class AppointmentFormCodeBehind {
 		} else {
 			this.updateCurrentAppointmentProperties();
 			success = this.viewmodel.updateAppointment(this.currentAppointment);
+			success = this.viewmodel.updateCheckup(this.currentCheckup);
 		}
 		if (!success) {
 			this.showErrorDialog("Failed to save appointment. Please try again.");
@@ -277,9 +296,12 @@ public class AppointmentFormCodeBehind {
 		this.currentAppointment.setDetails(this.viewmodel.detailsProperty().get());
 		this.currentCheckup.setSystolicBloodPressure(this.viewmodel.systolicPressureProperty().get());
 		this.currentCheckup.setDiastolicBloodPressure(this.viewmodel.diastolicPressureProperty().get());
+		this.currentCheckup.setBodyTemperature(this.viewmodel.bodyTemperatureProperty().get());
 		this.currentCheckup.setPulse(this.viewmodel.pulseProperty().get());
 		this.currentCheckup.setHeight(this.viewmodel.heightProperty().get());
 		this.currentCheckup.setWeight(this.viewmodel.weightProperty().get());
+		this.currentCheckup.setSymptoms(this.viewmodel.symptomsProperty().get());
+		this.currentCheckup.setInitialDiagnosis(this.viewmodel.initialDiagnosisProperty().get());
 	}
 
 	private StringBuilder validateAppointmentInput() {
@@ -293,7 +315,7 @@ public class AppointmentFormCodeBehind {
 			errorMessage.append("Appointment date and time must be selected.\n");
 		} else if (appointmentDateTime.isBefore(LocalDateTime.now())) {
 			errorMessage.append("Appointment cannot be scheduled in the past.\n");
-		} else if (this.viewmodel.isDoctorAvailable(getSelectedDoctorId(), appointmentDateTime)) {
+		} else if (!this.viewmodel.isDoctorAvailable(getSelectedDoctorId(), appointmentDateTime) && this.createAppointmentButton.getText().equals("Update Appointment")) {
 			errorMessage.append("Doctor cannot be double booked. \n");
 		}
 		if (this.appointmentTypeComboBox.getValue() == null) {
@@ -301,6 +323,9 @@ public class AppointmentFormCodeBehind {
 		}
 		if (this.reasonTextArea.getText() == null || this.reasonTextArea.getText().isEmpty()) {
 			errorMessage.append("Appointment reason must not be empty.\n");
+		}
+		if (!this.isNumeric(this.temperatureTextField.getText())) {
+			errorMessage.append("Temperature must be a numeric value. \n");
 		}
 		if (!this.isNumeric(this.systolicPressureTextField.getText())) {
 			errorMessage.append("Systolic Pressure must be a numeric value.\n");

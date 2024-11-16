@@ -666,20 +666,31 @@ public class MedMystViewModel {
 				this.reason.get(), this.details.get(), this.appointmentType.get(), this.appointmentDateTime.get());
 		
 		try {
-			Checkup newCheckup = new Checkup(this.appointmentId.get(), this.loginDAL.getUserIdByUsername(this.username.get()), 
-					this.bodyTemperature.get(), this.diastolicPressure.get(), this.systolicPressure.get(), this.pulse.get(), 
-					this.symptoms.get(), this.height.get(), this.weight.get(), this.initialDiagnosis.get());
-			this.appointmentDAL.addAppointment(newAppointment);
-			this.checkupDAL.addCheckup(newCheckup);
-			return true;
-		} catch (SQLException e) {
-			System.err.println("SQL Error during appointment creation:");
-			System.err.println("Error Code: " + e.getErrorCode());
-			System.err.println("SQL State: " + e.getSQLState());
-			System.err.println("Message: " + e.getMessage());
-			e.printStackTrace();
-			return false;
-		}
+	        int generatedAppointmentId = this.appointmentDAL.addAppointment(newAppointment);
+
+	        Checkup newCheckup = new Checkup(
+	                generatedAppointmentId,
+	                this.loginDAL.getUserIdByUsername(this.username.get()),
+	                this.bodyTemperature.get(),
+	                this.diastolicPressure.get(),
+	                this.systolicPressure.get(),
+	                this.pulse.get(),
+	                this.symptoms.get(),
+	                this.height.get(),
+	                this.weight.get(),
+	                this.initialDiagnosis.get()
+	        );
+	        newAppointment.setCheckup(newCheckup);
+	        this.checkupDAL.addCheckup(newCheckup);
+	        return true;
+	    } catch (SQLException e) {
+	        System.err.println("SQL Error during appointment creation:");
+	        System.err.println("Error Code: " + e.getErrorCode());
+	        System.err.println("SQL State: " + e.getSQLState());
+	        System.err.println("Message: " + e.getMessage());
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 
 	/**
@@ -821,17 +832,16 @@ public class MedMystViewModel {
 			e.printStackTrace();
 		}
 		
-		try {
-			Checkup checkup = this.checkupDAL.getCheckupByAppointmentId(this.appointmentId.get());
-		
-			this.systolicPressure.set(checkup.getSystolicBloodPressure());
-			this.diastolicPressure.set(checkup.getDiastolicBloodPressure());
-			this.pulse.set(checkup.getPulse());
-			this.height.set(checkup.getHeight());
-			this.weight.set(checkup.getWeight());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		Checkup checkup = appointment.getCheckup();
+
+		this.systolicPressure.set(checkup.getSystolicBloodPressure());
+		this.diastolicPressure.set(checkup.getDiastolicBloodPressure());
+		this.bodyTemperature.set(checkup.getBodyTemperature());
+		this.pulse.set(checkup.getPulse());
+		this.height.set(checkup.getHeight());
+		this.weight.set(checkup.getWeight());
+		this.symptoms.set(checkup.getSymptoms());
+		this.initialDiagnosis.set(checkup.getInitialDiagnosis());
 	}
 
 	/**
@@ -908,4 +918,23 @@ public class MedMystViewModel {
             this.canAddAppointment.set(selectedPatient.getActiveStatus());
         }
     }
+
+    /**
+     * Updates the specified checkup in the DBbbbbbbbbbbbbb
+     * @param currentCheckup the checkup to update
+     * @return true if updated
+     */
+	public boolean updateCheckup(Checkup currentCheckup) {
+		try {
+	        this.checkupDAL.updateCheckup(currentCheckup);
+	        return true;
+	    } catch (SQLException e) {
+	        System.err.println("SQL Error while updating checkup:");
+	        System.err.println("Error Code: " + e.getErrorCode());
+	        System.err.println("SQL State: " + e.getSQLState());
+	        System.err.println("Message: " + e.getMessage());
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
 }

@@ -313,6 +313,8 @@ public class MedMystNurseCodeBehind {
 				AppointmentFormCodeBehind appointmentFormCodeBehind = loader.getController();
 				appointmentFormCodeBehind.setViewModel(this.viewmodel);
 				appointmentFormCodeBehind.setCurrentAppointment(this.selectedAppointment);
+				appointmentFormCodeBehind.setCurrentCheckup(this.selectedAppointment.getCheckup());
+				appointmentFormCodeBehind.getCreateAppointmentButton().setVisible(false);
 
 				Patient patient = this.viewmodel.getPatientById(this.selectedAppointment.getPatientId());
 				if (patient != null) {
@@ -355,6 +357,7 @@ public class MedMystNurseCodeBehind {
 				AppointmentFormCodeBehind appointmentFormCodeBehind = loader.getController();
 				appointmentFormCodeBehind.setViewModel(this.viewmodel);
 				appointmentFormCodeBehind.setCurrentAppointment(this.selectedAppointment);
+				appointmentFormCodeBehind.setCurrentCheckup(this.selectedAppointment.getCheckup());
 
 				appointmentFormCodeBehind.setCreateAppointmentButtonText("Edit Appointment");
 

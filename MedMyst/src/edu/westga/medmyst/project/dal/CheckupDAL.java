@@ -50,7 +50,7 @@ public class CheckupDAL {
      */
     public void addCheckup(Checkup checkup) throws SQLException {
         String query = "INSERT INTO CheckUp (appointment_id, nurse_id, body_temperature, diastolic_blood_pressure, " +
-                       "systolic_blood_pressure, pulse, height, weight, symptoms, initial_diagnosis) " +
+                       "systolic_blood_pressure, pulse, symptoms, height, weight, initial_diagnosis) " +
                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -77,7 +77,7 @@ public class CheckupDAL {
      */
     public void updateCheckup(Checkup checkup) throws SQLException {
         String query = "UPDATE CheckUp SET nurse_id = ?, body_temperature = ?, diastolic_blood_pressure = ?, " +
-                       "systolic_blood_pressure = ?, pulse = ?, height = ?, weight = ?, symptoms = ?, initial_diagnosis = ? " +
+                       "systolic_blood_pressure = ?, pulse = ?, symptoms =?, height = ?, weight = ?, initial_diagnosis = ? " +
                        "WHERE appointment_id = ?";
         try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
              PreparedStatement stmt = connection.prepareStatement(query)) {

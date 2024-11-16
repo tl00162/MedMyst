@@ -1,6 +1,9 @@
 package edu.westga.medmyst.project.model;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+
+import edu.westga.medmyst.project.dal.CheckupDAL;
 
 /**
  * The Class Appointment.
@@ -21,6 +24,7 @@ public class Appointment {
     private String details;
     private String appointmentType;
     private LocalDateTime dateTime;
+    private CheckupDAL checkupDAL;
     private Checkup checkup;
 
     /**
@@ -39,6 +43,7 @@ public class Appointment {
      */
     public Appointment(int appointmentId, int patientId, int doctorId, String doctorFirstName, String doctorLastName, String doctorSpecialty, String reason, String details, 
     		String appointmentType, LocalDateTime dateTime) {
+    	this.checkupDAL = new CheckupDAL();
         this.appointmentId = appointmentId;
         this.patientId = patientId;
         this.doctorId = doctorId;
@@ -61,7 +66,9 @@ public class Appointment {
      * @param appointmentType The type of the appointment.
      * @param dateTime		  The date and time of the appointment.
      */
-    public Appointment(int appointmentId, int patientId, int doctorId, String reason, String details, String appointmentType, LocalDateTime dateTime) {
+    public Appointment(int appointmentId, int patientId, int doctorId, String reason, String details, String appointmentType, 
+    		LocalDateTime dateTime) {
+    	this.checkupDAL = new CheckupDAL();
     	this.appointmentId = appointmentId;
         this.patientId = patientId;
         this.doctorId = doctorId;
@@ -237,7 +244,12 @@ public class Appointment {
      * @return the checkup
      */
     public Checkup getCheckup() {
-    	return this.checkup;
+    	try {
+			return this.checkupDAL.getCheckupByAppointmentId(this.appointmentId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	return null;
     }
     
     /**
