@@ -21,6 +21,7 @@ import edu.westga.medmyst.project.model.Checkup;
 import edu.westga.medmyst.project.model.Doctor;
 import edu.westga.medmyst.project.model.Login;
 import edu.westga.medmyst.project.model.Patient;
+import edu.westga.medmyst.project.model.TestType;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -79,6 +80,13 @@ public class MedMystViewModel {
 	private DoubleProperty height;
 	private DoubleProperty weight;
 	private StringProperty initialDiagnosis;
+	
+	private StringProperty testType;
+	private DoubleProperty testHighValue;
+	private DoubleProperty testLowValue;
+	private StringProperty testUnit;
+	private StringProperty testResult;
+	private ObjectProperty<LocalDateTime> testDateTime;
 
 	private LoginDAL loginDAL;
 	private Login currentUser;
@@ -141,6 +149,13 @@ public class MedMystViewModel {
 		this.checkupDAL = new CheckupDAL();
 		this.isActive = new SimpleBooleanProperty();
 		this.canAddAppointment = new SimpleBooleanProperty(false); 
+		
+	    this.testType = new SimpleStringProperty();
+	    this.testHighValue = new SimpleDoubleProperty();
+	    this.testLowValue = new SimpleDoubleProperty();
+	    this.testUnit = new SimpleStringProperty();
+	    this.testResult = new SimpleStringProperty();
+	    this.testDateTime = new SimpleObjectProperty<>();
 	}
 
 	/**
@@ -457,6 +472,60 @@ public class MedMystViewModel {
 	public void logout() {
 		this.currentUser = null;
 		this.loginSuccess.set("You have been logged out.");
+	}
+	
+	/**
+	 * Gets the test type property.
+	 * 
+	 * @return a StringProperty representing the type of the test
+	 */
+	public StringProperty testTypeProperty() {
+	    return this.testType;
+	}
+
+	/**
+	 * Gets the high value property for the test.
+	 * 
+	 * @return a DoubleProperty representing the high threshold value for the test
+	 */
+	public DoubleProperty testHighValueProperty() {
+	    return this.testHighValue;
+	}
+
+	/**
+	 * Gets the low value property for the test.
+	 * 
+	 * @return a DoubleProperty representing the low threshold value for the test
+	 */
+	public DoubleProperty testLowValueProperty() {
+	    return this.testLowValue;
+	}
+
+	/**
+	 * Gets the unit property for the test.
+	 * 
+	 * @return a StringProperty representing the unit of measurement for the test
+	 */
+	public StringProperty testUnitProperty() {
+	    return this.testUnit;
+	}
+
+	/**
+	 * Gets the result property for the test.
+	 * 
+	 * @return a StringProperty representing the result of the test
+	 */
+	public StringProperty testResultProperty() {
+	    return this.testResult;
+	}
+
+	/**
+	 * Gets the date and time property for the test.
+	 * 
+	 * @return an ObjectProperty representing the date and time of the test
+	 */
+	public ObjectProperty<LocalDateTime> testDateTimeProperty() {
+	    return this.testDateTime;
 	}
 
 	/**
@@ -937,4 +1006,19 @@ public class MedMystViewModel {
 	        return false;
 	    }
 	}
+	
+	/**
+	 * Gets the list of all available test types.
+	 * 
+	 * @return a List of TestType objects representing all available test types
+	 */
+	public List<TestType> getTestTypes() {
+	    try {
+	        return this.testTypeDAL.getAllLabTestTypes();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return new ArrayList<>();
+	    }
+	}
+
 }

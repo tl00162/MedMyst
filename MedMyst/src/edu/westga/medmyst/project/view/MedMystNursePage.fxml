@@ -34,11 +34,6 @@
       <Label fx:id="searchDOBLabel" layoutX="344.0" layoutY="270.0" text="DOB" />
       <DatePicker fx:id="searchDOBPickerPatient" layoutX="344.0" layoutY="287.0" />
       <Button fx:id="searchButtonPatient" layoutX="440.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchPatients" text="Search" />
-      <Label fx:id="appointmentListLabel" layoutX="689.0" layoutY="35.0" text="Appointments">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
       <Button fx:id="addAppointmentButton" layoutX="112.0" layoutY="444.0" mnemonicParsing="false" onAction="#createAppointment" text="Create Appointment for Patient" />
       <Label fx:id="searchByAppointmentLabel" layoutX="1010.0" layoutY="118.0" text="Search By:">
          <font>

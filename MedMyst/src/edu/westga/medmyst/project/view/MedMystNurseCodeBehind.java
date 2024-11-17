@@ -446,9 +446,29 @@ public class MedMystNurseCodeBehind {
 	}
 	
 	@FXML
-    void createTest() {
-		//TODO unimplemented
-    }
+	void createTest() {
+	    if (this.selectedPatient != null) {
+	        try {
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/TestForm.fxml"));
+	            Pane testFormPane = loader.load();
+
+	            Stage testFormStage = new Stage();
+	            testFormStage.setTitle("Create Test");
+	            testFormStage.setScene(new Scene(testFormPane));
+
+	            TestFormCodeBehind testFormController = loader.getController();
+	            testFormController.setViewModel(this.viewmodel);
+	            testFormController.initializeForm(this.selectedPatient);
+
+	            testFormStage.show();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    } else {
+	        System.out.println("No patient selected.");
+	    }
+	}
+	
 	
 	@FXML
     void editTest() {

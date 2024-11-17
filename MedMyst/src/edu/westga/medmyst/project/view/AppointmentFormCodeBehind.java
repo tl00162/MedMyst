@@ -60,7 +60,7 @@ public class AppointmentFormCodeBehind {
 
 	@FXML
 	private TextField diastolicPressureTextField;
-	
+
 	@FXML
 	private TextField temperatureTextField;
 
@@ -72,10 +72,10 @@ public class AppointmentFormCodeBehind {
 
 	@FXML
 	private TextField weightTextField;
-	
+
 	@FXML
 	private TextArea symptomsTextArea;
-	
+
 	@FXML
 	private TextArea initialDiagnosisTextArea;
 
@@ -90,7 +90,7 @@ public class AppointmentFormCodeBehind {
 	private Patient currentPatient;
 
 	private Appointment currentAppointment;
-	
+
 	private Checkup currentCheckup;
 
 	private Runnable onFormSubmit;
@@ -135,7 +135,7 @@ public class AppointmentFormCodeBehind {
 				new NumberStringConverter());
 		this.diastolicPressureTextField.textProperty().bindBidirectional(this.viewmodel.diastolicPressureProperty(),
 				new NumberStringConverter());
-		this.temperatureTextField.textProperty().bindBidirectional(this.viewmodel.bodyTemperatureProperty(), 
+		this.temperatureTextField.textProperty().bindBidirectional(this.viewmodel.bodyTemperatureProperty(),
 				new NumberStringConverter());
 		this.pulseTextField.textProperty().bindBidirectional(this.viewmodel.pulseProperty(),
 				new NumberStringConverter());
@@ -204,7 +204,7 @@ public class AppointmentFormCodeBehind {
 			this.appointmentTypeComboBox.setValue(appointment.getAppointmentType());
 		}
 	}
-	
+
 	public void setCurrentCheckup(Checkup checkup) {
 		this.currentCheckup = checkup;
 	}
@@ -217,7 +217,7 @@ public class AppointmentFormCodeBehind {
 	public void setOnFormSubmit(Runnable onFormSubmit) {
 		this.onFormSubmit = onFormSubmit;
 	}
-	
+
 	/**
 	 * Gets the createAppointmentButton
 	 * 
@@ -315,7 +315,8 @@ public class AppointmentFormCodeBehind {
 			errorMessage.append("Appointment date and time must be selected.\n");
 		} else if (appointmentDateTime.isBefore(LocalDateTime.now())) {
 			errorMessage.append("Appointment cannot be scheduled in the past.\n");
-		} else if (!this.viewmodel.isDoctorAvailable(getSelectedDoctorId(), appointmentDateTime) && this.createAppointmentButton.getText().equals("Update Appointment")) {
+		} else if (!this.viewmodel.isDoctorAvailable(getSelectedDoctorId(), appointmentDateTime)
+				&& this.createAppointmentButton.getText().equals("Update Appointment")) {
 			errorMessage.append("Doctor cannot be double booked. \n");
 		}
 		if (this.appointmentTypeComboBox.getValue() == null) {
