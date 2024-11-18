@@ -79,6 +79,9 @@ public class MedMystLoginCodeBehind {
 			Stage stage = (Stage) this.loginButton.getScene().getWindow();
 			Scene scene = new Scene(dashboardPane);
 			stage.setScene(scene);
+			javafx.geometry.Rectangle2D screenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+	        stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
+	        stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -30,6 +30,7 @@ public class Checkup {
      * @param symptoms the symptoms described in the checkup
      * @param height the height
      * @param weight the weight
+     * @param initialDiagnosis the initialDiagnosis
      */
     public Checkup(int appointmentId, int nurseId, double bodyTemperature, int diastolicBloodPressure, int systolicBloodPressure, int pulse, String symptoms, double height, double weight, String initialDiagnosis) {
         this.appointmentId = appointmentId;

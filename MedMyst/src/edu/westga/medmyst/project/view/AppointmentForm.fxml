@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="652.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.AppointmentFormCodeBehind">
+<AnchorPane prefHeight="904.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.AppointmentFormCodeBehind">
    <children>
       <Label fx:id="appointmentFormLabel" layoutX="203.0" layoutY="8.0" text="Appointment Form">
          <font>
@@ -44,8 +44,9 @@
       <TextField fx:id="systolicPressureTextField" layoutX="58.0" layoutY="477.0" prefHeight="25.0" prefWidth="99.0" />
       <Label fx:id="diastolicPressureLabel" layoutX="58.0" layoutY="519.0" text="Diastolic Pressure" />
       <TextField fx:id="diastolicPressureTextField" layoutX="58.0" layoutY="536.0" prefHeight="25.0" prefWidth="99.0" />
-      <Button fx:id="createAppointmentButton" layoutX="46.0" layoutY="614.0" mnemonicParsing="false" text="Create Appointment" />
-      <Button fx:id="cancelButton" layoutX="495.0" layoutY="614.0" mnemonicParsing="false" text="Cancel" />
+      <Label fx:id="temperatureLabel" layoutX="246.0" layoutY="452.0" text="Temperature" />
+      <Button fx:id="createAppointmentButton" layoutX="53.0" layoutY="849.0" mnemonicParsing="false" text="Create Appointment" />
+      <Button fx:id="cancelButton" layoutX="491.0" layoutY="849.0" mnemonicParsing="false" text="Cancel" />
       <Label layoutX="160.0" layoutY="481.0" text="mmHg" />
       <Label layoutX="160.0" layoutY="540.0" text="mmHg" />
       <Label fx:id="pulseLabel" layoutX="246.0" layoutY="498.0" text="Pulse" />
@@ -57,5 +58,11 @@
       <TextField fx:id="weightTextField" layoutX="419.0" layoutY="536.0" prefHeight="25.0" prefWidth="73.0" />
       <Label layoutX="491.0" layoutY="481.0" text="in" />
       <Label layoutX="493.0" layoutY="540.0" text="lb" />
+      <Label fx:id="symptomsLabel" layoutX="58.0" layoutY="584.0" text="Symptoms" />
+      <TextArea fx:id="symptomsTextArea" layoutX="60.0" layoutY="601.0" prefHeight="78.0" prefWidth="485.0" />
+      <Label fx:id="initialDiagnosisLabel" layoutX="58.0" layoutY="701.0" text="Initial Diagnosis" />
+      <TextArea fx:id="initialDiagnosisTextArea" layoutX="60.0" layoutY="718.0" prefHeight="60.0" prefWidth="485.0" />
+      <TextField fx:id="temperatureTextField" layoutX="243.0" layoutY="469.0" prefHeight="25.0" prefWidth="73.0" />
+      <Label fx:id="degreesLabel" layoutX="316.0" layoutY="473.0" text="°F" />
    </children>
 </AnchorPane>
