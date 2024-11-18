@@ -8,13 +8,14 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.TestFormCodeBehind">
    <children>
-      <AnchorPane layoutX="2.0" layoutY="3.0" prefHeight="611.0" prefWidth="956.0">
+      <AnchorPane layoutY="1.0" prefHeight="611.0" prefWidth="956.0">
          <children>
             <Label layoutX="418.0" layoutY="14.0" text="Test Form">
                <font>
@@ -29,8 +30,8 @@
                            <children>
                               <TableView fx:id="orderedTestsTableView" layoutX="16.0" layoutY="15.0" prefHeight="446.0" prefWidth="426.0">
                                 <columns>
-                                  <TableColumn fx:id="typeTableColumn" prefWidth="109.0" text="Type" />
-                                  <TableColumn fx:id="descriptionTableColumn" minWidth="0.0" prefWidth="319.0" text="Description" />
+                                  <TableColumn fx:id="typeTableColumn" prefWidth="81.0" text="Type" />
+                                    <TableColumn fx:id="dateTableColumn" prefWidth="344.0" text="Date" />
                                 </columns>
                               </TableView>
                            </children>
@@ -43,8 +44,9 @@
                            <children>
                               <TableView fx:id="testResultsTableView" layoutX="16.0" layoutY="15.0" prefHeight="446.0" prefWidth="426.0">
                                 <columns>
-                                  <TableColumn prefWidth="109.0" text="Type" />
-                                  <TableColumn fx:id="resultTableColumn" prefWidth="316.0" text="Results" />
+                                  <TableColumn fx:id="resultTestTypeTableColumn" prefWidth="81.0" text="Type" />
+                                  <TableColumn fx:id="resultDateTableColumn" prefWidth="115.0" text="Date" />
+                                    <TableColumn fx:id="resultTableColumn" prefWidth="229.0" text="Results" />
                                 </columns>
                               </TableView>
                            </children>
@@ -70,14 +72,14 @@
             <Button fx:id="addTestButton" layoutX="14.0" layoutY="539.0" mnemonicParsing="false" onAction="#addTest" text="Add Test" />
             <Button fx:id="removeTestButton" layoutX="197.0" layoutY="539.0" mnemonicParsing="false" onAction="#removeTest" text="Remove Test" />
             <Button fx:id="finalizeDiagnosisButton" layoutX="356.0" layoutY="539.0" mnemonicParsing="false" onAction="#finalizeDiagnosis" text="Finalize Diagnosis" />
-            <TextField fx:id="highValueTextField" layoutX="15.0" layoutY="405.0" />
-            <TextField fx:id="lowValueTextField" layoutX="180.0" layoutY="405.0" />
-            <TextField fx:id="unitsTextField" layoutX="359.0" layoutY="405.0" prefHeight="25.0" prefWidth="105.0" />
-            <TextField fx:id="resultsTextField" layoutX="180.0" layoutY="455.0" />
-            <Label layoutX="19.0" layoutY="388.0" text="High" />
-            <Label layoutX="183.0" layoutY="388.0" text="Low" />
-            <Label layoutX="359.0" layoutY="388.0" text="Units" />
-            <Label layoutX="183.0" layoutY="438.0" text="Results" />
+            <TextField fx:id="highValueTextField" layoutX="15.0" layoutY="360.0" />
+            <TextField fx:id="lowValueTextField" layoutX="180.0" layoutY="360.0" />
+            <TextField fx:id="unitsTextField" layoutX="359.0" layoutY="360.0" prefHeight="25.0" prefWidth="105.0" />
+            <Label layoutX="19.0" layoutY="343.0" text="High" />
+            <Label layoutX="183.0" layoutY="343.0" text="Low" />
+            <Label layoutX="359.0" layoutY="343.0" text="Units" />
+            <Label layoutX="21.0" layoutY="412.0" text="Results" />
+            <TextArea fx:id="resultsTextArea" layoutX="21.0" layoutY="429.0" prefHeight="97.0" prefWidth="437.0" wrapText="true" />
          </children>
       </AnchorPane>
    </children>
