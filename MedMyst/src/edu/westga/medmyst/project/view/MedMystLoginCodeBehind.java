@@ -52,6 +52,16 @@ public class MedMystLoginCodeBehind {
 		this.loginSuccess.textProperty().bindBidirectional(this.viewmodel.getLoginSuccess());
 		this.usernameTextField.textProperty().bindBidirectional(this.viewmodel.getUsername());
 		this.passwordTextField.textProperty().bindBidirectional(this.viewmodel.getPassword());
+		
+	    this.passwordTextField.setOnKeyPressed(event -> {
+	        switch (event.getCode()) {
+	            case ENTER:
+	                this.loginButtonClick(null);
+	                break;
+	            default:
+	                break;
+	        }
+	    });
 	}
 
 	@FXML

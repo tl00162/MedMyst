@@ -129,7 +129,19 @@ public class TestFormCodeBehind {
 						this.populateFields(newValue);
 					}
 				});
+		this.orderedTestsTableView.setOnMouseClicked(event -> {
+			Test selectedTest = this.orderedTestsTableView.getSelectionModel().getSelectedItem();
+			if (selectedTest != null) {
+				this.populateFields(selectedTest);
+			}
+		});
 
+		this.testResultsTableView.setOnMouseClicked(event -> {
+			Test selectedTest = this.testResultsTableView.getSelectionModel().getSelectedItem();
+			if (selectedTest != null) {
+				this.populateFields(selectedTest);
+			}
+		});
 	}
 
 	public void setViewModel(MedMystViewModel viewModel) {
