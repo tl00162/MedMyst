@@ -2,6 +2,7 @@ package edu.westga.medmyst.project.dal;
 
 import edu.westga.medmyst.project.model.Appointment;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -27,29 +28,25 @@ public class AppointmentDAL {
 	 * @return the generated appointmentId
 	 */
 	public int addAppointment(Appointment appointment) throws SQLException {
-		String query = "INSERT INTO appointment (patient_id, doctor_id, reason, details, appointment_type, datetime) VALUES (?, ?, ?, ?, ?, ?)";
+		String query = "{ CALL AddAppointment(?, ?, ?, ?, ?, ?, ?) }";
 
-		try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
-				PreparedStatement stmt = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+	    try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+	         CallableStatement stmt = connection.prepareCall(query)) {
 
-			stmt.setInt(1, appointment.getPatientId());
-			stmt.setInt(2, appointment.getDoctorId());
-			stmt.setString(3, appointment.getReason());
-			stmt.setString(4, appointment.getDetails());
-			stmt.setString(5, appointment.getAppointmentType());
-			stmt.setTimestamp(6, java.sql.Timestamp.valueOf(appointment.getDateTime()));
+	        stmt.setInt(1, appointment.getPatientId());
+	        stmt.setInt(2, appointment.getDoctorId());
+	        stmt.setString(3, appointment.getReason());
+	        stmt.setString(4, appointment.getDetails());
+	        stmt.setString(5, appointment.getAppointmentType());
+	        stmt.setTimestamp(6, java.sql.Timestamp.valueOf(appointment.getDateTime()));
+	        stmt.registerOutParameter(7, java.sql.Types.INTEGER);
 
-			stmt.executeUpdate();
+	        stmt.execute();
 
-			try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-				if (generatedKeys.next()) {
-					appointment.setAppointmentId(generatedKeys.getInt(1));
-					return appointment.getAppointmentId();
-				} else {
-					throw new SQLException("Creating appointment failed, no ID obtained.");
-				}
-			}
-		}
+	        int generatedId = stmt.getInt(7);
+	        appointment.setAppointmentId(generatedId);
+	        return generatedId;
+	    }
 	}
 
 	/**
