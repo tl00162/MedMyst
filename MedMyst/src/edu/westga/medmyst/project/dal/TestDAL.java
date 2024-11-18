@@ -143,16 +143,18 @@ public class TestDAL {
 	}
 
 	public void finalizeTest(int testId) throws SQLException {
-		String query = "UPDATE LabTest SET finalized = 1 WHERE lab_test_id = ?";
-		try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
-				PreparedStatement stmt = connection.prepareStatement(query)) {
+	    String query = "{ CALL FinalizeTest(?) }";
 
-			stmt.setInt(1, testId);
-			int rowsAffected = stmt.executeUpdate();
-			if (rowsAffected == 0) {
-				throw new SQLException("Finalizing test failed. Test may not exist.");
-			}
-		}
+	    try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+	         CallableStatement stmt = connection.prepareCall(query)) {
+
+	        stmt.setInt(1, testId);
+
+	        stmt.execute();
+	    } catch (SQLException e) {
+	        System.err.println("Error finalizing test: " + e.getMessage());
+	        throw e;
+	    }
 	}
 
 	public List<Test> getTests() throws SQLException {

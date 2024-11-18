@@ -1052,7 +1052,6 @@ public class MedMystViewModel {
 
 		try {
 			this.testDAL.addLabTest(newTest);
-			System.out.println("Test successfully added to the database.");
 			return true;
 		} catch (SQLException e) {
 			System.err.println("SQL Error during test creation:");
@@ -1127,15 +1126,12 @@ public class MedMystViewModel {
 			throw new IllegalArgumentException("Updated test cannot be null.");
 		}
 
-		System.out.println("Updating test with ID: " + updatedTest.getTestId());
-
 		if (updatedTest.getDoctorId() <= 0 || updatedTest.getPatientId() <= 0 || updatedTest.getTestType() == null) {
 			throw new IllegalArgumentException("Invalid test details provided.");
 		}
 
 		try {
 			this.testDAL.updateLabTest(updatedTest);
-			System.out.println("Test updated successfully in the database.");
 		} catch (SQLException e) {
 			System.err.println("Error updating test in database: " + e.getMessage());
 			throw e;
