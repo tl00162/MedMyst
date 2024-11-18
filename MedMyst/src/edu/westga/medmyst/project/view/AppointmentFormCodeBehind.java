@@ -205,6 +205,11 @@ public class AppointmentFormCodeBehind {
 		}
 	}
 
+	/**
+	 * Sets the currentCheckup
+	 * 
+	 * @param checkup the currentCheckup
+	 */
 	public void setCurrentCheckup(Checkup checkup) {
 		this.currentCheckup = checkup;
 	}
@@ -228,7 +233,7 @@ public class AppointmentFormCodeBehind {
 	}
 
 	/**
-	 * Gets the createAppointmentButton text
+	 * Sets the createAppointmentButton text
 	 * 
 	 * @param text for createAppointment Button
 	 */
@@ -315,7 +320,7 @@ public class AppointmentFormCodeBehind {
 			errorMessage.append("Appointment date and time must be selected.\n");
 		} else if (appointmentDateTime.isBefore(LocalDateTime.now())) {
 			errorMessage.append("Appointment cannot be scheduled in the past.\n");
-		} else if (!this.viewmodel.isDoctorAvailable(getSelectedDoctorId(), appointmentDateTime)
+		} else if (!this.viewmodel.isDoctorAvailable(this.getSelectedDoctorId(), appointmentDateTime)
 				&& this.createAppointmentButton.getText().equals("Update Appointment")) {
 			errorMessage.append("Doctor cannot be double booked. \n");
 		}

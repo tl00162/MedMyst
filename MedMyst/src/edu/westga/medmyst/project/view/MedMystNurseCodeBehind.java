@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import edu.westga.medmyst.project.model.Appointment;
-import edu.westga.medmyst.project.model.AppointmentTest;
 import edu.westga.medmyst.project.model.Patient;
 import edu.westga.medmyst.project.model.Test;
 import edu.westga.medmyst.project.viewmodel.MedMystViewModel;

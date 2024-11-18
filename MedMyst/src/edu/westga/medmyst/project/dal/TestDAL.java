@@ -2,7 +2,6 @@ package edu.westga.medmyst.project.dal;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +21,11 @@ public class TestDAL {
 			List<Test> labTests = new ArrayList<>();
 			while (resultSet.next()) {
 				TestType testType = new TestType(resultSet.getString("test_type"), null);
-				boolean finalized = resultSet.getShort("finalized") == 1; // Assuming finalized is stored as a short (0
-																			// or 1)
+				boolean finalized = resultSet.getShort("finalized") == 1;
 				labTests.add(new Test(resultSet.getInt("lab_test_id"), resultSet.getInt("doctor_id"), patientId,
 						testType, resultSet.getDouble("low"), resultSet.getDouble("high"),
 						resultSet.getString("unit_of_measurement"), resultSet.getString("results"),
-						resultSet.getTimestamp("datetime").toLocalDateTime(), finalized // Pass the finalized value to
-																						// the Test object
-				));
+						resultSet.getTimestamp("datetime").toLocalDateTime(), finalized));
 			}
 			return labTests;
 		}

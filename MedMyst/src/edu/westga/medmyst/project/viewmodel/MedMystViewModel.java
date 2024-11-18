@@ -23,7 +23,6 @@ import edu.westga.medmyst.project.model.Login;
 import edu.westga.medmyst.project.model.Patient;
 import edu.westga.medmyst.project.model.Test;
 import edu.westga.medmyst.project.model.TestType;
-import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -1021,6 +1020,14 @@ public class MedMystViewModel {
 		}
 	}
 
+	/**
+	 * Adds a new lab test to the database.
+	 * 
+	 * @throws SQLException             if a database access error occurs
+	 * @throws IllegalArgumentException if the test is null or contains invalid
+	 *                                  details
+	 * @return true if test was added
+	 */
 	public boolean addTest() {
 		System.out.println("Debugging addTest method in ViewModel:");
 		System.out.println("Doctor ID: " + this.doctorIdProperty().get());
@@ -1057,11 +1064,24 @@ public class MedMystViewModel {
 		}
 	}
 
+	/**
+	 * Retrieves a list of completed tests for the currently selected patient.
+	 * 
+	 * @return a list of completed tests for the patient
+	 * @throws SQLException if a database access error occurs
+	 */
 	public List<Test> getCompleteTestsForPatient() throws SQLException {
 		int patientId = this.patientIdProperty().get();
 		return this.testDAL.getCompleteTestsByPatientId(patientId);
 	}
 
+	/**
+	 * Retrieves a list of incomplete tests for the currently selected patient.
+	 * 
+	 * @return a list of incomplete tests for the patient, or an empty list if no
+	 *         patient is selected
+	 * @throws SQLException if a database access error occurs
+	 */
 	public List<Test> getIncompleteTestsForPatient() throws SQLException {
 		if (this.patientIdProperty().get() == 0) {
 			return new ArrayList<>();
@@ -1069,10 +1089,23 @@ public class MedMystViewModel {
 		return this.testDAL.getIncompleteTestsByPatientId(this.patientIdProperty().get());
 	}
 
+	/**
+	 * Removes the specified test from the database.
+	 * 
+	 * @param test the test to be removed
+	 * @throws SQLException if a database access error occurs
+	 */
 	public void removeTest(Test test) throws SQLException {
 		this.testDAL.removeTestById(test.getTestId());
 	}
 
+	/**
+	 * Finalizes the specified test, marking it as completed in the database.
+	 * 
+	 * @param test the test to be finalized
+	 * @throws SQLException             if a database access error occurs
+	 * @throws IllegalArgumentException if the test is null
+	 */
 	public void finalizeTest(Test test) throws SQLException {
 		if (test == null) {
 			throw new IllegalArgumentException("Test cannot be null.");
@@ -1081,6 +1114,14 @@ public class MedMystViewModel {
 		test.setFinalized(true);
 	}
 
+	/**
+	 * Updates the details of the specified test in the database.
+	 * 
+	 * @param updatedTest the test with updated details
+	 * @throws SQLException             if a database access error occurs
+	 * @throws IllegalArgumentException if the test is null or contains invalid
+	 *                                  details
+	 */
 	public void updateLabTest(Test updatedTest) throws SQLException {
 		if (updatedTest == null) {
 			throw new IllegalArgumentException("Updated test cannot be null.");
@@ -1101,6 +1142,11 @@ public class MedMystViewModel {
 		}
 	}
 
+	/**
+	 * Retrieves all tests from the database.
+	 * 
+	 * @return a list of all tests
+	 */
 	public List<Test> getTests() {
 		try {
 			return this.testDAL.getTests();
@@ -1110,6 +1156,14 @@ public class MedMystViewModel {
 		}
 	}
 
+	/**
+	 * Searches for tests based on the provided patient information.
+	 * 
+	 * @param firstName the first name of the patient
+	 * @param lastName  the last name of the patient
+	 * @param dob       the date of birth of the patient
+	 * @return a list of tests matching the provided patient information
+	 */
 	public List<Test> searchTestsByPatientInfo(String firstName, String lastName, LocalDate dob) {
 		try {
 			return this.testDAL.searchTestsByPatientInfo(firstName, lastName, dob);
