@@ -1,6 +1,7 @@
 package edu.westga.medmyst.project.dal;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -155,6 +156,58 @@ public class TestDAL {
 			if (rowsAffected == 0) {
 				throw new SQLException("Finalizing test failed. Test may not exist.");
 			}
+		}
+	}
+
+	public List<Test> getTests() throws SQLException {
+		String query = "SELECT * FROM LabTest";
+		try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+				PreparedStatement stmt = connection.prepareStatement(query);
+				ResultSet resultSet = stmt.executeQuery()) {
+
+			List<Test> allTests = new ArrayList<>();
+			while (resultSet.next()) {
+				TestType testType = new TestType(resultSet.getString("test_type"), null);
+				boolean finalized = resultSet.getShort("finalized") == 1;
+
+				allTests.add(new Test(resultSet.getInt("lab_test_id"), resultSet.getInt("doctor_id"),
+						resultSet.getInt("patient_id"), testType, resultSet.getDouble("low"),
+						resultSet.getDouble("high"), resultSet.getString("unit_of_measurement"),
+						resultSet.getString("results"), resultSet.getTimestamp("datetime").toLocalDateTime(),
+						finalized));
+			}
+			return allTests;
+		}
+	}
+
+	public List<Test> searchTestsByPatientInfo(String firstName, String lastName, LocalDate dob) throws SQLException {
+		String query = "SELECT lt.* FROM LabTest lt " + "JOIN Patient p ON lt.patient_id = p.patient_id "
+				+ "WHERE (p.f_name LIKE ? OR ? IS NULL) " + "AND (p.l_name LIKE ? OR ? IS NULL) "
+				+ "AND (p.date_of_birth = ? OR ? IS NULL)";
+		try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+				PreparedStatement stmt = connection.prepareStatement(query)) {
+
+			stmt.setString(1, firstName != null ? firstName + "%" : null);
+			stmt.setString(2, firstName);
+			stmt.setString(3, lastName != null ? lastName + "%" : null);
+			stmt.setString(4, lastName);
+			stmt.setDate(5, dob != null ? Date.valueOf(dob) : null);
+			stmt.setDate(6, dob != null ? Date.valueOf(dob) : null);
+
+			ResultSet resultSet = stmt.executeQuery();
+
+			List<Test> filteredTests = new ArrayList<>();
+			while (resultSet.next()) {
+				TestType testType = new TestType(resultSet.getString("test_type"), null);
+				boolean finalized = resultSet.getShort("finalized") == 1;
+
+				filteredTests.add(new Test(resultSet.getInt("lab_test_id"), resultSet.getInt("doctor_id"),
+						resultSet.getInt("patient_id"), testType, resultSet.getDouble("low"),
+						resultSet.getDouble("high"), resultSet.getString("unit_of_measurement"),
+						resultSet.getString("results"), resultSet.getTimestamp("datetime").toLocalDateTime(),
+						finalized));
+			}
+			return filteredTests;
 		}
 	}
 }

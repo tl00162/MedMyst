@@ -68,7 +68,6 @@
                      <children>
                         <ListView fx:id="testsListView" layoutX="14.0" layoutY="14.0" prefHeight="280.0" prefWidth="416.0" />
                         <Button fx:id="viewTestButton" layoutX="14.0" layoutY="303.0" mnemonicParsing="false" onAction="#viewTest" text="View Test" />
-                        <Button fx:id="editTestButton" layoutX="365.0" layoutY="303.0" mnemonicParsing="false" onAction="#editTest" text="Edit Test" />
                      </children>
                   </AnchorPane>
             </content>

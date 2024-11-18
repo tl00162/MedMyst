@@ -1088,7 +1088,6 @@ public class MedMystViewModel {
 
 		System.out.println("Updating test with ID: " + updatedTest.getTestId());
 
-		// Ensure required fields are valid
 		if (updatedTest.getDoctorId() <= 0 || updatedTest.getPatientId() <= 0 || updatedTest.getTestType() == null) {
 			throw new IllegalArgumentException("Invalid test details provided.");
 		}
@@ -1099,6 +1098,24 @@ public class MedMystViewModel {
 		} catch (SQLException e) {
 			System.err.println("Error updating test in database: " + e.getMessage());
 			throw e;
+		}
+	}
+
+	public List<Test> getTests() {
+		try {
+			return this.testDAL.getTests();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new ArrayList<>();
+		}
+	}
+
+	public List<Test> searchTestsByPatientInfo(String firstName, String lastName, LocalDate dob) {
+		try {
+			return this.testDAL.searchTestsByPatientInfo(firstName, lastName, dob);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new ArrayList<>();
 		}
 	}
 }

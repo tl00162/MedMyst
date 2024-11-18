@@ -368,7 +368,7 @@ public class TestFormCodeBehind {
 			} else if (this.testResultsTableView.getItems().contains(selectedTest)) {
 				this.testResultsTableView.getItems().remove(selectedTest);
 			}
-			System.out.println("Test removed successfully.");
+			this.clearForm();
 		} catch (SQLException e) {
 			System.err.println("Error removing test: " + e.getMessage());
 			e.printStackTrace();
@@ -404,7 +404,7 @@ public class TestFormCodeBehind {
 		}
 	}
 
-	private void populateFields(Test test) {
+	public void populateFields(Test test) {
 		try {
 			this.currentTest = test;
 			this.addTestButton.setText("Update");

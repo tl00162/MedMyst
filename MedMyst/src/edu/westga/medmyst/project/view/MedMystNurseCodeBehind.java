@@ -37,9 +37,9 @@ public class MedMystNurseCodeBehind {
 
 	@FXML
 	private Button addPatientButton;
-	
+
 	@FXML
-    private Button addTestButton;
+	private Button addTestButton;
 
 	@FXML
 	private Button editPatientButton;
@@ -67,9 +67,6 @@ public class MedMystNurseCodeBehind {
 
 	@FXML
 	private Button editAppointmentButton;
-	
-	@FXML
-    private Button editTestButton;
 
 	@FXML
 	private Button clearAppoinmentButton;
@@ -79,9 +76,9 @@ public class MedMystNurseCodeBehind {
 
 	@FXML
 	private ListView<Appointment> appointmentsListView;
-	
+
 	@FXML
-    private ListView<AppointmentTest> testsListView;
+	private ListView<Test> testsListView;
 
 	@FXML
 	private TextField searchFirstNameTextFieldAppointment;
@@ -97,9 +94,9 @@ public class MedMystNurseCodeBehind {
 
 	@FXML
 	private Button viewAppointmentButton;
-	
+
 	@FXML
-    private Button viewTestButton;
+	private Button viewTestButton;
 
 	@FXML
 	private Label usernameLabel;
@@ -109,31 +106,36 @@ public class MedMystNurseCodeBehind {
 	private Patient selectedPatient;
 
 	private Appointment selectedAppointment;
-	
-	private AppointmentTest selectedAppointmentTest;
+
+	private Test selectedTest;
 
 	@FXML
 	private void initialize() {
-	    this.editPatientButton.disableProperty()
-	            .bind(this.patientsListView.getSelectionModel().selectedItemProperty().isNull());
-	    
-	    this.patientsListView.getSelectionModel().selectedItemProperty()
-	            .addListener((observable, oldValue, newValue) -> {
-	                this.selectedPatient = newValue;
-	                
-	                this.viewmodel.updateCanAddAppointment(newValue);
-	            });
+		this.editPatientButton.disableProperty()
+				.bind(this.patientsListView.getSelectionModel().selectedItemProperty().isNull());
 
-	    this.editAppointmentButton.disableProperty()
-	            .bind(this.appointmentsListView.getSelectionModel().selectedItemProperty().isNull());
+		this.patientsListView.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> {
+					this.selectedPatient = newValue;
 
-	    this.viewAppointmentButton.disableProperty()
-	            .bind(this.appointmentsListView.getSelectionModel().selectedItemProperty().isNull());
+					this.viewmodel.updateCanAddAppointment(newValue);
+				});
 
-	    this.appointmentsListView.getSelectionModel().selectedItemProperty()
-	            .addListener((observable, oldValue, newValue) -> {
-	                this.selectedAppointment = newValue;
-	            });
+		this.editAppointmentButton.disableProperty()
+				.bind(this.appointmentsListView.getSelectionModel().selectedItemProperty().isNull());
+
+		this.viewAppointmentButton.disableProperty()
+				.bind(this.appointmentsListView.getSelectionModel().selectedItemProperty().isNull());
+
+		this.appointmentsListView.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> {
+					this.selectedAppointment = newValue;
+				});
+
+		this.testsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			this.selectedTest = newValue;
+		});
+
 	}
 
 	/**
@@ -157,6 +159,43 @@ public class MedMystNurseCodeBehind {
 		});
 	}
 
+	private void refreshTestList() {
+		List<Test> testList = this.viewmodel.getTests();
+		ObservableList<Test> observableTestList = FXCollections.observableArrayList(testList);
+		this.testsListView.setItems(observableTestList);
+
+		this.testsListView.setCellFactory(testListView -> new ListCell<Test>() {
+			@Override
+			protected void updateItem(Test test, boolean empty) {
+				super.updateItem(test, empty);
+				if (empty || test == null) {
+					setText(null);
+				} else {
+					String patientName = "Unknown Patient";
+					Patient patient = viewmodel.getPatientById(test.getPatientId());
+					if (patient != null) {
+						patientName = patient.getLName();
+					}
+
+					String testType = test.getTestType().getTypeName();
+					String date = test.getDateTime().toLocalDate().toString();
+
+					// Append "FINAL" if the test is finalized
+					String status = test.isFinalized() ? "FINAL" : "";
+
+					String displayText = String.format("%s | %s | %s %s", patientName, testType, date, status);
+					setText(displayText.trim());
+				}
+			}
+		});
+	}
+
+	private void filterTests(String firstName, String lastName, LocalDate dob) {
+		List<Test> filteredTests = this.viewmodel.searchTestsByPatientInfo(firstName, lastName, dob);
+		ObservableList<Test> observableTestList = FXCollections.observableArrayList(filteredTests);
+		this.testsListView.setItems(observableTestList);
+	}
+
 	/**
 	 * Refreshes the appointment list in the ListView.
 	 */
@@ -178,7 +217,7 @@ public class MedMystNurseCodeBehind {
 					String appointmentType = appointment.getAppointmentType();
 					LocalDateTime dateTime = appointment.getDateTime();
 
-					String displayText = String.format("%s - %s | %s | %s", patientLastName,
+					String displayText = String.format("%s | %s | %s | %s", patientLastName,
 							dateTime.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
 							doctorName, appointmentType);
 
@@ -203,10 +242,11 @@ public class MedMystNurseCodeBehind {
 
 			this.usernameLabel.setText(String.format("Welcome, %s, %s %s!", userId, firstName, lastName));
 		}
-	    this.addAppointmentButton.disableProperty().bind(this.viewmodel.canAddAppointmentProperty().not());
-	    this.addTestButton.disableProperty().bind(this.viewmodel.canAddAppointmentProperty().not());
+		this.addAppointmentButton.disableProperty().bind(this.viewmodel.canAddAppointmentProperty().not());
+		this.addTestButton.disableProperty().bind(this.viewmodel.canAddAppointmentProperty().not());
 		this.refreshPatientList();
 		this.refreshAppointmentList();
+		this.refreshTestList();
 	}
 
 	@FXML
@@ -424,60 +464,82 @@ public class MedMystNurseCodeBehind {
 				dob);
 		ObservableList<Appointment> observableAppointmentList = FXCollections.observableArrayList(filteredAppointments);
 		this.appointmentsListView.setItems(observableAppointmentList);
+		this.filterTests(firstName, lastName, dob);
 	}
 
 	@FXML
 	void clearAppointments() {
 
-	    this.searchFirstNameTextFieldAppointment.clear();
-	    this.searchLastNameTextFieldAppointment.clear();
-	    this.searchDOBPickerAppointment.setValue(null);
+		this.searchFirstNameTextFieldAppointment.clear();
+		this.searchLastNameTextFieldAppointment.clear();
+		this.searchDOBPickerAppointment.setValue(null);
 
-	    this.refreshAppointmentList();
+		this.refreshAppointmentList();
+		this.refreshTestList();
 	}
 
 	@FXML
 	void clearPatientSearch() {
-	    this.searchFirstNameTextFieldPatient.clear();
-	    this.searchLastNameTextFieldPatient.clear();
-	    this.searchDOBPickerPatient.setValue(null);
+		this.searchFirstNameTextFieldPatient.clear();
+		this.searchLastNameTextFieldPatient.clear();
+		this.searchDOBPickerPatient.setValue(null);
 
-	    this.refreshPatientList();
+		this.refreshPatientList();
 	}
-	
+
 	@FXML
 	void createTest() {
-	    if (this.selectedPatient != null) {
-	        try {
-	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/westga/medmyst/project/view/TestForm.fxml"));
-	            Pane testFormPane = loader.load();
+		if (this.selectedPatient != null) {
+			try {
+				FXMLLoader loader = new FXMLLoader(
+						getClass().getResource("/edu/westga/medmyst/project/view/TestForm.fxml"));
+				Pane testFormPane = loader.load();
 
-	            Stage testFormStage = new Stage();
-	            testFormStage.setTitle("Create Test");
-	            testFormStage.setScene(new Scene(testFormPane));
+				Stage testFormStage = new Stage();
+				testFormStage.setTitle("Create Test");
+				testFormStage.setScene(new Scene(testFormPane));
 
-	            TestFormCodeBehind testFormController = loader.getController();
-	            testFormController.setViewModel(this.viewmodel);
-	            testFormController.initializeForm(this.selectedPatient);
+				TestFormCodeBehind testFormController = loader.getController();
+				testFormController.setViewModel(this.viewmodel);
+				testFormController.initializeForm(this.selectedPatient);
 
-	            testFormStage.show();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    } else {
-	        System.out.println("No patient selected.");
-	    }
+				testFormStage.setOnHidden(event -> this.refreshTestList());
+
+				testFormStage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("No patient selected.");
+		}
 	}
-	
-	
+
 	@FXML
-    void editTest() {
-		//TODO unimplemented
-    }
-	
-	@FXML
-    void viewTest() {
-		//TODO unimplemented
-    }
+	void viewTest() {
+		if (this.selectedTest != null) {
+			try {
+				FXMLLoader loader = new FXMLLoader(
+						getClass().getResource("/edu/westga/medmyst/project/view/TestForm.fxml"));
+				Pane testFormPane = loader.load();
+
+				Stage testFormStage = new Stage();
+				testFormStage.setTitle("Edit Test");
+				testFormStage.setScene(new Scene(testFormPane));
+
+				TestFormCodeBehind testFormController = loader.getController();
+				testFormController.setViewModel(this.viewmodel);
+				testFormController.initializeForm(this.viewmodel.getPatientById(this.selectedTest.getPatientId()));
+				testFormController.populateFields(this.selectedTest);
+
+				testFormStage.setOnHidden(event -> this.refreshTestList());
+
+				testFormStage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("No test selected.");
+		}
+	}
 
 }
