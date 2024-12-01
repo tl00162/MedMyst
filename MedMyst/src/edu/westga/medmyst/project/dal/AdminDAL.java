@@ -58,9 +58,9 @@ public class AdminDAL {
 	public List<Map<String, Object>> getVisitReport(LocalDate startDate, LocalDate endDate) throws SQLException {
 	    String query = "SELECT a.datetime AS 'Visit Date', "
 	                 + "p.patient_id AS 'Patient ID', "
-	                 + "p.f_name || ' ' || p.l_name AS 'Patient Name', "
-	                 + "d.f_name || ' ' || d.l_name AS 'Doctor Name', "
-	                 + "n.f_name || ' ' || n.l_name AS 'Nurse Name', "
+	                 + "CONCAT(p.f_name, ' ', p.l_name) AS 'Patient Name', "
+	                 + "CONCAT(d.f_name, ' ', d.l_name) AS 'Doctor Name', "
+	                 + "CONCAT(n.f_name, ' ', n.l_name) AS 'Nurse Name', "
 	                 + "t.test_type AS 'Test Type', "
 	                 + "t.datetime AS 'Test Perform Date', "
 	                 + "CASE "
