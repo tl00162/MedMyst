@@ -100,6 +100,9 @@ public class MedMystNurseCodeBehind {
 	private Button viewTestButton;
 
 	@FXML
+	private Button adminViewButton;
+
+	@FXML
 	private Label usernameLabel;
 
 	private MedMystViewModel viewmodel;
@@ -136,7 +139,6 @@ public class MedMystNurseCodeBehind {
 		this.testsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			this.selectedTest = newValue;
 		});
-
 	}
 
 	/**
@@ -181,7 +183,6 @@ public class MedMystNurseCodeBehind {
 					String testType = test.getTestType().getTypeName();
 					String date = test.getDateTime().toLocalDate().toString();
 
-					// Append "FINAL" if the test is finalized
 					String status = test.isFinalized() ? "FINAL" : "";
 
 					String displayText = String.format("%s | %s | %s %s", patientName, testType, date, status);
@@ -248,6 +249,11 @@ public class MedMystNurseCodeBehind {
 		this.refreshPatientList();
 		this.refreshAppointmentList();
 		this.refreshTestList();
+		if (this.viewmodel.getCurrentUser().getRole().equals("admin")) {
+			this.adminViewButton.setVisible(true);
+		} else {
+			this.adminViewButton.setVisible(false);
+		}
 	}
 
 	@FXML
@@ -346,7 +352,6 @@ public class MedMystNurseCodeBehind {
 				FXMLLoader loader = new FXMLLoader(
 						getClass().getResource("/edu/westga/medmyst/project/view/AppointmentForm.fxml"));
 				ScrollPane appointmentFormPane = loader.load();
-				
 
 				Stage appointmentFormStage = new Stage();
 				appointmentFormStage.setTitle("View Appointment");
@@ -545,6 +550,28 @@ public class MedMystNurseCodeBehind {
 			}
 		} else {
 			System.out.println("No test selected.");
+		}
+	}
+
+	@FXML
+	void adminView() {
+		try {
+			FXMLLoader loader = new FXMLLoader(
+					getClass().getResource("/edu/westga/medmyst/project/view/MedMystAdminPage.fxml"));
+			Pane adminPane = loader.load();
+
+			MedMystAdminCodeBehind adminController = loader.getController();
+			adminController.setViewModel(this.viewmodel);
+
+			Stage stage = (Stage) this.adminViewButton.getScene().getWindow();
+			Scene scene = new Scene(adminPane);
+			stage.setScene(scene);
+
+			javafx.geometry.Rectangle2D screenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+			stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
+			stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

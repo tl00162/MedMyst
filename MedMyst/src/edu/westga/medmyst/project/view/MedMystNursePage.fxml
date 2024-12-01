@@ -75,5 +75,6 @@
         </tabs>
       </TabPane>
       <Button fx:id="addTestButton" layoutX="112.0" layoutY="476.0" mnemonicParsing="false" onAction="#createTest" prefHeight="25.0" prefWidth="183.0" text="Create Test for Patient" />
+      <Button fx:id="adminViewButton" layoutX="1112.0" layoutY="542.0" mnemonicParsing="false" onAction="#adminView" text="Admin View" />
    </children>
 </AnchorPane>

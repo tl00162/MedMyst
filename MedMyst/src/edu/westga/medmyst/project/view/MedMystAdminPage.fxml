@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="665.0" prefWidth="815.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.MedMystAdminCodeBehind">
+   <children>
+      <Label fx:id="usernameLabel" layoutX="14.0" layoutY="14.0" text="Logged in as:" />
+      <TextArea fx:id="queryTextArea" layoutX="50.0" layoutY="46.0" prefHeight="292.0" prefWidth="717.0" />
+      <TableView fx:id="queryResultsTable" layoutX="49.0" layoutY="397.0" prefHeight="224.0" prefWidth="717.0" />
+      <Button fx:id="executeQueryButton" layoutX="50.0" layoutY="356.0" mnemonicParsing="false" onAction="#executeQuery" text="Execute Query" />
+      <Button fx:id="clearQueryButton" layoutX="687.0" layoutY="356.0" mnemonicParsing="false" onAction="#clearQuery" text="Clear Query" />
+      <Button fx:id="nurseViewButton" layoutX="693.0" layoutY="626.0" mnemonicParsing="false" onAction="#nurseView" text="Nurse View" />
+      <Button fx:id="logoutButton" layoutX="715.0" layoutY="10.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
+      <Button fx:id="exportResultsButton" layoutX="362.0" layoutY="356.0" mnemonicParsing="false" onAction="#exportResults" text="Export Results" />
+   </children>
+</AnchorPane>
