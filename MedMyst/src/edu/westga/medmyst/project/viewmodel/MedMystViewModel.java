@@ -635,7 +635,6 @@ public class MedMystViewModel {
 	 * @param patient the specified patient
 	 */
 	public void loadPatientData(Patient patient) {
-		System.out.println(patient);
 		this.patientId.set(patient.getPatientId());
 		this.firstName.set(patient.getFName());
 		this.lastName.set(patient.getLName());
@@ -741,11 +740,9 @@ public class MedMystViewModel {
 	public boolean addAppointment() {
 		if (this.patientId.get() == 0 || this.doctorId.get() == 0 || this.appointmentDateTime.get() == null
 				|| this.reason.get().isEmpty() || this.appointmentType.get().isEmpty()) {
-			System.out.println("Error: Missing required fields for appointment creation.");
 			return false;
 		}
 		if (!this.isDoctorAvailable(this.doctorId.get(), this.appointmentDateTime.get())) {
-			System.out.println("Error: Doctor is already booked at this time.");
 			return false;
 		}
 		Appointment newAppointment = new Appointment(this.appointmentId.get(), this.patientId.get(),
@@ -1049,12 +1046,6 @@ public class MedMystViewModel {
 	 * @return the ID of the newly added test, or -1 if the operation fails
 	 */
 	public int addTest(Test newTest, boolean isNormal) {
-		System.out.println("Debugging addTest method in ViewModel:");
-		System.out.println("Doctor ID: " + newTest.getDoctorId());
-		System.out.println("Patient ID: " + newTest.getPatientId());
-		System.out.println("Test Type: " + newTest.getTestType().getTypeName());
-		System.out.println("Test DateTime: " + newTest.getDateTime());
-		System.out.println("Normality: " + isNormal);
 
 		if (newTest.getPatientId() == 0 || newTest.getDoctorId() == 0 || newTest.getTestType().getTypeName() == null
 				|| newTest.getDateTime() == null) {
@@ -1065,12 +1056,7 @@ public class MedMystViewModel {
 		int newTestId = -1;
 		try {
 			newTestId = this.testDAL.addLabTest(newTest, isNormal);
-			System.out.println("New Test ID: " + newTestId);
 		} catch (SQLException e) {
-			System.err.println("SQL Error during test creation:");
-			System.err.println("Error Code: " + e.getErrorCode());
-			System.err.println("SQL State: " + e.getSQLState());
-			System.err.println("Message: " + e.getMessage());
 			e.printStackTrace();
 		}
 		return newTestId;
@@ -1134,7 +1120,6 @@ public class MedMystViewModel {
 			this.testDAL.finalizeTest(test.getTestId());
 			this.testDAL.updateNormalityForAppointmentLabTest(test.getTestId(), normality);
 			test.setFinalized(true);
-			System.out.println("Test finalized successfully with normality: " + normality);
 		} catch (SQLException e) {
 			System.err.println("Error finalizing test in database: " + e.getMessage());
 			throw e;
@@ -1277,11 +1262,56 @@ public class MedMystViewModel {
 
 		try {
 			this.testDAL.linkTestToAppointment(testId, appointmentId, normality);
-			System.out.println("Test linked to appointment successfully with normality: " + normality);
 		} catch (SQLException e) {
 			System.err.println("Error linking test to appointment in database: " + e.getMessage());
 			throw e;
 		}
+	}
+
+	/**
+	 * Finalizes all complete tests for the specified appointment.
+	 * 
+	 * @param appointmentId the ID of the appointment
+	 * @param tests         the list of complete tests to finalize
+	 * @throws SQLException if a database access error occurs
+	 */
+	public void finalizeAllTestsForAppointment(int appointmentId, List<Test> tests) throws SQLException {
+		try {
+			this.testDAL.finalizeTests(tests);
+			for (Test test : tests) {
+				test.setFinalized(true);
+			}
+		} catch (SQLException e) {
+			System.err.println("Error finalizing tests for appointment in database: " + e.getMessage());
+			throw e;
+		}
+	}
+
+	/**
+	 * Retrieves the appointment ID associated with a specific test ID.
+	 * 
+	 * @param testId The ID of the test for which to retrieve the associated
+	 *               appointment ID.
+	 * @return The appointment ID associated with the specified test ID.
+	 * @throws SQLException If a database access error occurs.
+	 */
+	public int getAppointmentIdForTest(int testId) throws SQLException {
+		return this.testDAL.getAppointmentIdByTestId(testId);
+	}
+
+	/**
+	 * Retrieves an appointment by its ID from the database. This method fetches
+	 * detailed appointment information including associated doctor and patient
+	 * details.
+	 * 
+	 * @param appointmentId The ID of the appointment to retrieve.
+	 * @return An {@link Appointment} object containing the details of the
+	 *         appointment if found, or {@code null} if no appointment with the
+	 *         specified ID exists.
+	 * @throws SQLException If a database access error occurs.
+	 */
+	public Appointment getAppointmentById(int appointmentId) throws SQLException {
+		return this.appointmentDAL.getAppointmentById(appointmentId);
 	}
 
 }

@@ -16,6 +16,7 @@ public class Test {
 	private double low;
 	private double high;
 	private String unitOfMeasurement;
+	private int appointmentId; 
 	private String result;
 	private LocalDateTime dateTime;
 	private boolean finalized;
@@ -266,5 +267,14 @@ public class Test {
 	public void setNormality(Boolean normality) {
 		this.normality = normality;
 	}
+	
+    /**
+     * Gets the appointment ID associated with the test.
+     * 
+     * @return the appointment ID
+     */
+    public int getAppointmentId() {
+        return this.appointmentId;
+    }
 
 }

@@ -44,9 +44,6 @@ public class MedMystNurseCodeBehind {
 	private Button addPatientButton;
 
 	@FXML
-	private Button addTestButton;
-
-	@FXML
 	private Button editPatientButton;
 
 	@FXML
@@ -276,7 +273,6 @@ public class MedMystNurseCodeBehind {
 			this.usernameLabel.setText(String.format("Welcome, %s, %s %s!", userId, firstName, lastName));
 		}
 		this.addAppointmentButton.disableProperty().bind(this.viewmodel.canAddAppointmentProperty().not());
-		this.addTestButton.disableProperty().bind(this.viewmodel.canAddAppointmentProperty().not());
 		this.refreshPatientList();
 		this.refreshAppointmentList();
 		this.refreshTestList();
@@ -530,58 +526,31 @@ public class MedMystNurseCodeBehind {
 	}
 
 	@FXML
-	void createTest() {
-//		if (this.selectedPatient != null) {
-//			try {
-//				FXMLLoader loader = new FXMLLoader(
-//						getClass().getResource("/edu/westga/medmyst/project/view/TestForm.fxml"));
-//				Pane testFormPane = loader.load();
-//
-//				Stage testFormStage = new Stage();
-//				testFormStage.setTitle("Create Test");
-//				testFormStage.setScene(new Scene(testFormPane));
-//
-//				TestFormCodeBehind testFormController = loader.getController();
-//				testFormController.setViewModel(this.viewmodel);
-//				testFormController.initializeForm(this.selectedPatient);
-//
-//				testFormStage.setOnHidden(event -> this.refreshTestList());
-//
-//				testFormStage.show();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		} else {
-//			System.out.println("No patient selected.");
-//		}
-	}
-
-	@FXML
 	void viewTest() {
-//		if (this.selectedTest != null) {
-//			try {
-//				FXMLLoader loader = new FXMLLoader(
-//						getClass().getResource("/edu/westga/medmyst/project/view/TestForm.fxml"));
-//				Pane testFormPane = loader.load();
-//
-//				Stage testFormStage = new Stage();
-//				testFormStage.setTitle("Edit Test");
-//				testFormStage.setScene(new Scene(testFormPane));
-//
-//				TestFormCodeBehind testFormController = loader.getController();
-//				testFormController.setViewModel(this.viewmodel);
-//				testFormController.initializeForm(this.viewmodel.getPatientById(this.selectedTest.getPatientId()));
-//				testFormController.populateFields(this.selectedTest);
-//
-//				testFormStage.setOnHidden(event -> this.refreshTestList());
-//
-//				testFormStage.show();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		} else {
-//			System.out.println("No test selected.");
-//		}
+		if (this.selectedTest != null) {
+			try {
+				FXMLLoader loader = new FXMLLoader(
+						getClass().getResource("/edu/westga/medmyst/project/view/TestForm.fxml"));
+				Pane testFormPane = loader.load();
+
+				Stage testFormStage = new Stage();
+				testFormStage.setTitle("Edit Test");
+				testFormStage.setScene(new Scene(testFormPane));
+
+				TestFormCodeBehind testFormController = loader.getController();
+				testFormController.setViewModel(this.viewmodel);
+				testFormController.initializeForm(this.selectedTest);
+				testFormController.populateFields(this.selectedTest);
+
+				testFormStage.setOnHidden(event -> this.refreshTestList());
+
+				testFormStage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("No test selected.");
+		}
 	}
 
 	@FXML

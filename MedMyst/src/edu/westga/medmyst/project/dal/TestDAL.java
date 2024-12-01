@@ -478,4 +478,77 @@ public class TestDAL {
 		}
 	}
 
+	/**
+	 * Finalizes the specified list of tests in a single transaction.
+	 * 
+	 * @param tests the list of tests to finalize
+	 * @throws SQLException if a database access error occurs
+	 */
+	public void finalizeTests(List<Test> tests) throws SQLException {
+		String updateQuery = "UPDATE LabTest SET finalized = 1 WHERE lab_test_id = ?";
+
+		Connection connection = null;
+		PreparedStatement stmt = null;
+
+		try {
+			connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+			connection.setAutoCommit(false);
+
+			stmt = connection.prepareStatement(updateQuery);
+
+			for (Test test : tests) {
+				stmt.setInt(1, test.getTestId());
+				stmt.addBatch();
+			}
+
+			int[] rowsAffected = stmt.executeBatch();
+
+			for (int rows : rowsAffected) {
+				if (rows == 0) {
+					throw new SQLException("Failed to finalize one or more tests: No rows affected.");
+				}
+			}
+
+			connection.commit();
+		} catch (SQLException e) {
+			if (connection != null) {
+				try {
+					connection.rollback();
+				} catch (SQLException rollbackEx) {
+					System.err.println("Rollback failed: " + rollbackEx.getMessage());
+				}
+			}
+			throw e;
+		} finally {
+			if (stmt != null)
+				stmt.close();
+			if (connection != null)
+				connection.close();
+		}
+	}
+
+	/**
+	 * Retrieves the appointment ID associated with a specific test ID from the
+	 * database.
+	 * 
+	 * @param testId The ID of the test for which to retrieve the associated
+	 *               appointment ID.
+	 * @return The appointment ID associated with the specified test ID.
+	 * @throws SQLException If a database access error occurs or if the query
+	 *                      execution fails.
+	 */
+	public int getAppointmentIdByTestId(int testId) throws SQLException {
+		String query = "SELECT appointment_id FROM AppointmentLabTest WHERE lab_test_id = ?";
+		try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
+				PreparedStatement stmt = connection.prepareStatement(query)) {
+			stmt.setInt(1, testId);
+			ResultSet resultSet = stmt.executeQuery();
+
+			if (resultSet.next()) {
+				return resultSet.getInt("appointment_id");
+			} else {
+				throw new SQLException("No appointment found for the given test ID.");
+			}
+		}
+	}
 }

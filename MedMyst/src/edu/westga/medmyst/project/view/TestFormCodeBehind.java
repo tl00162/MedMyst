@@ -181,6 +181,12 @@ public class TestFormCodeBehind {
 		this.normalRadioButton.setSelected(false);
 		this.abnormalRadioButton.setSelected(false);
 
+		this.resultsTextArea.focusedProperty().addListener((observable, oldFocus, newFocus) -> {
+			if (!newFocus) { // Lost focus
+				this.evaluateResultsField();
+			}
+		});
+
 	}
 
 	private void updateTestTypeFields(TestType selectedTestType) {
@@ -276,6 +282,33 @@ public class TestFormCodeBehind {
 		}
 	}
 
+	public void initializeForm(Test selectedTest) {
+		if (selectedTest != null) {
+			try {
+				int appointmentId = this.viewModel.getAppointmentIdForTest(selectedTest.getTestId());
+				if (appointmentId <= 0) {
+					System.err.println("Error: Invalid appointment ID for the selected test.");
+					return;
+				}
+
+				Appointment selectedAppointment = this.viewModel.getAppointmentById(appointmentId);
+				if (selectedAppointment == null) {
+					System.err.println("Error: Unable to find the appointment for the selected test.");
+					return;
+				}
+
+				this.initializeForm(selectedAppointment);
+				this.populateFields(selectedTest);
+
+			} catch (SQLException e) {
+				System.err.println("Error fetching appointment for the selected test: " + e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("Error: Selected test is null.");
+		}
+	}
+
 	private void loadTestsForAppointment(int appointmentId) {
 		try {
 			List<Test> orderedTests = this.viewModel.getTestsForAppointment(appointmentId, false);
@@ -351,7 +384,6 @@ public class TestFormCodeBehind {
 				this.loadTestsForAppointment(this.viewModel.appointmentIdProperty().get());
 				this.clearForm();
 
-				System.out.println("Test updated successfully.");
 			} else {
 				Test newTest = new Test(-1, this.viewModel.doctorIdProperty().get(),
 						this.viewModel.patientIdProperty().get(), selectedTestType,
@@ -360,15 +392,11 @@ public class TestFormCodeBehind {
 						false, isNormal);
 
 				int newTestId = this.viewModel.addTest(newTest, isNormal);
-				System.out.println("New Test ID: " + newTestId);
 
-				System.out.println("Linking Test to Appointment ID: " + this.viewModel.appointmentIdProperty().get());
 				this.viewModel.linkTestToAppointment(newTestId, this.viewModel.appointmentIdProperty().get(),
 						normality);
 				this.loadTestsForAppointment(this.viewModel.appointmentIdProperty().get());
 				this.clearForm();
-
-				System.out.println("Test added successfully.");
 			}
 		} catch (NumberFormatException e) {
 			System.err.println("Error: High and Low values must be numeric.");
@@ -389,39 +417,27 @@ public class TestFormCodeBehind {
 
 	@FXML
 	void finalizeDiagnosis() {
-		Test selectedTest = this.orderedTestsTableView.getSelectionModel().getSelectedItem();
-		if (selectedTest == null) {
-			selectedTest = this.testResultsTableView.getSelectionModel().getSelectedItem();
-		}
-
-		if (selectedTest == null) {
-			this.showErrorDialog("No test selected. Please select a test to finalize.");
-			return;
-		}
-
 		try {
-			if (selectedTest.isFinalized()) {
-				this.showErrorDialog("This test is already finalized and cannot be modified.");
+			int appointmentId = this.viewModel.appointmentIdProperty().get();
+			List<Test> completeTests = this.viewModel.getTestsForAppointment(appointmentId, true);
+
+			if (completeTests.isEmpty()) {
+				this.showErrorDialog("No complete tests available to finalize for this appointment.");
 				return;
 			}
 
-			boolean confirmation = this
-					.showConfirmationDialog("Finalizing a test is permanent and cannot be undone. Are you sure?");
+			boolean confirmation = this.showConfirmationDialog(
+					"Finalizing tests is permanent and cannot be undone. All complete tests for this appointment will be finalized. Are you sure?");
 			if (!confirmation) {
 				return;
 			}
 
-			int normality = this.normalRadioButton.isSelected() ? 1 : 0;
+			this.viewModel.finalizeAllTestsForAppointment(appointmentId, completeTests);
 
-			this.viewModel.finalizeTest(selectedTest, normality);
-
-			this.loadTestsForAppointment(this.viewModel.appointmentIdProperty().get());
-
-			System.out.println("Test finalized successfully.");
+			this.loadTestsForAppointment(appointmentId); // Refresh the tests after finalization
 		} catch (SQLException e) {
-			System.err.println("Error finalizing test: " + e.getMessage());
-			e.printStackTrace();
-			this.showErrorDialog("An error occurred while trying to finalize the test.");
+			System.err.println("Error finalizing tests: " + e.getMessage());
+			this.showErrorDialog("An error occurred while trying to finalize the tests.");
 		}
 	}
 
@@ -554,5 +570,39 @@ public class TestFormCodeBehind {
 		this.addTestButton.setDisable(true);
 		this.removeTestButton.setDisable(true);
 		this.finalizeDiagnosisButton.setDisable(true);
+	}
+
+	private void evaluateResultsField() {
+		try {
+			String resultsText = this.resultsTextArea.getText();
+			if (resultsText == null || resultsText.isEmpty()) {
+				return;
+			}
+
+			String regex = "-?\\d+(\\.\\d+)?";
+			java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(regex);
+			java.util.regex.Matcher matcher = pattern.matcher(resultsText);
+
+			if (matcher.find()) {
+				double value = Double.parseDouble(matcher.group());
+
+				double low = Double.parseDouble(
+						this.lowValueTextField.getText().isEmpty() ? "0.0" : this.lowValueTextField.getText());
+				double high = Double.parseDouble(
+						this.highValueTextField.getText().isEmpty() ? "0.0" : this.highValueTextField.getText());
+
+				if (value >= low && value <= high) {
+					this.normalRadioButton.setSelected(true);
+					this.abnormalRadioButton.setSelected(false);
+				} else {
+					this.normalRadioButton.setSelected(false);
+					this.abnormalRadioButton.setSelected(true);
+				}
+			}
+		} catch (NumberFormatException e) {
+			System.err.println("Error parsing numerical value from results: " + e.getMessage());
+		} catch (Exception e) {
+			System.err.println("Unexpected error evaluating results field: " + e.getMessage());
+		}
 	}
 }
