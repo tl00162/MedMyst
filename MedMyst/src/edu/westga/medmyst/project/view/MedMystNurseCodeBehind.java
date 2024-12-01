@@ -389,6 +389,10 @@ public class MedMystNurseCodeBehind {
 				this.showAlert("Cannot Edit Appointment", "This appointment is in the past and cannot be edited.");
 				return;
 			}
+			if (!this.selectedAppointment.getFinalDiagnosis().isEmpty()) {
+				this.showAlert("Cannot Edit Appointment", "This appointment has been finalized.");
+				return;
+			}
 			try {
 				FXMLLoader loader = new FXMLLoader(
 						getClass().getResource("/edu/westga/medmyst/project/view/AppointmentForm.fxml"));
