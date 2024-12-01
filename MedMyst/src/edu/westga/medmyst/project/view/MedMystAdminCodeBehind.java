@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -60,6 +62,15 @@ public class MedMystAdminCodeBehind {
 
 	@FXML
 	private Button exportResultsButton;
+
+	@FXML
+	private Button generateVisitReportButton;
+
+	@FXML
+	private DatePicker startDatePicker;
+
+	@FXML
+	private DatePicker endDatePicker;
 
 	private MedMystViewModel viewmodel;
 
@@ -217,4 +228,30 @@ public class MedMystAdminCodeBehind {
 		alert.setContentText(message);
 		alert.showAndWait();
 	}
+	
+	@FXML
+    void generateVisitReport(ActionEvent event) {
+        LocalDate startDate = this.startDatePicker.getValue();
+        LocalDate endDate = this.endDatePicker.getValue();
+
+        if (startDate == null || endDate == null) {
+            this.showAlert("Invalid Dates", "Please select both start and end dates.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        try {
+            List<Map<String, Object>> reportData = this.viewmodel.generateVisitReport(startDate, endDate);
+            if (reportData.isEmpty()) {
+                this.showAlert("No Data", "No visits found for the selected date range.", Alert.AlertType.INFORMATION);
+                this.queryResultsTable.getColumns().clear();
+                this.queryResultsTable.setItems(FXCollections.observableArrayList());
+            } else {
+                this.populateQueryResultsTable(reportData);
+                this.showAlert("Report Generated", "Visit report generated successfully.", Alert.AlertType.INFORMATION);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            this.showAlert("Error", "Error generating report: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
 }
