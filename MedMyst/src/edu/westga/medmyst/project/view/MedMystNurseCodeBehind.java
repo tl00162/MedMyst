@@ -192,6 +192,9 @@ public class MedMystNurseCodeBehind {
 
 	private void refreshTestList() {
 		List<Test> testList = this.viewmodel.getTests();
+
+		testList.sort((test1, test2) -> test1.getDateTime().compareTo(test2.getDateTime()));
+
 		ObservableList<Test> observableTestList = FXCollections.observableArrayList(testList);
 		this.testsListView.setItems(observableTestList);
 
@@ -202,18 +205,20 @@ public class MedMystNurseCodeBehind {
 				if (empty || test == null) {
 					setText(null);
 				} else {
-					String patientName = "Unknown Patient";
 					Patient patient = viewmodel.getPatientById(test.getPatientId());
-					if (patient != null) {
-						patientName = patient.getLName();
-					}
+					String fullName = (patient != null) ? patient.getFName() + " " + patient.getLName()
+							: "Unknown Patient";
+					String dob = (patient != null) ? patient.getDateOfBirth().toString() : "Unknown DOB";
 
 					String testType = test.getTestType().getTypeName();
-					String date = test.getDateTime().toLocalDate().toString();
+					String appointmentDate = test.getDateTime()
+							.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
-					String status = test.isFinalized() ? "FINAL" : "";
+					String status = test.isFinalized() ? " FINAL" : "";
 
-					String displayText = String.format("%s | %s | %s %s", patientName, testType, date, status);
+					String displayText = String.format("%s | %s | %s | DOB: %s | %s", appointmentDate, fullName,
+							testType, dob, status);
+
 					setText(displayText.trim());
 				}
 			}
@@ -231,6 +236,9 @@ public class MedMystNurseCodeBehind {
 	 */
 	private void refreshAppointmentList() {
 		List<Appointment> appointmentList = this.viewmodel.getAppointments();
+
+		appointmentList.sort((a1, a2) -> a1.getDateTime().compareTo(a2.getDateTime()));
+
 		ObservableList<Appointment> observableAppointmentList = FXCollections.observableArrayList(appointmentList);
 		this.appointmentsListView.setItems(observableAppointmentList);
 
@@ -242,16 +250,19 @@ public class MedMystNurseCodeBehind {
 					setText(null);
 				} else {
 					Patient patient = viewmodel.getPatientById(appointment.getPatientId());
-					String patientLastName = (patient != null) ? patient.getLName() : "Unknown";
+					String fullName = (patient != null) ? patient.getFName() + " " + patient.getLName()
+							: "Unknown Patient";
+					String dob = (patient != null) ? patient.getDateOfBirth().toString() : "Unknown DOB";
+
 					String doctorName = viewmodel.getDoctorNameById(appointment.getDoctorId());
 					String appointmentType = appointment.getAppointmentType();
-					LocalDateTime dateTime = appointment.getDateTime();
+					String dateTime = appointment.getDateTime()
+							.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
-					String displayText = String.format("%s | %s | %s | %s", patientLastName,
-							dateTime.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
+					String displayText = String.format("%s | %s | DOB: %s | %s | %s", dateTime, fullName, dob,
 							doctorName, appointmentType);
 
-					setText(displayText);
+					setText(displayText.trim());
 				}
 			}
 		});

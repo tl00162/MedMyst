@@ -1,5 +1,6 @@
 package edu.westga.medmyst.project.view;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,6 +10,8 @@ import edu.westga.medmyst.project.model.Checkup;
 import edu.westga.medmyst.project.model.Patient;
 import edu.westga.medmyst.project.viewmodel.MedMystViewModel;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -17,6 +20,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert.AlertType;
 import javafx.util.converter.NumberStringConverter;
@@ -90,6 +94,9 @@ public class AppointmentFormCodeBehind {
 	@FXML
 	private Button cancelButton;
 
+	@FXML
+	private Button orderTestButton;
+
 	private MedMystViewModel viewmodel;
 
 	private Patient currentPatient;
@@ -116,6 +123,7 @@ public class AppointmentFormCodeBehind {
 		this.addDoubleInputRestriction(this.temperatureTextField);
 		this.addDoubleInputRestriction(this.heightTextField);
 		this.addDoubleInputRestriction(this.weightTextField);
+		this.orderTestButton.setVisible(false);
 	}
 
 	/**
@@ -198,6 +206,8 @@ public class AppointmentFormCodeBehind {
 	 */
 	public void setCurrentAppointment(Appointment appointment) {
 		this.currentAppointment = appointment;
+
+		this.orderTestButton.setVisible(this.currentAppointment != null);
 
 		this.populateAppointmentTypeComboBox();
 		this.populateDoctorComboBox();
@@ -461,5 +471,29 @@ public class AppointmentFormCodeBehind {
 				event.consume();
 			}
 		});
+	}
+
+	@FXML
+	void orderTests() {
+		if (this.currentAppointment != null) {
+			try {
+				FXMLLoader loader = new FXMLLoader(
+						getClass().getResource("/edu/westga/medmyst/project/view/TestForm.fxml"));
+				Pane testFormPane = loader.load();
+
+				Stage testFormStage = new Stage();
+				testFormStage.setTitle("Create Test");
+				testFormStage.setScene(new Scene(testFormPane));
+
+				TestFormCodeBehind testFormController = loader.getController();
+				testFormController.setViewModel(this.viewmodel);
+				testFormController.initializeForm(this.currentAppointment);
+				testFormStage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("No test selected.");
+		}
 	}
 }
