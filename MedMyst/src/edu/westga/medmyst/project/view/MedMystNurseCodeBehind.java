@@ -19,8 +19,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListCell;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -313,7 +315,7 @@ public class MedMystNurseCodeBehind {
 			try {
 				FXMLLoader loader = new FXMLLoader(
 						getClass().getResource("/edu/westga/medmyst/project/view/AppointmentForm.fxml"));
-				Pane appointmentFormPane = loader.load();
+				ScrollPane appointmentFormPane = loader.load();
 
 				Stage appointmentFormStage = new Stage();
 				appointmentFormStage.setTitle("Create Appointment");
@@ -343,7 +345,8 @@ public class MedMystNurseCodeBehind {
 			try {
 				FXMLLoader loader = new FXMLLoader(
 						getClass().getResource("/edu/westga/medmyst/project/view/AppointmentForm.fxml"));
-				Pane appointmentFormPane = loader.load();
+				ScrollPane appointmentFormPane = loader.load();
+				
 
 				Stage appointmentFormStage = new Stage();
 				appointmentFormStage.setTitle("View Appointment");
@@ -389,7 +392,7 @@ public class MedMystNurseCodeBehind {
 			try {
 				FXMLLoader loader = new FXMLLoader(
 						getClass().getResource("/edu/westga/medmyst/project/view/AppointmentForm.fxml"));
-				Pane appointmentFormPane = loader.load();
+				ScrollPane appointmentFormPane = loader.load();
 				Stage appointmentFormStage = new Stage();
 				appointmentFormStage.setTitle("Edit Appointment");
 				appointmentFormStage.setScene(new Scene(appointmentFormPane));
