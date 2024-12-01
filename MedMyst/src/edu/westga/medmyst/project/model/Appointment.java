@@ -24,6 +24,7 @@ public class Appointment {
     private String details;
     private String appointmentType;
     private LocalDateTime dateTime;
+    private String finalDiagnosis;
     private CheckupDAL checkupDAL;
     private Checkup checkup;
 
@@ -237,6 +238,22 @@ public class Appointment {
      */
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+    
+    /**
+     * gets the finalDiagnosis
+     * @return the finalDiagnosis
+     */
+    public String getFinalDiagnosis() {
+    	return this.finalDiagnosis;
+    }
+    
+    /**
+     * Sets the final diagnosis
+     * @param diagnosis the final diagnosis
+     */
+    public void setFinalDiagosis(String diagnosis) {
+    	this.finalDiagnosis = diagnosis;
     }
     
     /**

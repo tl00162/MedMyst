@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.AppointmentFormCodeBehind" fitToWidth="true" fitToHeight="true">
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.medmyst.project.view.AppointmentFormCodeBehind">
    <content>
-      <AnchorPane fx:id="rootAnchorPane" prefHeight="904.0" prefWidth="600.0">
+      <AnchorPane fx:id="rootAnchorPane" prefHeight="950.0" prefWidth="600.0">
          <children>
             <Label fx:id="appointmentFormLabel" layoutX="203.0" layoutY="8.0" text="Appointment Form">
                <font>
@@ -58,8 +58,10 @@
             <TextArea fx:id="symptomsTextArea" layoutX="60.0" layoutY="601.0" prefHeight="78.0" prefWidth="485.0" />
             <Label fx:id="initialDiagnosisLabel" layoutX="58.0" layoutY="701.0" text="Initial Diagnosis" />
             <TextArea fx:id="initialDiagnosisTextArea" layoutX="60.0" layoutY="718.0" prefHeight="60.0" prefWidth="485.0" />
-            <Button fx:id="createAppointmentButton" layoutX="53.0" layoutY="849.0" mnemonicParsing="false" text="Create Appointment" />
-            <Button fx:id="cancelButton" layoutX="491.0" layoutY="849.0" mnemonicParsing="false" text="Cancel" />
+            <Label fx:id="finalDiagnosisLabel" layoutX="58.0" layoutY="791.0" text="Final Diagnosis" />
+            <Button fx:id="createAppointmentButton" layoutX="55.0" layoutY="873.0" mnemonicParsing="false" text="Create Appointment" />
+            <Button fx:id="cancelButton" layoutX="493.0" layoutY="873.0" mnemonicParsing="false" text="Cancel" />
+            <TextArea fx:id="finalDiagnosisTextArea" layoutX="57.0" layoutY="808.0" prefHeight="51.0" prefWidth="491.0" />
          </children>
       </AnchorPane>
    </content>

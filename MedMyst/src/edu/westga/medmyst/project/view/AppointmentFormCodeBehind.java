@@ -80,6 +80,9 @@ public class AppointmentFormCodeBehind {
 
 	@FXML
 	private TextArea initialDiagnosisTextArea;
+	
+	@FXML
+	private TextArea finalDiagnosisTextArea;
 
 	@FXML
 	private Button createAppointmentButton;
@@ -147,6 +150,7 @@ public class AppointmentFormCodeBehind {
 				new NumberStringConverter());
 		this.symptomsTextArea.textProperty().bindBidirectional(this.viewmodel.symptomsProperty());
 		this.initialDiagnosisTextArea.textProperty().bindBidirectional(this.viewmodel.initialDiagnosisProperty());
+		this.finalDiagnosisTextArea.textProperty().bindBidirectional(this.viewmodel.finalDiagnosisProperty());
 
 		this.appointmentTypeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
 			if (newVal != null) {
@@ -204,6 +208,7 @@ public class AppointmentFormCodeBehind {
 			this.doctorComboBox.setValue(doctorName);
 			this.createAppointmentButton.setText("Update Appointment");
 			this.appointmentTypeComboBox.setValue(appointment.getAppointmentType());
+			this.finalDiagnosisTextArea.setText(appointment.getFinalDiagnosis());
 		}
 	}
 
@@ -301,6 +306,7 @@ public class AppointmentFormCodeBehind {
 		this.currentAppointment.setAppointmentType(this.viewmodel.appointmentTypeProperty().get());
 		this.currentAppointment.setReason(this.viewmodel.reasonProperty().get());
 		this.currentAppointment.setDetails(this.viewmodel.detailsProperty().get());
+		this.currentAppointment.setFinalDiagosis(this.viewmodel.finalDiagnosisProperty().get());
 		this.currentCheckup.setSystolicBloodPressure(this.viewmodel.systolicPressureProperty().get());
 		this.currentCheckup.setDiastolicBloodPressure(this.viewmodel.diastolicPressureProperty().get());
 		this.currentCheckup.setBodyTemperature(this.viewmodel.bodyTemperatureProperty().get());
@@ -407,6 +413,7 @@ public class AppointmentFormCodeBehind {
 		this.viewmodel.appointmentTypeProperty().set(this.appointmentTypeComboBox.getValue());
 		this.viewmodel.reasonProperty().set(this.reasonTextArea.getText());
 		this.viewmodel.detailsProperty().set(this.detailsTextArea.getText());
+		this.viewmodel.finalDiagnosisProperty().set(this.finalDiagnosisTextArea.getText());
 	}
 
 	private void showErrorDialog(String errorMessage) {

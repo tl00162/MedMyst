@@ -80,6 +80,7 @@ public class MedMystViewModel {
 	private DoubleProperty height;
 	private DoubleProperty weight;
 	private StringProperty initialDiagnosis;
+	private StringProperty finalDiagnosis;
 
 	private StringProperty testType;
 	private DoubleProperty testHighValue;
@@ -137,6 +138,7 @@ public class MedMystViewModel {
 		this.height = new SimpleDoubleProperty();
 		this.weight = new SimpleDoubleProperty();
 		this.initialDiagnosis = new SimpleStringProperty();
+		this.finalDiagnosis = new SimpleStringProperty();
 		this.loginDAL = new LoginDAL();
 		this.currentUser = null;
 		this.patientDAL = new PatientDAL();
@@ -468,6 +470,14 @@ public class MedMystViewModel {
 	public StringProperty initialDiagnosisProperty() {
 		return this.initialDiagnosis;
 	}
+	
+	/**
+	 * Returns the finalDiagnosisProperty
+	 * @return the finalDiagnosisProperty
+	 */
+	public StringProperty finalDiagnosisProperty() {
+		return this.finalDiagnosis;
+	}
 
 	/**
 	 * Logs the user out by clearing the current user.
@@ -736,6 +746,7 @@ public class MedMystViewModel {
 		Appointment newAppointment = new Appointment(this.appointmentId.get(), this.patientId.get(),
 				this.doctorId.get(), this.doctorFirstName.get(), this.doctorLastName.get(), this.doctorSpecialty.get(),
 				this.reason.get(), this.details.get(), this.appointmentType.get(), this.appointmentDateTime.get());
+		newAppointment.setFinalDiagosis(this.finalDiagnosis.get());
 
 		try {
 			int generatedAppointmentId = this.appointmentDAL.addAppointment(newAppointment);
@@ -768,6 +779,8 @@ public class MedMystViewModel {
 			System.out.println("Cannot update: Appointment time has passed.");
 			return false;
 		}
+		
+		appointmentToUpdate.setFinalDiagosis(this.finalDiagnosis.get());
 
 		try {
 			this.appointmentDAL.updateAppointment(appointmentToUpdate);
@@ -884,6 +897,7 @@ public class MedMystViewModel {
 		this.appointmentDate.set(appointment.getDateTime().toLocalDate());
 		this.appointmentTime.set(appointment.getDateTime().toLocalTime().toString());
 		this.appointmentDateTime.set(appointment.getDateTime());
+		this.finalDiagnosis.set(appointment.getFinalDiagnosis());
 
 		try {
 			Doctor doctor = this.doctorDAL.getDoctorById(appointment.getDoctorId());
