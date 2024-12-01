@@ -1,6 +1,13 @@
 package edu.westga.medmyst.project.dal;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +15,12 @@ import java.util.List;
 import edu.westga.medmyst.project.model.Test;
 import edu.westga.medmyst.project.model.TestType;
 
+/**
+ * DAL for accessing test data in the database.
+ * 
+ * @author tl00162
+ * @version Fall 2024
+ */
 public class TestDAL {
 
 	/**
@@ -58,7 +71,7 @@ public class TestDAL {
 			while (resultSet.next()) {
 				TestType testType = new TestType(resultSet.getString("test_type"), null, 0, 0, null);
 				boolean finalized = resultSet.getShort("finalized") == 1;
-				boolean normality = resultSet.getShort("normality") == 1; // Add normality here
+				boolean normality = resultSet.getShort("normality") == 1;
 				completeTests.add(new Test(resultSet.getInt("lab_test_id"), resultSet.getInt("doctor_id"), patientId,
 						testType, resultSet.getDouble("low"), resultSet.getDouble("high"),
 						resultSet.getString("unit_of_measurement"), resultSet.getString("results"),
@@ -134,12 +147,16 @@ public class TestDAL {
 			}
 			throw e;
 		} finally {
-			if (generatedKeys != null)
+			if (generatedKeys != null) {
 				generatedKeys.close();
-			if (insertStmt != null)
+			}
+			if (insertStmt != null) {
 				insertStmt.close();
-			if (connection != null)
+			}
+			if (connection != null) {
 				connection.close();
+			}
+
 		}
 	}
 
@@ -207,7 +224,7 @@ public class TestDAL {
 			while (resultSet.next()) {
 				TestType testType = new TestType(resultSet.getString("test_type"), null, 0, 0, null);
 				boolean finalized = resultSet.getShort("finalized") == 1;
-				boolean normality = resultSet.getShort("normality") == 1; // Add normality here
+				boolean normality = resultSet.getShort("normality") == 1;
 
 				incompleteTests.add(new Test(resultSet.getInt("lab_test_id"), resultSet.getInt("doctor_id"), patientId,
 						testType, resultSet.getDouble("low"), resultSet.getDouble("high"),
@@ -273,7 +290,7 @@ public class TestDAL {
 			while (resultSet.next()) {
 				TestType testType = new TestType(resultSet.getString("test_type"), null, 0, 0, null);
 				boolean finalized = resultSet.getShort("finalized") == 1;
-				boolean normality = resultSet.getShort("normality") == 1; // Add normality here
+				boolean normality = resultSet.getShort("normality") == 1;
 
 				allTests.add(new Test(resultSet.getInt("lab_test_id"), resultSet.getInt("doctor_id"),
 						resultSet.getInt("patient_id"), testType, resultSet.getDouble("low"),
@@ -324,7 +341,7 @@ public class TestDAL {
 			while (resultSet.next()) {
 				TestType testType = new TestType(resultSet.getString("test_type"), null, 0, 0, null);
 				boolean finalized = resultSet.getShort("finalized") == 1;
-				boolean normality = resultSet.getShort("normality") == 1; // Add normality here
+				boolean normality = resultSet.getShort("normality") == 1;
 				tests.add(new Test(resultSet.getInt("lab_test_id"), resultSet.getInt("doctor_id"),
 						resultSet.getInt("patient_id"), testType, resultSet.getDouble("low"),
 						resultSet.getDouble("high"), resultSet.getString("unit_of_measurement"),
@@ -364,7 +381,7 @@ public class TestDAL {
 			while (resultSet.next()) {
 				TestType testType = new TestType(resultSet.getString("test_type"), null, 0, 0, null);
 				boolean finalized = resultSet.getShort("finalized") == 1;
-				boolean normality = resultSet.getShort("normality") == 1; // Add normality here
+				boolean normality = resultSet.getShort("normality") == 1;
 
 				filteredTests.add(new Test(resultSet.getInt("lab_test_id"), resultSet.getInt("doctor_id"),
 						resultSet.getInt("patient_id"), testType, resultSet.getDouble("low"),
@@ -445,7 +462,7 @@ public class TestDAL {
 			while (resultSet.next()) {
 				TestType testType = new TestType(resultSet.getString("test_type"), null, 0, 0, null);
 				boolean finalized = resultSet.getShort("finalized") == 1;
-				boolean normality = resultSet.getShort("normality") == 1; // Add normality here
+				boolean normality = resultSet.getShort("normality") == 1;
 
 				pastTests.add(new Test(resultSet.getInt("lab_test_id"), resultSet.getInt("doctor_id"), patientId,
 						testType, resultSet.getDouble("low"), resultSet.getDouble("high"),
@@ -520,10 +537,13 @@ public class TestDAL {
 			}
 			throw e;
 		} finally {
-			if (stmt != null)
+			if (stmt != null) {
 				stmt.close();
-			if (connection != null)
+			}
+			if (connection != null) {
 				connection.close();
+			}
+
 		}
 	}
 

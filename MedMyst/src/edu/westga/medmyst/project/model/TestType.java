@@ -18,6 +18,9 @@ public class TestType {
 	 * 
 	 * @param typeName    the type name
 	 * @param description the description
+	 * @param low         low value
+	 * @param high        high value
+	 * @param unit        the units
 	 */
 	public TestType(String typeName, String description, double low, double high, String unit) {
 		this.typeName = typeName;
@@ -33,7 +36,7 @@ public class TestType {
 	 * @return the typeName
 	 */
 	public String getTypeName() {
-		return typeName;
+		return this.typeName;
 	}
 
 	/**
@@ -51,7 +54,7 @@ public class TestType {
 	 * @return the description
 	 */
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	/**

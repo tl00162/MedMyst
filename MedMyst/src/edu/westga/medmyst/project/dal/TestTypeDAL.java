@@ -16,6 +16,7 @@ import edu.westga.medmyst.project.model.TestType;
  * with the LabTestType table in the database.
  * 
  * @version Fall 2024
+ * @author tl00162
  */
 public class TestTypeDAL {
 

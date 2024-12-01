@@ -16,7 +16,7 @@ public class Test {
 	private double low;
 	private double high;
 	private String unitOfMeasurement;
-	private int appointmentId; 
+	private int appointmentId;
 	private String result;
 	private LocalDateTime dateTime;
 	private boolean finalized;
@@ -35,6 +35,7 @@ public class Test {
 	 * @param unitOfMeasurement
 	 * @param result
 	 * @param dateTime
+	 * @param finalized
 	 */
 	public Test(int testId, int doctorId, int patientId, TestType testType, double low, double high,
 			String unitOfMeasurement, String result, LocalDateTime dateTime, boolean finalized, Boolean normality) {
@@ -267,14 +268,14 @@ public class Test {
 	public void setNormality(Boolean normality) {
 		this.normality = normality;
 	}
-	
-    /**
-     * Gets the appointment ID associated with the test.
-     * 
-     * @return the appointment ID
-     */
-    public int getAppointmentId() {
-        return this.appointmentId;
-    }
+
+	/**
+	 * Gets the appointment ID associated with the test.
+	 * 
+	 * @return the appointment ID
+	 */
+	public int getAppointmentId() {
+		return this.appointmentId;
+	}
 
 }

@@ -99,9 +99,6 @@ public class TestFormCodeBehind {
 	private TableColumn<?, ?> dateTableColumn;
 
 	@FXML
-	private TableColumn<?, ?> c;
-
-	@FXML
 	private TableColumn<?, ?> pastTestDateColumn;
 
 	@FXML
@@ -182,7 +179,7 @@ public class TestFormCodeBehind {
 		this.abnormalRadioButton.setSelected(false);
 
 		this.resultsTextArea.focusedProperty().addListener((observable, oldFocus, newFocus) -> {
-			if (!newFocus) { // Lost focus
+			if (!newFocus) {
 				this.evaluateResultsField();
 			}
 		});
@@ -195,6 +192,23 @@ public class TestFormCodeBehind {
 		this.unitsTextField.setText(selectedTestType.getUnit());
 	}
 
+	/**
+	 * Sets the ViewModel for this controller.
+	 * <p>
+	 * This method initializes the necessary bindings and populates UI components
+	 * (e.g., ComboBoxes and TextFields) with data from the provided
+	 * {@link MedMystViewModel}.
+	 * </p>
+	 * 
+	 * <p>
+	 * The ViewModel is used to manage the state and provide access to business
+	 * logic and data required by the view.
+	 * </p>
+	 * 
+	 * @param viewModel the {@link MedMystViewModel} instance to be associated with
+	 *                  this controller
+	 * @throws IllegalArgumentException if the provided ViewModel is null
+	 */
 	public void setViewModel(MedMystViewModel viewModel) {
 		if (viewModel == null) {
 			System.err.println("ViewModel is null in TestFormCodeBehind.");
@@ -265,6 +279,13 @@ public class TestFormCodeBehind {
 				"02:40 PM", "03:00 PM", "03:20 PM", "03:40 PM");
 	}
 
+	/**
+	 * Initializes the form with details from the selected appointment. Populates UI
+	 * fields and loads tests associated with the appointment.
+	 * 
+	 * @param selectedAppointment the selected {@link Appointment} to initialize the
+	 *                            form with
+	 */
 	public void initializeForm(Appointment selectedAppointment) {
 		if (selectedAppointment != null) {
 			this.viewModel.appointmentIdProperty().set(selectedAppointment.getAppointmentId());
@@ -274,6 +295,8 @@ public class TestFormCodeBehind {
 			this.patientLastNameLabel.setText(selectedAppointment.getPatient().getLName());
 			this.patientDoBLabel.setValue(selectedAppointment.getPatient().getDateOfBirth());
 
+			this.resultsTextArea.clear();
+
 			int appointmentId = selectedAppointment.getAppointmentId();
 			int patientId = selectedAppointment.getPatientId();
 			this.loadPastTestsForPatient(patientId, appointmentId);
@@ -282,6 +305,12 @@ public class TestFormCodeBehind {
 		}
 	}
 
+	/**
+	 * Initializes the form with details from the selected test. Fetches the
+	 * associated appointment and delegates to the appointment initializer.
+	 * 
+	 * @param selectedTest the selected {@link Test} to initialize the form with
+	 */
 	public void initializeForm(Test selectedTest) {
 		if (selectedTest != null) {
 			try {
@@ -296,6 +325,8 @@ public class TestFormCodeBehind {
 					System.err.println("Error: Unable to find the appointment for the selected test.");
 					return;
 				}
+
+				this.resultsTextArea.clear();
 
 				this.initializeForm(selectedAppointment);
 				this.populateFields(selectedTest);
@@ -434,7 +465,7 @@ public class TestFormCodeBehind {
 
 			this.viewModel.finalizeAllTestsForAppointment(appointmentId, completeTests);
 
-			this.loadTestsForAppointment(appointmentId); // Refresh the tests after finalization
+			this.loadTestsForAppointment(appointmentId);
 		} catch (SQLException e) {
 			System.err.println("Error finalizing tests: " + e.getMessage());
 			this.showErrorDialog("An error occurred while trying to finalize the tests.");
@@ -487,6 +518,11 @@ public class TestFormCodeBehind {
 		return alert.showAndWait().orElse(null) == ButtonType.OK;
 	}
 
+	/**
+	 * Populates the form fields with data from the specified test.
+	 *
+	 * @param test the {@link Test} whose data is used to populate the form
+	 */
 	public void populateFields(Test test) {
 		try {
 			this.currentTest = test;
