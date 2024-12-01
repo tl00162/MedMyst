@@ -52,23 +52,28 @@ public class MedMystLoginCodeBehind {
 		this.loginSuccess.textProperty().bindBidirectional(this.viewmodel.getLoginSuccess());
 		this.usernameTextField.textProperty().bindBidirectional(this.viewmodel.getUsername());
 		this.passwordTextField.textProperty().bindBidirectional(this.viewmodel.getPassword());
-		
-	    this.passwordTextField.setOnKeyPressed(event -> {
-	        switch (event.getCode()) {
-	            case ENTER:
-	                this.loginButtonClick(null);
-	                break;
-	            default:
-	                break;
-	        }
-	    });
+
+		this.passwordTextField.setOnKeyPressed(event -> {
+			switch (event.getCode()) {
+			case ENTER:
+				this.loginButtonClick(null);
+				break;
+			default:
+				break;
+			}
+		});
 	}
 
 	@FXML
 	void loginButtonClick(ActionEvent event) {
 		try {
-			if (this.viewmodel.validateLogin()) {
-				this.loadNurseScene();
+			String role = this.viewmodel.validateLogin();
+			if (role != null) {
+				if (role.equalsIgnoreCase("admin")) {
+					this.loadAdminScene();
+				} else if (role.equalsIgnoreCase("nurse")) {
+					this.loadNurseScene();
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -90,8 +95,29 @@ public class MedMystLoginCodeBehind {
 			Scene scene = new Scene(dashboardPane);
 			stage.setScene(scene);
 			javafx.geometry.Rectangle2D screenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
-	        stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
-	        stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
+			stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
+			stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void loadAdminScene() {
+		try {
+			FXMLLoader loader = new FXMLLoader(
+					getClass().getResource("/edu/westga/medmyst/project/view/MedMystAdminPage.fxml"));
+			Pane adminPane = loader.load();
+
+			MedMystAdminCodeBehind adminController = loader.getController();
+			adminController.setViewModel(this.viewmodel);
+
+			Stage stage = (Stage) this.loginButton.getScene().getWindow();
+			Scene scene = new Scene(adminPane);
+			stage.setScene(scene);
+
+			javafx.geometry.Rectangle2D screenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+			stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
+			stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
