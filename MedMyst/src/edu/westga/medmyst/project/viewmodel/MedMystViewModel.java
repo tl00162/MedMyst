@@ -474,9 +474,10 @@ public class MedMystViewModel {
 	public StringProperty initialDiagnosisProperty() {
 		return this.initialDiagnosis;
 	}
-	
+
 	/**
 	 * Returns the finalDiagnosisProperty
+	 * 
 	 * @return the finalDiagnosisProperty
 	 */
 	public StringProperty finalDiagnosisProperty() {
@@ -550,31 +551,32 @@ public class MedMystViewModel {
 	 * the database using the LoginDAL.
 	 * 
 	 * If either the username or password is empty, an error message is set. If the
-	 * login is valid, the method returns the role of the user (e.g., "admin" or "nurse").
+	 * login is valid, the method returns the role of the user (e.g., "admin" or
+	 * "nurse").
 	 * 
 	 * @return the role of the user if the login is valid, null otherwise
 	 * @throws SQLException if there is an issue with the database connection or
 	 *                      query execution
 	 */
 	public String validateLogin() throws SQLException {
-	    String usernameValue = this.username.get();
-	    String passwordValue = this.password.get();
+		String usernameValue = this.username.get();
+		String passwordValue = this.password.get();
 
-	    if (usernameValue == null || usernameValue.isEmpty() || passwordValue == null || passwordValue.isEmpty()) {
-	        this.loginSuccess.set("Username and password must not be empty.");
-	        return null;
-	    }
+		if (usernameValue == null || usernameValue.isEmpty() || passwordValue == null || passwordValue.isEmpty()) {
+			this.loginSuccess.set("Username and password must not be empty.");
+			return null;
+		}
 
-	    Login login = this.loginDAL.checkValidLogin(usernameValue, passwordValue);
+		Login login = this.loginDAL.checkValidLogin(usernameValue, passwordValue);
 
-	    if (login != null) {
-	        this.loginSuccess.set("Login successful! Welcome, " + login.getFirstName() + " " + login.getLastName());
-	        this.currentUser = login;
-	        return login.getRole();
-	    } else {
-	        this.loginSuccess.set("Invalid username or password.");
-	        return null;
-	    }
+		if (login != null) {
+			this.loginSuccess.set("Login successful! Welcome, " + login.getFirstName() + " " + login.getLastName());
+			this.currentUser = login;
+			return login.getRole();
+		} else {
+			this.loginSuccess.set("Invalid username or password.");
+			return null;
+		}
 	}
 
 	/**
@@ -782,7 +784,7 @@ public class MedMystViewModel {
 			System.out.println("Cannot update: Appointment time has passed.");
 			return false;
 		}
-		
+
 		appointmentToUpdate.setFinalDiagosis(this.finalDiagnosis.get());
 
 		try {
@@ -1185,18 +1187,24 @@ public class MedMystViewModel {
 			return new ArrayList<>();
 		}
 	}
-	
+
 	/**
-	 * Executes a query entered by the admin and returns the results as a list of maps.
+	 * Executes a query entered by the admin and returns the results as a list of
+	 * maps.
 	 *
 	 * @param query The SQL query to execute.
-	 * @return A list of maps, where each map represents a row of the result set with column names as keys.
+	 * @return A list of maps, where each map represents a row of the result set
+	 *         with column names as keys.
 	 * @throws SQLException If an error occurs while executing the query.
 	 */
 	public List<Map<String, Object>> executeAdminQuery(String query) throws SQLException {
-	    if (query == null || query.trim().isEmpty()) {
-	        throw new IllegalArgumentException("Query cannot be null or empty.");
-	    }
-	    return this.adminDAL.executeQuery(query);
+		if (query == null || query.trim().isEmpty()) {
+			throw new IllegalArgumentException("Query cannot be null or empty.");
+		}
+		return this.adminDAL.executeQuery(query);
+	}
+
+	public List<Map<String, Object>> generateVisitReport(LocalDate startDate, LocalDate endDate) throws SQLException {
+		return this.adminDAL.getVisitReport(startDate, endDate);
 	}
 }
