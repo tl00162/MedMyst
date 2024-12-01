@@ -22,7 +22,7 @@
       <ListView fx:id="patientsListView" layoutX="79.0" layoutY="118.0" prefHeight="280.0" prefWidth="248.0" />
       <Button fx:id="addPatientButton" layoutX="110.0" layoutY="409.0" mnemonicParsing="false" onAction="#addPatient" text="Add Patient" />
       <Button fx:id="editPatientButton" layoutX="221.0" layoutY="409.0" mnemonicParsing="false" onAction="#editPatient" text="Edit Patient" />
-      <Label fx:id="searchByLabel" layoutX="382.0" layoutY="118.0" text="Search By:">
+      <Label fx:id="searchByLabel" layoutX="344.0" layoutY="118.0" text="Search Patients By:">
          <font>
             <Font size="16.0" />
          </font>
@@ -35,7 +35,7 @@
       <DatePicker fx:id="searchDOBPickerPatient" layoutX="344.0" layoutY="287.0" />
       <Button fx:id="searchButtonPatient" layoutX="440.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchPatients" text="Search" />
       <Button fx:id="addAppointmentButton" layoutX="112.0" layoutY="444.0" mnemonicParsing="false" onAction="#createAppointment" text="Create Appointment for Patient" />
-      <Label fx:id="searchByAppointmentLabel" layoutX="1010.0" layoutY="118.0" text="Search By:">
+      <Label fx:id="searchByAppointmentLabel" layoutX="971.0" layoutY="118.0" text="Search Appointments By:">
          <font>
             <Font size="16.0" />
          </font>
@@ -49,9 +49,9 @@
       <Button fx:id="searchButtonAppointment" layoutX="1068.0" layoutY="333.0" mnemonicParsing="false" onAction="#searchAppointments" text="Search" />
       <Button fx:id="clearPatientButton" layoutX="343.0" layoutY="333.0" mnemonicParsing="false" onAction="#clearPatientSearch" text="Clear" />
       <Button fx:id="clearAppoinmentButton" layoutX="971.0" layoutY="333.0" mnemonicParsing="false" onAction="#clearAppointments" text="Clear" />
-      <TabPane layoutX="528.0" layoutY="75.0" prefHeight="413.0" prefWidth="441.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="appointmentTabPane" layoutX="528.0" layoutY="75.0" prefHeight="413.0" prefWidth="441.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Appointments">
+          <Tab fx:id="appointmentsTab" text="Appointments">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="384.0" prefWidth="331.0">
                      <children>
@@ -62,7 +62,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="Tests">
+          <Tab fx:id="testsTab" text="Tests">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

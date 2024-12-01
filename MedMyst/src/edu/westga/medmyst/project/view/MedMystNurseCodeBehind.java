@@ -9,6 +9,8 @@ import edu.westga.medmyst.project.model.Appointment;
 import edu.westga.medmyst.project.model.Patient;
 import edu.westga.medmyst.project.model.Test;
 import edu.westga.medmyst.project.viewmodel.MedMystViewModel;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +22,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
@@ -80,6 +84,18 @@ public class MedMystNurseCodeBehind {
 
 	@FXML
 	private ListView<Test> testsListView;
+	
+	@FXML
+	private Label searchByAppointmentLabel;
+	
+	@FXML
+	private TabPane appointmentTabPane;
+	
+	@FXML
+	private Tab appointmentsTab;
+	
+	@FXML
+	private Tab testsTab;
 
 	@FXML
 	private TextField searchFirstNameTextFieldAppointment;
@@ -139,6 +155,18 @@ public class MedMystNurseCodeBehind {
 		this.testsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			this.selectedTest = newValue;
 		});
+		
+		this.appointmentTabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+			@Override
+			public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
+				if (newTab.getText().equals("Appointments")) {
+					searchByAppointmentLabel.setText("Search Appointments By: ");
+				} else if (newTab.getText().equals("Tests")) {
+					searchByAppointmentLabel.setText("Search Tests By: ");
+				}
+			}
+		});
+
 	}
 
 	/**
