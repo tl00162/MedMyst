@@ -55,11 +55,11 @@ public class MedMystLoginCodeBehind {
 
 		this.passwordTextField.setOnKeyPressed(event -> {
 			switch (event.getCode()) {
-			case ENTER:
-				this.loginButtonClick(null);
-				break;
-			default:
-				break;
+				case ENTER:
+					this.loginButtonClick(null);
+					break;
+				default:
+					break;
 			}
 		});
 	}

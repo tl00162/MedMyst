@@ -29,7 +29,7 @@ import javafx.util.converter.NumberStringConverter;
  * @author demmons1
  */
 public class AppointmentFormCodeBehind {
-	
+
 	@FXML
 	private TextField fnameTextField;
 
@@ -80,7 +80,7 @@ public class AppointmentFormCodeBehind {
 
 	@FXML
 	private TextArea initialDiagnosisTextArea;
-	
+
 	@FXML
 	private TextArea finalDiagnosisTextArea;
 

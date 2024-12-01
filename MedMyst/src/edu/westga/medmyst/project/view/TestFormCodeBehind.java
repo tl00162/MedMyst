@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import edu.westga.medmyst.project.model.Patient;
+import edu.westga.medmyst.project.model.Appointment;
 import edu.westga.medmyst.project.model.Test;
 import edu.westga.medmyst.project.model.TestType;
 import edu.westga.medmyst.project.viewmodel.MedMystViewModel;
@@ -17,11 +17,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
@@ -100,7 +102,25 @@ public class TestFormCodeBehind {
 	private TableColumn<?, ?> c;
 
 	@FXML
+	private TableColumn<?, ?> pastTestDateColumn;
+
+	@FXML
+	private TableColumn<?, ?> pastTestResultsColumn;
+
+	@FXML
+	private TableColumn<?, ?> pastTestTypeColumn;
+
+	@FXML
+	private TableView<Test> pastTestsTableView;
+
+	@FXML
 	private TextField unitsTextField;
+
+	@FXML
+	private RadioButton normalRadioButton;
+
+	@FXML
+	private RadioButton abnormalRadioButton;
 
 	private MedMystViewModel viewModel;
 
@@ -116,10 +136,15 @@ public class TestFormCodeBehind {
 		this.resultTestTypeTableColumn.setCellValueFactory(new PropertyValueFactory<>("typeName"));
 		this.resultDateTableColumn.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
 
+		this.pastTestResultsColumn.setCellValueFactory(new PropertyValueFactory<>("result"));
+		this.pastTestTypeColumn.setCellValueFactory(new PropertyValueFactory<>("typeName"));
+		this.pastTestDateColumn.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
+
 		this.orderedTestsTableView.getSelectionModel().selectedItemProperty()
 				.addListener((observable, oldValue, newValue) -> {
 					if (newValue != null) {
 						this.populateFields(newValue);
+						this.enableButtonsForAppointmentTests();
 					}
 				});
 
@@ -127,21 +152,41 @@ public class TestFormCodeBehind {
 				.addListener((observable, oldValue, newValue) -> {
 					if (newValue != null) {
 						this.populateFields(newValue);
+						this.enableButtonsForAppointmentTests();
 					}
 				});
-		this.orderedTestsTableView.setOnMouseClicked(event -> {
-			Test selectedTest = this.orderedTestsTableView.getSelectionModel().getSelectedItem();
+
+		this.pastTestsTableView.setOnMouseClicked(event -> {
+			Test selectedTest = this.pastTestsTableView.getSelectionModel().getSelectedItem();
 			if (selectedTest != null) {
 				this.populateFields(selectedTest);
+				this.disableButtonsForPastTests();
 			}
 		});
 
-		this.testResultsTableView.setOnMouseClicked(event -> {
-			Test selectedTest = this.testResultsTableView.getSelectionModel().getSelectedItem();
-			if (selectedTest != null) {
-				this.populateFields(selectedTest);
-			}
-		});
+		this.testTypeComboBox.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> {
+					if (newValue != null) {
+						this.updateTestTypeFields(newValue);
+					}
+				});
+		this.highValueTextField.setEditable(false);
+		this.lowValueTextField.setEditable(false);
+		this.unitsTextField.setEditable(false);
+
+		ToggleGroup normalityGroup = new ToggleGroup();
+		this.normalRadioButton.setToggleGroup(normalityGroup);
+		this.abnormalRadioButton.setToggleGroup(normalityGroup);
+
+		this.normalRadioButton.setSelected(false);
+		this.abnormalRadioButton.setSelected(false);
+
+	}
+
+	private void updateTestTypeFields(TestType selectedTestType) {
+		this.highValueTextField.setText(String.valueOf(selectedTestType.getHigh()));
+		this.lowValueTextField.setText(String.valueOf(selectedTestType.getLow()));
+		this.unitsTextField.setText(selectedTestType.getUnit());
 	}
 
 	public void setViewModel(MedMystViewModel viewModel) {
@@ -200,8 +245,12 @@ public class TestFormCodeBehind {
 	}
 
 	private void populateTestTypeComboBox() {
-		List<TestType> testTypes = this.viewModel.getTestTypes();
-		this.testTypeComboBox.getItems().addAll(testTypes);
+		try {
+			List<TestType> testTypes = this.viewModel.getAllTestTypes();
+			this.testTypeComboBox.getItems().addAll(testTypes);
+		} catch (SQLException e) {
+			System.err.println("Error loading test types: " + e.getMessage());
+		}
 	}
 
 	private void populateTestTimeComboBox() {
@@ -210,15 +259,33 @@ public class TestFormCodeBehind {
 				"02:40 PM", "03:00 PM", "03:20 PM", "03:40 PM");
 	}
 
-	public void initializeForm(Patient selectedPatient) {
-		if (selectedPatient != null) {
-			this.patientFirstNameLabel.setText(selectedPatient.getFName());
-			this.patientLastNameLabel.setText(selectedPatient.getLName());
-			this.patientDoBLabel.setValue(selectedPatient.getDateOfBirth());
-			this.viewModel.patientIdProperty().set(selectedPatient.getPatientId());
+	public void initializeForm(Appointment selectedAppointment) {
+		if (selectedAppointment != null) {
+			this.viewModel.appointmentIdProperty().set(selectedAppointment.getAppointmentId());
+			this.viewModel.patientIdProperty().set(selectedAppointment.getPatientId());
 
-			this.loadCompleteTests();
-			this.loadIncompleteTests();
+			this.patientFirstNameLabel.setText(selectedAppointment.getPatient().getFName());
+			this.patientLastNameLabel.setText(selectedAppointment.getPatient().getLName());
+			this.patientDoBLabel.setValue(selectedAppointment.getPatient().getDateOfBirth());
+
+			int appointmentId = selectedAppointment.getAppointmentId();
+			int patientId = selectedAppointment.getPatientId();
+			this.loadPastTestsForPatient(patientId, appointmentId);
+
+			this.loadTestsForAppointment(selectedAppointment.getAppointmentId());
+		}
+	}
+
+	private void loadTestsForAppointment(int appointmentId) {
+		try {
+			List<Test> orderedTests = this.viewModel.getTestsForAppointment(appointmentId, false);
+			List<Test> completedTests = this.viewModel.getTestsForAppointment(appointmentId, true);
+
+			this.orderedTestsTableView.getItems().setAll(orderedTests);
+			this.testResultsTableView.getItems().setAll(completedTests);
+		} catch (SQLException e) {
+			System.err.println("Error loading tests for appointment: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -232,6 +299,7 @@ public class TestFormCodeBehind {
 			String unit = this.unitsTextField.getText();
 			String result = this.resultsTextArea.getText();
 			LocalDate testDate = this.testDatePicker.getValue();
+
 			if (testDate == null) {
 				this.showErrorDialog("Test date must be selected.");
 				return;
@@ -251,6 +319,7 @@ public class TestFormCodeBehind {
 				this.showErrorDialog("Doctor must be selected.");
 				return;
 			}
+
 			if (selectedTestType == null) {
 				this.showErrorDialog("Test type must be selected.");
 				return;
@@ -265,6 +334,9 @@ public class TestFormCodeBehind {
 			this.viewModel.testResultProperty().set(result != null ? result : "");
 			this.viewModel.testDateTimeProperty().set(testDateTime);
 
+			boolean isNormal = this.normalRadioButton.isSelected();
+			int normality = this.normalRadioButton.isSelected() ? 1 : 0;
+
 			if (this.currentTest != null) {
 				this.currentTest.setDoctorId(this.viewModel.getDoctorIdByName(doctor));
 				this.currentTest.setTestType(selectedTestType);
@@ -274,27 +346,29 @@ public class TestFormCodeBehind {
 				this.currentTest.setResult(result);
 				this.currentTest.setDateTime(testDateTime);
 
-				this.viewModel.updateLabTest(this.currentTest);
+				this.viewModel.updateLabTest(this.currentTest, isNormal);
 
-				this.loadCompleteTests();
-				this.loadIncompleteTests();
+				this.loadTestsForAppointment(this.viewModel.appointmentIdProperty().get());
 				this.clearForm();
 
 				System.out.println("Test updated successfully.");
 			} else {
-				if (this.viewModel.addTest()) {
-					this.orderedTestsTableView.getItems()
-							.add(new Test(-1, this.viewModel.doctorIdProperty().get(),
-									this.viewModel.patientIdProperty().get(), selectedTestType,
-									Double.parseDouble(lowValueText.isEmpty() ? "0.0" : lowValueText),
-									Double.parseDouble(highValueText.isEmpty() ? "0.0" : highValueText), unit, result,
-									testDateTime, false));
-					this.clearForm();
-					System.out.println("Test added successfully.");
-				} else {
-					System.err.println("Failed to add test. ViewModel returned false.");
-					this.showErrorDialog("Failed to add test. Please check your inputs.");
-				}
+				Test newTest = new Test(-1, this.viewModel.doctorIdProperty().get(),
+						this.viewModel.patientIdProperty().get(), selectedTestType,
+						Double.parseDouble(lowValueText.isEmpty() ? "0.0" : lowValueText),
+						Double.parseDouble(highValueText.isEmpty() ? "0.0" : highValueText), unit, result, testDateTime,
+						false, isNormal);
+
+				int newTestId = this.viewModel.addTest(newTest, isNormal);
+				System.out.println("New Test ID: " + newTestId);
+
+				System.out.println("Linking Test to Appointment ID: " + this.viewModel.appointmentIdProperty().get());
+				this.viewModel.linkTestToAppointment(newTestId, this.viewModel.appointmentIdProperty().get(),
+						normality);
+				this.loadTestsForAppointment(this.viewModel.appointmentIdProperty().get());
+				this.clearForm();
+
+				System.out.println("Test added successfully.");
 			}
 		} catch (NumberFormatException e) {
 			System.err.println("Error: High and Low values must be numeric.");
@@ -337,10 +411,11 @@ public class TestFormCodeBehind {
 				return;
 			}
 
-			this.viewModel.finalizeTest(selectedTest);
+			int normality = this.normalRadioButton.isSelected() ? 1 : 0;
 
-			this.loadCompleteTests();
-			this.loadIncompleteTests();
+			this.viewModel.finalizeTest(selectedTest, normality);
+
+			this.loadTestsForAppointment(this.viewModel.appointmentIdProperty().get());
 
 			System.out.println("Test finalized successfully.");
 		} catch (SQLException e) {
@@ -396,26 +471,6 @@ public class TestFormCodeBehind {
 		return alert.showAndWait().orElse(null) == ButtonType.OK;
 	}
 
-	private void loadCompleteTests() {
-		try {
-			List<Test> completeTests = this.viewModel.getCompleteTestsForPatient();
-			this.testResultsTableView.getItems().setAll(completeTests);
-		} catch (SQLException e) {
-			System.err.println("Error loading complete tests: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-	private void loadIncompleteTests() {
-		try {
-			List<Test> incompleteTests = this.viewModel.getIncompleteTestsForPatient();
-			this.orderedTestsTableView.getItems().setAll(incompleteTests);
-		} catch (SQLException e) {
-			System.err.println("Error loading incomplete tests: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
 	public void populateFields(Test test) {
 		try {
 			this.currentTest = test;
@@ -439,6 +494,16 @@ public class TestFormCodeBehind {
 			this.removeTestButton.setDisable(isFinalized);
 			this.finalizeDiagnosisButton.setDisable(isFinalized);
 
+			if (test.getNormality() == null) {
+				this.normalRadioButton.setSelected(false);
+				this.abnormalRadioButton.setSelected(false);
+			} else if (test.getNormality()) {
+				this.normalRadioButton.setSelected(true);
+				this.abnormalRadioButton.setSelected(false);
+			} else {
+				this.normalRadioButton.setSelected(false);
+				this.abnormalRadioButton.setSelected(true);
+			}
 		} catch (Exception e) {
 			System.err.println("Error populating fields: " + e.getMessage());
 			e.printStackTrace();
@@ -461,5 +526,33 @@ public class TestFormCodeBehind {
 		this.finalizeDiagnosisButton.setDisable(false);
 		this.addTestButton.setDisable(false);
 		this.removeTestButton.setDisable(false);
+	}
+
+	private void loadPastTestsForPatient(int patientId, int currentAppointmentId) {
+		try {
+			List<Test> pastTests = this.viewModel.getPastTestsForPatient(patientId, currentAppointmentId);
+			this.pastTestsTableView.getItems().setAll(pastTests);
+		} catch (SQLException e) {
+			System.err.println("Error loading past tests: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	private void enableButtonsForAppointmentTests() {
+		if (this.currentTest != null && this.currentTest.isFinalized()) {
+			this.addTestButton.setDisable(true);
+			this.removeTestButton.setDisable(true);
+			this.finalizeDiagnosisButton.setDisable(true);
+		} else {
+			this.addTestButton.setDisable(false);
+			this.removeTestButton.setDisable(false);
+			this.finalizeDiagnosisButton.setDisable(false);
+		}
+	}
+
+	private void disableButtonsForPastTests() {
+		this.addTestButton.setDisable(true);
+		this.removeTestButton.setDisable(true);
+		this.finalizeDiagnosisButton.setDisable(true);
 	}
 }

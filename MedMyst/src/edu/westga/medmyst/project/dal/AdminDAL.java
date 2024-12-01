@@ -56,6 +56,15 @@ public class AdminDAL {
 		return results;
 	}
 
+	/**
+	 * Retrieves a report of visits within the specified date range.
+	 * 
+	 * @param startDate the start date of the report range (inclusive)
+	 * @param endDate   the end date of the report range (inclusive)
+	 * @return a list of maps, where each map represents a visit and contains
+	 *         key-value pairs of visit details
+	 * @throws SQLException if a database access error occurs
+	 */
 	public List<Map<String, Object>> getVisitReport(LocalDate startDate, LocalDate endDate) throws SQLException {
 		String query = "SELECT a.datetime AS 'Visit Date', " + "p.patient_id AS 'Patient ID', "
 				+ "CONCAT(p.f_name, ' ', p.l_name) AS 'Patient Name', "

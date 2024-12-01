@@ -58,6 +58,7 @@
                         <ListView fx:id="appointmentsListView" layoutX="14.0" layoutY="14.0" prefHeight="280.0" prefWidth="412.0" />
                         <Button fx:id="editAppointmentButton" layoutX="316.0" layoutY="302.0" mnemonicParsing="false" onAction="#editAppointment" text="Edit Appointment" />
                         <Button fx:id="viewAppointmentButton" layoutX="14.0" layoutY="302.0" mnemonicParsing="false" onAction="#viewAppointment" text="View appointment" />
+                        <Button fx:id="orderTestsButton" layoutX="33.0" layoutY="345.0" mnemonicParsing="false" onAction="#orderTests" text="Order Tests" />
                      </children>
                   </AnchorPane>
             </content>

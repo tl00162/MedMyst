@@ -1030,56 +1030,50 @@ public class MedMystViewModel {
 	 * 
 	 * @return a List of TestType objects representing all available test types
 	 */
-	public List<TestType> getTestTypes() {
+	public List<TestType> getAllTestTypes() throws SQLException {
 		try {
 			return this.testTypeDAL.getAllLabTestTypes();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return new ArrayList<>();
+			System.err.println("Error retrieving test types from database: " + e.getMessage());
+			throw e;
 		}
 	}
 
 	/**
-	 * Adds a new lab test to the database.
+	 * Adds a new test to the database and links it to the appointment with the
+	 * provided normality.
 	 * 
-	 * @throws SQLException             if a database access error occurs
-	 * @throws IllegalArgumentException if the test is null or contains invalid
-	 *                                  details
-	 * @return true if test was added
+	 * @param newTest  the new test to add
+	 * @param isNormal the normality of the test (true for normal, false for
+	 *                 abnormal)
+	 * @return the ID of the newly added test, or -1 if the operation fails
 	 */
-	public boolean addTest() {
+	public int addTest(Test newTest, boolean isNormal) {
 		System.out.println("Debugging addTest method in ViewModel:");
-		System.out.println("Doctor ID: " + this.doctorIdProperty().get());
-		System.out.println("Patient ID: " + this.patientIdProperty().get());
-		System.out.println("Test Type: " + this.testTypeProperty().get());
-		System.out.println("Test DateTime: " + this.testDateTimeProperty().get());
+		System.out.println("Doctor ID: " + newTest.getDoctorId());
+		System.out.println("Patient ID: " + newTest.getPatientId());
+		System.out.println("Test Type: " + newTest.getTestType().getTypeName());
+		System.out.println("Test DateTime: " + newTest.getDateTime());
+		System.out.println("Normality: " + isNormal);
 
-		if (this.patientIdProperty().get() == 0 || this.doctorIdProperty().get() == 0
-				|| this.testTypeProperty().get() == null || this.testDateTimeProperty().get() == null) {
+		if (newTest.getPatientId() == 0 || newTest.getDoctorId() == 0 || newTest.getTestType().getTypeName() == null
+				|| newTest.getDateTime() == null) {
 			System.err.println("Error: Missing required fields for lab test creation.");
-			return false;
+			return -1;
 		}
 
-		double lowValue = this.testLowValueProperty().get();
-		double highValue = this.testHighValueProperty().get();
-		String unit = this.testUnitProperty().get() == null ? "" : this.testUnitProperty().get();
-		String result = this.testResultProperty().get() == null ? "" : this.testResultProperty().get();
-
-		Test newTest = new Test(-1, this.doctorIdProperty().get(), this.patientIdProperty().get(),
-				new TestType(this.testTypeProperty().get(), ""), lowValue > 0 ? lowValue : 0.0,
-				highValue > 0 ? highValue : 0.0, unit, result, this.testDateTimeProperty().get(), false);
-
+		int newTestId = -1;
 		try {
-			this.testDAL.addLabTest(newTest);
-			return true;
+			newTestId = this.testDAL.addLabTest(newTest, isNormal);
+			System.out.println("New Test ID: " + newTestId);
 		} catch (SQLException e) {
 			System.err.println("SQL Error during test creation:");
 			System.err.println("Error Code: " + e.getErrorCode());
 			System.err.println("SQL State: " + e.getSQLState());
 			System.err.println("Message: " + e.getMessage());
 			e.printStackTrace();
-			return false;
 		}
+		return newTestId;
 	}
 
 	/**
@@ -1118,29 +1112,47 @@ public class MedMystViewModel {
 	}
 
 	/**
-	 * Finalizes the specified test, marking it as completed in the database.
+	 * Finalizes the specified test, marking it as completed in the database and
+	 * updating its normality.
 	 * 
-	 * @param test the test to be finalized
+	 * @param test      the test to be finalized
+	 * @param normality the normality of the test (1 for normal, 0 for abnormal)
 	 * @throws SQLException             if a database access error occurs
-	 * @throws IllegalArgumentException if the test is null
+	 * @throws IllegalArgumentException if the test is null or the normality is
+	 *                                  invalid
 	 */
-	public void finalizeTest(Test test) throws SQLException {
+	public void finalizeTest(Test test, int normality) throws SQLException {
 		if (test == null) {
 			throw new IllegalArgumentException("Test cannot be null.");
 		}
-		this.testDAL.finalizeTest(test.getTestId());
-		test.setFinalized(true);
+
+		if (normality != 0 && normality != 1) {
+			throw new IllegalArgumentException("Normality must be 0 (abnormal) or 1 (normal).");
+		}
+
+		try {
+			this.testDAL.finalizeTest(test.getTestId());
+			this.testDAL.updateNormalityForAppointmentLabTest(test.getTestId(), normality);
+			test.setFinalized(true);
+			System.out.println("Test finalized successfully with normality: " + normality);
+		} catch (SQLException e) {
+			System.err.println("Error finalizing test in database: " + e.getMessage());
+			throw e;
+		}
 	}
 
 	/**
-	 * Updates the details of the specified test in the database.
+	 * Updates the details of the specified test in the database, including its
+	 * normality.
 	 * 
 	 * @param updatedTest the test with updated details
+	 * @param isNormal    the normality of the test (true for normal, false for
+	 *                    abnormal)
 	 * @throws SQLException             if a database access error occurs
 	 * @throws IllegalArgumentException if the test is null or contains invalid
 	 *                                  details
 	 */
-	public void updateLabTest(Test updatedTest) throws SQLException {
+	public void updateLabTest(Test updatedTest, boolean isNormal) throws SQLException {
 		if (updatedTest == null) {
 			throw new IllegalArgumentException("Updated test cannot be null.");
 		}
@@ -1150,7 +1162,10 @@ public class MedMystViewModel {
 		}
 
 		try {
-			this.testDAL.updateLabTest(updatedTest);
+			int normality = isNormal ? 1 : 0;
+			this.testDAL.updateLabTest(updatedTest, isNormal);
+			this.testDAL.updateNormalityForAppointmentLabTest(updatedTest.getTestId(), normality);
+
 		} catch (SQLException e) {
 			System.err.println("Error updating test in database: " + e.getMessage());
 			throw e;
@@ -1204,7 +1219,69 @@ public class MedMystViewModel {
 		return this.adminDAL.executeQuery(query);
 	}
 
+	/**
+	 * Generates a visit report for the specified date range.
+	 * 
+	 * @param startDate the start date of the report range (inclusive)
+	 * @param endDate   the end date of the report range (inclusive)
+	 * @return a list of maps, where each map represents a visit and contains
+	 *         key-value pairs of visit details
+	 * @throws SQLException if a database access error occurs
+	 */
 	public List<Map<String, Object>> generateVisitReport(LocalDate startDate, LocalDate endDate) throws SQLException {
 		return this.adminDAL.getVisitReport(startDate, endDate);
 	}
+
+	/**
+	 * Retrieves a list of tests for a specific appointment based on their
+	 * completion status.
+	 * 
+	 * @param appointmentId the ID of the appointment
+	 * @param isComplete    true to fetch completed tests, false to fetch incomplete
+	 *                      tests
+	 * @return a list of tests for the specified appointment and completion status
+	 * @throws SQLException if a database access error occurs
+	 */
+	public List<Test> getTestsForAppointment(int appointmentId, boolean isComplete) throws SQLException {
+		return isComplete ? this.testDAL.getCompleteTestsForAppointment(appointmentId)
+				: this.testDAL.getIncompleteTestsForAppointment(appointmentId);
+	}
+
+	/**
+	 * Retrieves a list of past tests for a specific patient that are not part of
+	 * the current appointment.
+	 * 
+	 * @param patientId            the ID of the patient
+	 * @param currentAppointmentId the ID of the current appointment
+	 * @return a list of past tests for the specified patient
+	 * @throws SQLException if a database access error occurs
+	 */
+	public List<Test> getPastTestsForPatient(int patientId, int currentAppointmentId) throws SQLException {
+		return this.testDAL.getPastTestsForPatient(patientId, currentAppointmentId);
+	}
+
+	/**
+	 * Links a test to an appointment in the AppointmentLabTest table with its
+	 * normality status.
+	 * 
+	 * @param testId        the ID of the test to link
+	 * @param appointmentId the ID of the appointment to link the test to
+	 * @param normality     the normality of the test (1 for normal, 0 for abnormal)
+	 * @throws SQLException             if a database access error occurs
+	 * @throws IllegalArgumentException if normality is invalid
+	 */
+	public void linkTestToAppointment(int testId, int appointmentId, int normality) throws SQLException {
+		if (normality != 0 && normality != 1) {
+			throw new IllegalArgumentException("Normality must be 0 (abnormal) or 1 (normal).");
+		}
+
+		try {
+			this.testDAL.linkTestToAppointment(testId, appointmentId, normality);
+			System.out.println("Test linked to appointment successfully with normality: " + normality);
+		} catch (SQLException e) {
+			System.err.println("Error linking test to appointment in database: " + e.getMessage());
+			throw e;
+		}
+	}
+
 }

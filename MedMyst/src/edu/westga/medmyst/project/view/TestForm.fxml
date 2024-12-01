@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -53,6 +54,21 @@
                         </AnchorPane>
                   </content>
                 </Tab>
+                  <Tab text="Past Tests">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView fx:id="pastTestsTableView" layoutX="16.0" layoutY="15.0" prefHeight="446.0" prefWidth="426.0">
+                                <columns>
+                                  <TableColumn fx:id="pastTestTypeColumn" prefWidth="81.0" text="Type" />
+                                  <TableColumn fx:id="pastTestDateColumn" prefWidth="115.0" text="Date" />
+                                    <TableColumn fx:id="pastTestResultsColumn" prefWidth="229.0" text="Results" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
               </tabs>
             </TabPane>
             <ComboBox fx:id="doctorComboBox" layoutX="14.0" layoutY="297.0" prefWidth="150.0" />
@@ -69,17 +85,19 @@
             <DatePicker fx:id="patientDoBLabel" layoutX="322.0" layoutY="131.0" prefHeight="25.0" prefWidth="150.0" />
             <Label layoutX="165.0" layoutY="114.0" text="First Name" />
             <Label layoutX="322.0" layoutY="114.0" text="Date of Birth" />
-            <Button fx:id="addTestButton" layoutX="14.0" layoutY="539.0" mnemonicParsing="false" onAction="#addTest" text="Add Test" />
-            <Button fx:id="removeTestButton" layoutX="197.0" layoutY="539.0" mnemonicParsing="false" onAction="#removeTest" text="Remove Test" />
-            <Button fx:id="finalizeDiagnosisButton" layoutX="356.0" layoutY="539.0" mnemonicParsing="false" onAction="#finalizeDiagnosis" text="Finalize Diagnosis" />
+            <Button fx:id="addTestButton" layoutX="14.0" layoutY="562.0" mnemonicParsing="false" onAction="#addTest" text="Add Test" />
+            <Button fx:id="removeTestButton" layoutX="198.0" layoutY="562.0" mnemonicParsing="false" onAction="#removeTest" prefHeight="25.0" prefWidth="84.0" text="Remove Test" />
+            <Button fx:id="finalizeDiagnosisButton" layoutX="357.0" layoutY="562.0" mnemonicParsing="false" onAction="#finalizeDiagnosis" text="Finalize Diagnosis" />
             <TextField fx:id="highValueTextField" layoutX="15.0" layoutY="360.0" />
             <TextField fx:id="lowValueTextField" layoutX="180.0" layoutY="360.0" />
             <TextField fx:id="unitsTextField" layoutX="359.0" layoutY="360.0" prefHeight="25.0" prefWidth="105.0" />
             <Label layoutX="19.0" layoutY="343.0" text="High" />
             <Label layoutX="183.0" layoutY="343.0" text="Low" />
             <Label layoutX="359.0" layoutY="343.0" text="Units" />
-            <Label layoutX="21.0" layoutY="412.0" text="Results" />
-            <TextArea fx:id="resultsTextArea" layoutX="21.0" layoutY="429.0" prefHeight="97.0" prefWidth="437.0" wrapText="true" />
+            <Label layoutX="21.0" layoutY="426.0" text="Results" />
+            <TextArea fx:id="resultsTextArea" layoutX="22.0" layoutY="450.0" prefHeight="97.0" prefWidth="437.0" wrapText="true" />
+            <RadioButton fx:id="normalRadioButton" layoutX="96.0" layoutY="426.0" mnemonicParsing="false" text="Normal" />
+            <RadioButton fx:id="abnormalRadioButton" layoutX="179.0" layoutY="426.0" mnemonicParsing="false" text="Abnormal" />
          </children>
       </AnchorPane>
    </children>

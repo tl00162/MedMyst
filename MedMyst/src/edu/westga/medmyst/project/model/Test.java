@@ -19,6 +19,7 @@ public class Test {
 	private String result;
 	private LocalDateTime dateTime;
 	private boolean finalized;
+	private Boolean normality;
 
 	/**
 	 * Constructor for Test. Creates a new test when all fields are present
@@ -35,7 +36,7 @@ public class Test {
 	 * @param dateTime
 	 */
 	public Test(int testId, int doctorId, int patientId, TestType testType, double low, double high,
-			String unitOfMeasurement, String result, LocalDateTime dateTime, boolean finalized) {
+			String unitOfMeasurement, String result, LocalDateTime dateTime, boolean finalized, Boolean normality) {
 		this.testId = testId;
 		this.doctorId = doctorId;
 		this.patientId = patientId;
@@ -46,6 +47,7 @@ public class Test {
 		this.result = result;
 		this.dateTime = dateTime;
 		this.finalized = finalized;
+		this.normality = normality;
 	}
 
 	/**
@@ -210,20 +212,59 @@ public class Test {
 		this.dateTime = dateTime;
 	}
 
+	/**
+	 * Gets the type name of the test.
+	 * 
+	 * @return the name of the test type
+	 */
 	public String getTypeName() {
 		return this.testType.getTypeName();
 	}
 
+	/**
+	 * Gets the description of the test type.
+	 * 
+	 * @return the description of the test type
+	 */
 	public String getDescription() {
 		return this.testType.getDescription();
 	}
 
+	/**
+	 * Checks if the test is finalized.
+	 * 
+	 * @return true if the test is finalized, false otherwise
+	 */
 	public boolean isFinalized() {
 		return this.finalized;
 	}
 
+	/**
+	 * Sets the finalized status of the test.
+	 * 
+	 * @param finalized true to mark the test as finalized, false otherwise
+	 */
 	public void setFinalized(boolean finalized) {
 		this.finalized = finalized;
+	}
+
+	/**
+	 * Gets the normality status of the test.
+	 * 
+	 * @return true if the test is normal, false if abnormal, or null if unspecified
+	 */
+	public Boolean getNormality() {
+		return this.normality;
+	}
+
+	/**
+	 * Sets the normality status of the test.
+	 * 
+	 * @param normality true to set the test as normal, false to set it as abnormal,
+	 *                  or null if unspecified
+	 */
+	public void setNormality(Boolean normality) {
+		this.normality = normality;
 	}
 
 }

@@ -2,7 +2,12 @@ package edu.westga.medmyst.project.dal;
 
 import edu.westga.medmyst.project.model.Appointment;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,7 +156,7 @@ public class AppointmentDAL {
      * @throws SQLException if a database access error occurs
      */
     public List<Appointment> getAppointmentsByDoctorId(int doctorId) throws SQLException {
-        List<Appointment> appointments = new ArrayList<>();
+    	List<Appointment> appointments = new ArrayList<>();
         String query = "SELECT * FROM appointment WHERE doctor_id = ?";
 
         try (Connection connection = DriverManager.getConnection(ConnectionString.CONNECTION_STRING);
