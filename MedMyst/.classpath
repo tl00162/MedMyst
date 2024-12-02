@@ -15,5 +15,6 @@
 	<classpathentry kind="var" path="ECLIPSE_HOME/javafx-sdk/lib/javafx.web.jar"/>
 	<classpathentry kind="var" path="ECLIPSE_HOME/javafx-sdk/lib/javafx-swt.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.26.jar"/>
+	<classpathentry kind="lib" path="C:/Users/demmons1/Desktop/CS3230/MedMyst/MedMyst/lib/jbcrypt-0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

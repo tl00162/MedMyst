@@ -545,6 +545,21 @@ public class MedMystViewModel {
 	public ObjectProperty<LocalDateTime> testDateTimeProperty() {
 		return this.testDateTime;
 	}
+	
+	/**
+	 * Attempts to create a new account via LoginDAL
+	 * @param accountType the type of account
+	 * @param password the password
+	 * @param firstName the first name
+	 * @param lastName the last name
+	 * @param username the username
+	 * @return true if account created
+	 * @throws SQLException
+	 */
+	public boolean createNewAccount(String accountType, String password, String firstName, String lastName, String username) throws SQLException {
+	    return this.loginDAL.createAccount(accountType, password, firstName, lastName, username);
+	}
+
 
 	/**
 	 * Validates the login credentials by checking the username and password against

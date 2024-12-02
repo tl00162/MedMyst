@@ -22,5 +22,6 @@
       <DatePicker fx:id="endDatePicker" layoutX="446.0" layoutY="669.0" />
       <Label layoutX="446.0" layoutY="652.0" text="End Date" />
       <Button fx:id="generateVisitReportButton" layoutX="343.0" layoutY="706.0" mnemonicParsing="false" onAction="#generateVisitReport" text="Generate Visit Report" />
+      <Button fx:id="createNewAccountButton" layoutX="23.0" layoutY="712.0" mnemonicParsing="false" onAction="#createNewAccount" text="Create New Account" />
    </children>
 </AnchorPane>

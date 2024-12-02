@@ -287,7 +287,7 @@ public class MedMystNurseCodeBehind {
 		this.refreshPatientList();
 		this.refreshAppointmentList();
 		this.refreshTestList();
-		if (this.viewmodel.getCurrentUser().getRole().equals("admin")) {
+		if (this.viewmodel.getCurrentUser().getRole().equalsIgnoreCase("admin")) {
 			this.adminViewButton.setVisible(true);
 		} else {
 			this.adminViewButton.setVisible(false);

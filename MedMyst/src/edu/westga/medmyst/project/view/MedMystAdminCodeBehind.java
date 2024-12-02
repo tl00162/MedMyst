@@ -71,6 +71,9 @@ public class MedMystAdminCodeBehind {
 
 	@FXML
 	private DatePicker endDatePicker;
+	
+	@FXML
+	private Button createNewAccountButton;
 
 	private MedMystViewModel viewmodel;
 
@@ -252,6 +255,27 @@ public class MedMystAdminCodeBehind {
         } catch (SQLException e) {
             e.printStackTrace();
             this.showAlert("Error", "Error generating report: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+	
+	@FXML
+    void createNewAccount(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/edu/westga/medmyst/project/view/AccountCreationForm.fxml"));
+            Pane accountCreationPane = loader.load();
+
+            Stage accountCreationStage = new Stage();
+            accountCreationStage.setTitle("Create New Account");
+            accountCreationStage.setScene(new Scene(accountCreationPane));
+
+            AccountCreationFormCodeBehind accountFormController = loader.getController();
+            accountFormController.setViewModel(this.viewmodel);
+
+            accountCreationStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            this.showAlert("Error", "Error opening Account Creation Form: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 }
