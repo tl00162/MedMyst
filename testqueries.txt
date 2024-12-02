@@ -1,0 +1,45 @@
+
+Show All Tests for a Patient
+
+SELECT 
+    t.lab_test_id AS "Test ID",
+    t.test_type AS "Test Type",
+    t.results AS "Result",
+    t.datetime AS "Test Date",
+    p.f_name AS "Patient First Name",
+    p.l_name AS "Patient Last Name"
+FROM 
+    labtest t
+JOIN 
+    appointmentlabtest alt ON t.lab_test_id = alt.lab_test_id
+JOIN 
+    Appointment a ON alt.appointment_id = a.appointment_id
+JOIN 
+    Patient p ON a.patient_id = p.patient_id
+WHERE 
+    p.patient_id = 1
+ORDER BY 
+    t.datetime DESC;
+	
+	
+Show all doctors with at least 1 test administered 
+
+SELECT 
+    d.doctor_id AS "Doctor ID",
+    d.f_name AS "Doctor First Name",
+    d.l_name AS "Doctor Last Name",
+    COUNT(t.lab_test_id) AS "Number of Tests Administered"
+FROM 
+    Doctor d
+JOIN 
+    Appointment a ON d.doctor_id = a.doctor_id
+JOIN 
+    appointmentlabtest alt ON a.appointment_id = alt.appointment_id
+JOIN 
+    labtest t ON alt.lab_test_id = t.lab_test_id
+GROUP BY 
+    d.doctor_id, d.f_name, d.l_name
+HAVING 
+    COUNT(t.lab_test_id) >= 1
+ORDER BY 
+    COUNT(t.lab_test_id) DESC;

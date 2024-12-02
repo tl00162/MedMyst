@@ -1,13 +1,20 @@
-Iteration 3 submission
+Final submission
+
+To build and run this program, ensure you have the following installed:
+
+Java Development Kit (JDK): Version 17 or later.
+
+MySQL Database Server: Version 8.0 or later.
+
 nurse log ins
 
-id: nurse1, password: password
-id: nurse2, password: password2
+username: nurse1, password: password
+
 
 admin log ins
 
-id: administrator1, password: testpassword1
-id: administrator2, password: testpassword2
+username: administrator1, password: testpassword1
+
 
 Stored Procedure for adding an appointment:
 
